@@ -1,0 +1,63 @@
+package org.fdapservice.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.fdapservice.biz.CarHisDataBiz;
+import org.fdapservice.biz.CarRealDataBiz;
+import org.fdapservice.biz.CarStartupBiz;
+import org.fdapservice.biz.RefRealDataBiz;
+import org.fdapservice.biz.impl.CarHisDataBizImpl;
+import org.fdapservice.biz.impl.CarRealDataBizImpl;
+import org.fdapservice.biz.impl.CarStartupBizImpl;
+import org.fdapservice.biz.impl.RefRealDataBizImpl;
+import org.fdapservice.entity.CarHisData;
+import org.fdapservice.entity.CarRealData;
+import org.fdapservice.entity.CarStartup;
+import org.fdapservice.entity.RefRealData;
+import org.fdapservice.service.UploadService;
+import org.fdapservice.util.DateUtil;
+
+public class UploadServiceImpl implements UploadService {
+
+	public RefRealDataBiz refRealDataBiz = new RefRealDataBizImpl();
+	
+	public CarRealDataBiz carRealDataBiz = new CarRealDataBizImpl();
+	
+	public CarStartupBiz carStartupBiz = new CarStartupBizImpl();
+	
+	public CarHisDataBiz carhisdatabiz = new CarHisDataBizImpl();
+	@Override
+	public Integer uploadRefRealData(String code, List<RefRealData> list) {
+		return refRealDataBiz.uploadRealData(code, list);
+	}
+	
+	@Override
+	public Integer uploadCarRealData(String code, List<CarRealData> carrealList) {
+		return carRealDataBiz.uploadCarReal(code, carrealList);
+	}
+
+	@Override
+	public Integer uploadCarStartup(String code, List<CarStartup> startuplist) {
+		return carStartupBiz.uploadStartup(code, startuplist);
+	}
+
+	@Override
+	public Integer uploadCarHisData(String code, List<CarHisData> carHislist) {
+		return carhisdatabiz.uploadCarHisData(code, carHislist);
+	}
+
+	public static void main(String[] args) {
+		String code = "9c219869-2229-4a00-9e51-fad53d0c4ca6" ;
+		List<RefRealData> list = new ArrayList<RefRealData>();
+		RefRealData d =new RefRealData();
+		d.setId(1) ;
+		d.setStatus(0);
+		d.setTime(DateUtil.getToString(new java.util.Date()));
+		d.setValue(12.2);
+		list.add(d) ;	
+		Integer i = new UploadServiceImpl().uploadRefRealData(code, list);
+		System.out.println(i);
+	}
+
+}

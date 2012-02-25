@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/.settings
+END
+org.eclipse.jdt.core.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/.settings/org.eclipse.jdt.core.prefs
+END
+com.genuitec.eclipse.ws.xfire.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/.settings/com.genuitec.eclipse.ws.xfire.prefs
+END
+com.genuitec.eclipse.ws.prefs
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/.settings/com.genuitec.eclipse.ws.prefs
+END

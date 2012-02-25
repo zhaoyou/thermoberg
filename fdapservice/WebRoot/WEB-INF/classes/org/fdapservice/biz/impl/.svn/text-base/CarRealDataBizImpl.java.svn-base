@@ -1,0 +1,61 @@
+package org.fdapservice.biz.impl;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.fdapservice.biz.CarRealDataBiz;
+import org.fdapservice.dao.CarRealDataDao;
+import org.fdapservice.dao.impl.CarRealDataDaoImpl;
+import org.fdapservice.entity.CarRealData;
+import org.fdapservice.service.UploadService;
+/**
+ * 车载实时数据上传业务实现类
+ * @author zhoukuanwei
+ */
+public class CarRealDataBizImpl implements CarRealDataBiz {
+
+	private CarRealDataDao carrealdao = new CarRealDataDaoImpl();
+	
+	private Logger logger = Logger.getLogger(CarRealDataBizImpl.class);
+
+	public Integer uploadCarReal(String code, List<CarRealData> carReallist) {
+		if(code == null||code.equals("") ||carReallist ==null || carReallist.size() == 0){
+			return UploadService.FAIL;
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		try {
+			for(int i=0;i<carReallist.size();i++){
+				sb.append(buildString(carReallist.get(i)));
+				if(i!=carReallist.size()-1){
+					sb.append(";");
+				}
+			}
+			
+			Integer result = carrealdao.uploadCarReal(code, sb.toString());
+			if(result.toString().equals("0")){
+				return UploadService.SUCCESS;
+			}
+			return UploadService.FAIL;
+			
+		} catch (Exception e) {
+			logger.error("上传车载实时数据失败"+e.getMessage());
+			return UploadService.ERROR;
+		}
+	}
+	
+	/**
+	 * 构造车载实时数据信息字符串
+	 * @param carreal			车载实时数据信息
+	 * @return					返回结果字符串：{aid1,aid2,aid3,t1,t2,t3,latitude,latitude_dir,longitude,longitude_dir,time}
+	 */
+	private String buildString(CarRealData carreal){
+		StringBuffer sb = new StringBuffer("");
+		sb.append(carreal.getAid1()+","+carreal.getAid2()+","+carreal.getAid3()+","+
+				carreal.getT1()+","+carreal.getT2()+","+carreal.getT3()+","+carreal.getLatitude()+","+
+				carreal.getLatitude_dir()+","+carreal.getLongitude()+","+carreal.getLongitude_dir()+","+
+				carreal.getTime());
+		return sb.toString();
+	}
+	
+}

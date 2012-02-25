@@ -1,0 +1,7 @@
+driverClass=com.mysql.jdbc.Driver
+url=jdbc:mysql://192.168.1.134:3306/tbcc_fdap_test
+user=root
+password=root
+minPoolSize=3
+maxPoolSize=30
+initialPoolSize=5
