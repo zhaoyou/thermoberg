@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute">
+	<mx:Button x="194" y="131" label="测试Flex喔" width="202" height="124" color="#3C0B20"/>
+	<mx:Label id="ll">
+		
+	</mx:Label>
+</mx:Application>

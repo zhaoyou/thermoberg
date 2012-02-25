@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" backgroundColor="white" creationComplete="init();">
+
+	<mx:Style source="util.css">	
+	</mx:Style>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import org.flex.entity.HisStartup;
+			import org.flex.entity.Project;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.managers.PopUpManager;
+			import mx.charts.series.items.LineSeriesItem;
+			import mx.charts.HitData;
+			import mx.charts.chartClasses.IAxis;
+			
+			[Frame(extraClass='mx.charts.chartClasses.ChartsLicenseHandler')]
+			
+			[Bindable]
+			public var hostname:String = "" ;
+			
+			public var branchId :String = ""	;
+			
+			public var proId :String = "" ;
+			
+			public var sid :String = "" ;
+			
+		
+			public var time1:String = "" ;
+			
+			public var time2:String = "" ;
+			
+			/**
+			 * 	初始化容器时调用
+			 * */
+			public function init():void{
+				getInitValue() ;			//获取初始化地址栏的值
+				getdomain() ;				//获取域名地址
+				remoteObject.getProById(this.proId);     //获取项目的初始化信息和启停记录的初始化信息
+				remoteObject.getStartUp(this.sid);
+			
+			}
+			
+			/**
+			 * 	获取初始化值
+			 * */
+			public function getInitValue():void{
+				var param :Object = getParams() ;
+				this.branchId = param.branchId ;
+				this.proId = param.proId ;
+				this.sid = param.sid ;
+				this.time1 = param.time1 ;
+				this.time2 = param.time2 ;
+			}
+			
+			/**
+		 	 * 获取地址栏url参数参数(获取机构Id)
+		 	 * */
+		 	public function getParams():Object{		
+		 	var params :Object = {};  
+            var query:String = ExternalInterface.call("window.location.search.substring", 1);   
+            if(query) {  
+                var pairs:Array = query.split("&");  
+                for(var i:uint=0; i < pairs.length; i++) {  
+                    var pos:int = pairs[i].indexOf("=");  
+                    if(pos != -1) {  
+                        var argname:String = pairs[i].substring(0, pos);  
+                        var value:String = pairs[i].substring(pos+1);  
+                        params[argname] = value;  
+                    }  
+                }  
+            }  
+            return params;  
+		 	}
+		 	
+		 	
+		 	/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		
+	 		public function getdomain():void{ 			 
+	 			 this.hostname =  ExternalInterface.call("window.location.host.toString");  
+	 		}
+	 		
+		 	
+			/**
+		 	 * 处理温度后面的C符号
+		 	 * */
+	 		public function TYlabel_handler(item:Object,preValue:Object,axis:IAxis):Object{
+	 			return item.toString()+"℃";
+	 		}
+	 		
+	 		 /**
+	 		 * 生成特定的提示文本信息
+	 		 * */
+	 		 
+	 		 private function showdataTip(d:HitData):String{	 		 	
+	 		 	var lineser:LineSeriesItem = d.chartItem as LineSeriesItem ;	 	
+	 		 	return lineser.yValue +"\n"+(lineser.xValue as Date).toLocaleTimeString();
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	设置温度是坐标
+	 		 * */ 
+	 		 public function setTValue(aTmin :Number,aTmax:Number):void{
+	 		 		this.templlinearAxis.minimum = aTmin ;
+	 		 		this.templlinearAxis.maximum = aTmax ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	显示设置温度的模式对话框
+	 		 * */
+	 		 public function  showTitleWin():void{
+	 		 	var title:TSetUp = new TSetUp();
+	 		 	title.callbackfunc = this.setTValue ;
+	 		 	PopUpManager.addPopUp(title,this,true);
+	 		 	PopUpManager.centerPopUp(title);
+	 		 }
+	 		 
+	 		 /**
+		 	 * 设置返回的路径
+		 	 * */
+		 	 
+		 	 private function toBack():void{
+		 	 	var url:URLRequest  = new URLRequest("../startup.do?ope=doStartUpBox&branchId="+this.branchId+"&proId="+proId+"&time1="+time1+"&time2="+time2);
+		 	 	navigateToURL(url,"_self");
+		 	 }
+		 	 
+		 	 /**
+	 		 * 	根据时间间隔和类型设置x坐标轴的 文本显示单位
+	 		 *  如果大于一天，怎显示间隔是days，如果是一天之内，怎是以hours为单位
+	 		 * */
+	 		 
+	 		 public function  getLabelUnits(sTime:Date,eTime:Date):String{
+	 		 	var mi :Number = eTime.getTime()-sTime.getTime() ;
+	 		 	
+	 		 	if((mi/1000/60/60/24)<=1)
+	 		 		return "hours" ;
+	 		 	else
+	 		 		return "days";	
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	错误处理程序(项目)
+	 		 * */
+	 		 public function errorHandler(event:FaultEvent):void{
+	 		 	Alert.show("获取项目信息发生错误:\n"+event.fault.faultDetail,"错误");
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	获取启停记录出现异常
+	 		 * */
+	 		public function errorHandler_startup(event:FaultEvent):void{
+	 			Alert.show("获取启停信息发生错误: \n"+event.fault.faultDetail,"错误");
+	 		}
+	 		
+	 		/**
+	 		 * 	获取历史数据出现异常
+	 		 * */
+	 		 
+	 		 public function errorHandler_data(event:FaultEvent):void{
+	 		 	Alert.show("获取数据发生错误: \n" + event.fault.faultDetail,"错误");
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	 获取项目信息
+	 		 * */
+	 		 public function getProject(event:ResultEvent):void{
+	 		 	var project:Project = event.result as Project ;
+	 		 	this.txtboxName.text = project.projectName ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	获取启停信息
+	 		 * */
+	 		 
+	 		 public function getStartUp(event:ResultEvent):void{
+	 		 	var startup :HisStartup = event.result as HisStartup ;
+	 		 	
+	 		 	this.txtBeginAddress.text = startup.beginAddress ;
+	 		 	this.txtEndAddress.text = startup.endAddress ;
+	 		 	this.txtStartTime.text = startup.btimeStr ;
+	 		 	this.txtEndTime.text = startup.etimeDisplay ;
+	 		 	this.txtCarrier.text = startup.carrier ;
+	 		 	this.txtInterval.text = startup.recordInterval.toString() ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	获取小批零历史数据
+	 		 * */
+	 		 
+	 		 public function getHisData(event:ResultEvent):void{
+	 		 	var ailist:ArrayCollection = event.result as ArrayCollection ;
+	 		 	   if(ailist==null || ailist.length<2)
+	 		 		{
+	 		 			Alert.show("选定时间范围内没有相关数据","提示");
+	 		 			this.linechart1.dataProvider = null ;
+	 		 			return ;
+	 		 		} 
+	 		 		
+	 		 		this.linechart1.dataProvider = ailist ;	
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		设置时间间隔已经文本
+	 		 * */
+	 		 
+	 		 public function setTimeAxis():void{
+	 		 	var s :Date = buildDate(this.txtStartTime.text) ;
+	 		 	var e:Date = buildDate(this.txtEndTime.text);
+	 	
+	 		 	this.TtimeAxis.minimum = s ;
+	 		 	this.TtimeAxis.maximum = e ;
+	 		 	
+	 		 	//由flex时间轴自动计算出来
+//	 		 	this.TtimeAxis.labelUnits = getLabelUnits(s,e);
+//	 		 	this.TtimeAxis.interval = 1 ;
+	 		 	
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	构造一个日期对象
+	 		 * 
+	 		 * */
+	 		 
+	 		 public function buildDate(timeStr:String):Date{
+	 		 	var day :Array = timeStr.split(" ");
+	 		 	var date:Array = day[0].toString().split("-");
+	 		 	var time:Array = day[1].toString().split(":");
+	 		 	var targeDate :Date = new Date(date[0],Number(date[1]),
+	 		 	Number(date[2]),Number(time[0]),Number(time[1]),Number(time[2]),0) ;
+	 		 	return targeDate ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	单击查询按钮
+	 		 * */
+	 		 
+	 		 public function query():void{
+	 		 	var timeNumber:Number = Number(this.txtNumber.text)  ;
+	 		 	
+	 		 	if(isNaN(timeNumber)){
+	 		 		Alert.show("间隔数量必须为正整数!","提示");
+	 		 		return  ;
+	 		 	}else{
+	 		 		if(timeNumber<1 || timeNumber%1!=0)
+	 		 			{
+	 		 				Alert.show("间隔数量必须为正整数!","提示");
+	 		 				return  ;
+	 		 			}
+	 		 	}
+	 		 	
+	 		 	remoteObject.getHisCarByProperty(this.proId,this.txtStartTime.text,this.txtEndTime.text,this.txtNumber.text,this.txtInterval.text);	 
+	 		 }
+	 		 
+	 	
+	 		
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="remoteObject" destination="hiscar2" endpoint="http://{hostname}/ccdcc/messagebroker/amf">
+		<mx:method name="getProById" fault="errorHandler(event)" result="getProject(event)"/>
+		<mx:method name="getStartUp" fault="errorHandler_startup(event)" result="getStartUp(event)"/>
+		<mx:method name="getHisCarByProperty" fault="errorHandler_data(event)" result="getHisData(event)"/>
+	</mx:RemoteObject>
+
+	<mx:Panel width="100%" height="100%" title="小批零历史数据查询" fontSize="12" layout="absolute" x="-1">
+		<mx:Label text="小批零名:" x="19" y="10"/>
+		<mx:Text width="96" id="txtboxName" x="97" y="10"/>
+		<mx:Label text="起始时间：" x="220" y="10"/>
+		<mx:Text id="txtStartTime" width="146" x="285" y="10"/>
+		<mx:Label text="结束时间:" x="465" y="10"/>
+		<mx:Text width="141" id="txtEndTime" x="531" y="10"/>
+		<mx:Label text="出发地:" width="61" x="19" y="42"/>
+		<mx:Label text="目的地:" width="51" x="220" y="41"/>
+		<mx:Label text="承运人:" x="467" y="43"/>
+		<mx:Text id="txtBeginAddress" width="96" x="97" y="42"/>
+		<mx:Text id="txtEndAddress" width="96" x="285" y="41"/>
+		<mx:Text id="txtCarrier" width="111" x="531" y="41"/>
+		<mx:Button label="查询" x="887" y="10" id="btnQuery" click="query();"/>
+		<mx:Button label="返回"  width="54" x="1074" y="12" id="btnBack" click="toBack();"/>
+		<mx:Button label="设置"   x="981" y="10" id="btnSetup" click="showTitleWin();"/>
+		<mx:Text width="36" id="txtInterval" enabled="false" x="763" y="43"/>
+		<mx:Label text="时间间隔:" x="697" y="43"/>
+		<mx:Label text="间隔数量:" x="697" y="12" visible="false"/>
+		<mx:TextInput width="36" height="24"  id="txtNumber" x="763" y="10" text="1" visible="false"/>
+		<mx:Label text="(S)" width="27" x="807" y="43"/>
+		
+		<mx:HRule x="19" y="69" width="100%" height="2"/>
+		
+		
+		<mx:LineChart x="19" y="79" id="linechart1" width="87%" height="80%" filters="[]" 
+			dataTipFunction="showdataTip" showDataTips="true">
+				<mx:backgroundElements>				
+						<mx:GridLines id="gridline1" direction="both">
+								
+								<mx:horizontalStroke>
+									<mx:Stroke id="Tvstroke" color="haloSilver" alpha=".2"/>
+								</mx:horizontalStroke>
+									
+								<!--垂直网格-->
+								<mx:verticalStroke>
+									<mx:Stroke id="HvStroke" color="haloSilver" alpha=".2"/>
+								</mx:verticalStroke>
+						</mx:GridLines>	
+						
+					</mx:backgroundElements>
+					
+					<!--垂直方向-->
+					<mx:verticalAxis>
+						<mx:LinearAxis id="templlinearAxis"  minimum="-5" maximum="30" labelFunction="TYlabel_handler"  minorInterval="1" interval="1"    />
+					</mx:verticalAxis>
+					
+					<!--水平方向-->
+					<mx:horizontalAxis >			
+							<!-- 时间坐标轴-->
+							<mx:DateTimeAxis id="TtimeAxis" displayLocalTime="true" />
+					</mx:horizontalAxis>
+					
+					<!--水平渲染-->
+					<mx:horizontalAxisRenderer>
+						<mx:AxisRenderer axis="{TtimeAxis}" canDropLabels="true"/>
+					</mx:horizontalAxisRenderer>
+					
+					<!--绘图序列-->
+					<mx:series>
+						<mx:LineSeries displayName="T1" form="curve" yField="ai1"  interpolateValues="false"  xField="updateTime"   alpha=".4" />
+					</mx:series>
+					
+		</mx:LineChart>
+		
+		<mx:Legend dataProvider="{linechart1}" y="90" right="10"/>
+		
+		
+	</mx:Panel>
+	
+</mx:Application>

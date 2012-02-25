@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" backgroundColor="white"   height="630" width="1000"
+	 xmlns:ns2="com.eshangrao.controls.*"   xmlns:ns1="*" creationComplete="init();" >
+	<mx:Style source="util.css">	
+	 </mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import mx.charts.series.LineSeries;
+			import mx.containers.Form;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.controls.Alert;
+			import mx.charts.chartClasses.IAxis;
+			import mx.charts.series.items.LineSeriesItem;
+			import mx.charts.HitData;
+			import mx.managers.PopUpManager;
+			
+			[Frame(extraClass='mx.charts.chartClasses.ChartsLicenseHandler')]
+			
+			[Bindable]
+			public var hostname :String = "" ;			//保存域名的变量
+			
+			
+			public var branchId:String = "" ;			//保存机构Id
+			
+			public var _hmin :Number = 0 ;				//湿度的最小值
+			
+			public var _hmax:Number = 100 ;				//湿度的最大值
+			
+			public var flag :Boolean = false ;			//湿度面板是否已经初始化
+			
+			
+//			[Bindable]
+//			public var hlineseries :ArrayCollection  = new ArrayCollection() ;	//标识湿度的lineseries的集合
+			
+			[Bindable]
+			public var tDataList :ArrayCollection = new ArrayCollection();		//绑定温度数据
+			
+			[Bindable]
+			public var hDataList:ArrayCollection = new ArrayCollection();		//绑定湿度数据
+			
+			[Bindable]
+			public var lineseriesList:ArrayCollection = new ArrayCollection();		//标示温度的lineseries集合
+			
+			[Bindable]
+			public var lineseriesList2 :ArrayCollection = new ArrayCollection();	//标示湿度的lineseries集合
+			
+			public var refTypeList :Array = new Array();							//定义一个变量用来根据不同的冷库类型，设置温度的上下限
+			
+			
+			
+			
+			/**
+			 * 	页面初始化值
+			 * */
+			public function init():void{
+				
+				var obj :Object = getparam() ;
+				this.branchId = obj.branchId ;	//获取地址栏中的参数	
+				getdomain() ;					//获取域名地址
+				remoteRef.getRefProj(this.branchId);	//获取冷库工程
+//				remoteRef.getRefList(this.branchId);	//获取冷库项目 
+			}
+			
+			
+			//**************************************获取初始化信息、以及页面跳转*****************************************
+			/**
+		 	 * 获取地址栏url参数参数(获取机构Id)
+		 	 * */
+		 
+		 	public function getparam():Object{		
+		 	var params :Object = {};  
+            var query:String = ExternalInterface.call("window.location.search.substring", 1);   
+            if(query) {  
+                var pairs:Array = query.split("&");  
+                for(var i:uint=0; i < pairs.length; i++) {  
+                    var pos:int = pairs[i].indexOf("=");  
+                    if(pos != -1) {  
+                        var argname:String = pairs[i].substring(0, pos);  
+                        var value:String = pairs[i].substring(pos+1);  
+                        params[argname] = value;  
+                    }  
+                }  
+            }  
+            return params;  
+		 	}
+		 	
+		 	/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		
+	 		public function getdomain():void{ 			 
+	 			 this.hostname =  ExternalInterface.call("window.location.host.toString");  
+	 		}
+		 	
+		 	 /**
+		 	 * 设置返回的路径
+		 	 * */
+		 	 
+		 	 public function toBack():void{
+		 	 	var url:URLRequest  = new URLRequest("../branch.do?ope=toListByBranch&branchId="+this.branchId);
+		 	 	navigateToURL(url,"_self");
+		 	 }
+		 	 
+		 	 
+		 	 //*********************************设置温湿度坐标的上下限、坐标轴的显示文本、以及探头的显示*****************************************
+		 	 
+		 	 /**
+		 	 * 	弹出设置窗体
+		 	 * */
+		 	 public function showTitleWin():void{
+		 	 	var titleWin :TRSetUp = new TRSetUp();
+		 	 	
+		 	 	titleWin.tmin = this.templlinearAxis.minimum ;
+		 	 	titleWin.tmax = this.templlinearAxis.maximum ;
+		 	 	
+		 	 	if(flag)
+		 	 	{
+		 	 		titleWin.hmin = this.Rlineraxis.minimum ;
+		 	 		titleWin.hmax = this.Rlineraxis.maximum ;
+		 	 	}else{
+		 	 		titleWin.hmin = 0 ;
+		 	 		titleWin.hmax = 0 ;
+		 	 	}
+		 	 	titleWin.callbackfunc = this.setTR ;
+		 	 	PopUpManager.addPopUp(titleWin,this,true);
+		 	 	PopUpManager.centerPopUp(titleWin);
+		 	 	
+		 	 }
+		 	 
+		 	 /**
+		 	 * 	设置温湿度轴的值
+		 	 * */
+		 	 public function setTR(tmin:Number,tmax:Number,hmin:Number,hmax:Number):void{
+		 	 	
+		 	 		this.templlinearAxis.minimum = tmin ;
+		 	 		this.templlinearAxis.maximum = tmax ;
+		 	 		
+		 	 		if(flag){
+		 	 			this.Rlineraxis.minimum = hmin ;
+		 	 			this.Rlineraxis.maximum = hmax ;
+		 	 		}else
+		 	 		{
+		 	 			 this._hmin = hmin ;
+		 	 			 this._hmax = hmax ;
+		 	 		}
+		 	 }
+		 	 
+		 	 /**
+	 		 * 生成特定的提示文本信息
+	 		 * */ 
+	 		 private function showdataTip(d:HitData):String{	 		 	
+	 		 	var lineser:LineSeriesItem = d.chartItem as LineSeriesItem ;	 	
+	 		 	return lineser.yValue +"\n"+(lineser.xValue as Date).toLocaleTimeString();
+	 		 }
+		 	 
+		 	 /**
+		 	 * 处理温度后面的C符号
+		 	 * */
+	 		public function TYlabel_handler(item:Object,preValue:Object,axis:IAxis):Object{
+	 			return item.toString()+"℃";
+	 		}
+	 		
+	 		/**
+	 		 * 处理湿度后面的%符号
+	 		 * */
+	 		 
+	 		 public function HYlabel_handler(item:Object,preValue:Object,axis:IAxis):Object{
+	 		 	return item.toString()+"%" ;
+	 		 }
+	 		 
+	 		 
+	 		 
+	 		
+	 		 
+	 		 
+	 		 //***********************************错误处理程序列表*****************************************
+	 		 
+	 		 /**
+	 		 * 	 错误处理程序(获取冷库列表)
+	 		 * */
+		 	 public function errorHandler(event:FaultEvent):void{
+		 	 	Alert.show("获取冷库信息错误:"+event.fault.faultDetail,"错误");
+		 	 }
+		 	 
+		 	 /**
+		 	 * 		错误处理程序(获取冷库的)
+		 	 * */
+		 	 public function errorHanlder_data(event:FaultEvent):void{
+		 	 	Alert.show("获取冷库历史数据错误:"+event.fault.faultDetail,"错误");
+		 	 }
+		 	 
+		 	 /**
+		 	 * 		获取探头发生错误处理程序
+		 	 * */
+		 	 public function errorHandler_ai(event:FaultEvent):void{
+		 	 	Alert.show("获取冷库探头错误:"+event.fault.faultDetail,"错误");
+		 	 }
+		 	 
+		 	 /**
+		 	 * 		获取冷库工程的错误处理程序
+		 	 * */
+		 	 public function errorHandler_refproj(event:FaultEvent):void{
+		 	 	Alert.show("获取冷库工程错误: "+event.fault.faultDetail,"错误") ;
+		 	 }
+		 	 
+		 	 /**
+		 	 * 		获取某个冷库工程下的冷库的错误处理程序
+		 	 * */
+		 	 public function errorHandler_projtoref(event:FaultEvent):void{
+		 	 	Alert.show("获取某个冷库工程下冷库信息错误: "+event.fault.faultDetail,"错误") ;
+		 	 }
+		 	 
+		 	 
+		 	 
+			//********************************把探头集合转化成曲线线条*********************************** 	 
+		 	 
+		 	 
+		 	 
+		 	 /**
+	 		 * 		把探头数据集合转化成lineseries
+	 		 * */
+	 		 public function listToLineseries(list:ArrayCollection):void{
+	 		 	
+	 		 		var Tlineseries :ArrayCollection = new ArrayCollection();			//表示温度lineseries 集合
+	 		 		var Hlineseries :ArrayCollection = new ArrayCollection();			//表示湿度lineseries 集合
+	 		 		
+	 		 		for(var i=0;i<list.length;i++){		//循环遍历端口 portNo
+		 	 			 	 		
+	 		 		var ls :LineSeries= new LineSeries();
+	 		 		
+	 		 		ls.displayName = list[i].portName ;
+	 		 		ls.yField = list[i].portNo ;
+	 		 		ls.xField = "updateTime" ;
+	 		 		ls.interpolateValues=false ;
+	 		 		ls.alpha = 0.4 ;
+	 		 		
+	 		 		if(list[i].portNo>9)				//如果控制的端口大于9，则表示控制湿度探头、反之则控制温度探头
+	 		 			Hlineseries.addItem(ls);
+	 		 		else
+	 		 			Tlineseries.addItem(ls);
+	 		 	}
+	 		 	
+	 		 	this.lineseriesList = Tlineseries ;
+	 		 	this.lineseriesList2 = Hlineseries ;
+	 		 	
+//	 		 	if(flag)									//如果湿度面板已经初始化、直接赋值、否则赋值全局变量
+//	 		 		this.linechart2.series = lineseriesList2.source ;
+	 		 		
+//	 		 	else
+//	 		 		this.hlineseries = lineseriesList2 ;
+	 		 				 	
+	 		// 	this.linechart1.series = lineseriesList.source ;
+	 		 }
+		 	 
+		 	 
+	 		 
+	 		 
+	 		 //*******************************改变相应的冷库工程列表、改变相应的冷库列表******************************************
+	 		 
+	 		 /**
+	 		 * 	当选择的冷库发生变化，获取相应的探头
+	 		 * */
+	 		 public function change_handler(event:Event):void{
+	 		 		 	
+	 		 	this.tDataList = null ;
+	 		 	
+	 		 	this.hDataList = null ;
+				
+	 		 	//根据选择的值，获取探头信息
+	 		 	var id :String = this.proRef.selectedItem.data ;
+	 		 	
+	 		 	var index:Number = this.proRef.selectedIndex ;
+	 		 	
+	 		 	setTempRange(refTypeList[index]) ;		//设置温度的范围
+	 		 	
+	 		 	remoteRef.getAiList(id);				//获取冷库下的探头
+	 		 }
+	 		 
+	 		 
+	 		 
+	 		 /**
+	 		 * 		当选择的冷库工程发生变化，获取对应下的冷库列表
+	 		 * */
+	 		 public function changeRefProject_handler(event:Event):void{
+	 		 	var p :String  = this.cmbrefplist.selectedItem.data ;
+	 		 	
+	 		 //	Alert.show("测试一下选中的工程标识ID："+p,"测试");
+	 		 	
+	 		 	remoteRef.getRefListByPid(p) ;									//获取冷库工程下的冷库
+	 		 	
+	 		 }
+	 		 
+	 		 
+	 		 
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		
+	 		 
+
+		 	 
+		 	 //******************根据分支标识获取冷库工程列表、根据冷库工程标识获取冷库列表**********************
+		 	 
+		 	 /**
+		 	 * 		根据工程标识Id，获取所有的冷库工程
+		 	 * */
+		 	 public function resultHandler_getRefProjectList(event:ResultEvent):void{
+		 	 	var rplist :Array = (event.result as ArrayCollection).source ;
+		 	 	var listitem:ArrayCollection = new ArrayCollection();
+		 	 	
+		 	 	for(var i=0;i<rplist.length  ;i++){
+		 	 		var obj = new Object();
+		 	 		obj.label = rplist[i].projectName ;
+		 	 		obj.data = rplist[i].projectId ;
+		 	 		listitem.addItem(obj);
+		 	 		
+		 	 		//默认选择第一个冷库工程下的所有冷库
+		 	 		if(i==0)
+		 	 		{	
+		 	 				remoteRef.getRefListByPid(obj.data);
+		 	 		}
+		 	 	}
+		 	 	this.cmbrefplist.dataProvider = listitem ;
+		 	 }
+		 	 
+		 	 /**
+		 	 * 		根据冷库工程标识,获取冷库工程下的冷库列表
+		 	 * */
+		 	public function resultHandler_getRefListByProjectId(event:ResultEvent):void{
+		 		
+		 		var refList:ArrayCollection  = event.result as ArrayCollection ;
+		 		
+		 		//如果当前没有对应的冷库，则清空冷库列表
+		 	 	if(refList==null || refList.length==0)
+		 	 	{
+		 	 		this.proRef.dataProvider = null ;
+		 	 		this.lineseriesList = null ;
+		 	 		this.lineseriesList2 = null ;
+		 	 		return ;
+		 	 	}
+		 		
+		 	 	var list :Array = refList.source ;
+		 	 	var bindList:ArrayCollection = new ArrayCollection();
+		 	 	
+		 	 	
+		 	 	
+		 	 	for(var i=0;i<list.length ;i++){						
+		 	 		
+		 	 		refTypeList[i] = list[i].refType ;	//把冷库的类型放入集合中
+		 	 		
+		 	 		var obj :Object = new Object();
+		 	 		obj.label = list[i].refName ;
+		 	 		obj.data = list[i].id ;
+		 	 		bindList.addItem(obj);
+		 	 			if(i==0)			//当第一个的时候，获取该冷库的探头数据目
+		 	 			{
+		 	 				remoteRef.getAiList(list[i].id) ;
+		 	 			}
+		 	 	}
+		 	 	this.proRef.dataProvider = bindList ;
+		 	} 
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	
+		 	 //**********************************                OLD  实现方式                ***********************************************
+		 	 
+		 	 /**
+		 	 * 		获取探头集合
+		 	 * */
+		 	 public function resultHandler_getAI(event:ResultEvent):void{
+	 		 		listToLineseries(event.result as ArrayCollection) ;
+		 	 }
+		 	 
+		 	 
+		 	 
+		 	 
+		 	 /**
+		 	 * 	 获取机构下的所有冷库信息
+		 	 * */	 
+		 	 public function resultHandler_getRefListByBranchId(event:ResultEvent):void{
+		 	 	var refList:ArrayCollection  = event.result as ArrayCollection ;
+		 	 	var list :Array = refList.source ;
+		 	 	var bindList:ArrayCollection = new ArrayCollection();
+		 	 	
+		 	 	for(var i=0;i<list.length ;i++){	
+		 	 		
+		 	 		refTypeList[i] = list[i].refType ;	//把冷库的类型放入集合中
+		 	 		
+		 	 		var obj :Object = new Object();
+		 	 		obj.label = list[i].refName ;
+		 	 		obj.data = list[i].id ;
+		 	 		bindList.addItem(obj);
+		 	 			if(i==0)			//当第一个的时候，获取该冷库的探头数据目
+		 	 			{
+		 	 				remoteRef.getAiList(list[i].id) ;
+		 	 			}
+		 	 	}
+		 	 	this.proRef.dataProvider = bindList ;
+		 	 }
+		 	 
+		 	 
+		 	 //***************************************************************************************
+		 	  
+		 	 
+		 	 /**
+		 	 * 		初始化湿度面板时调用
+		 	 * */
+		 	 public function initCanvas():void{
+		 	 	
+		 	 	if(!this.flag){ 	 		
+		 	 		
+				 	 	this.Rlineraxis.minimum = this._hmin ;						//标识湿度数值轴的范围
+				 	 	this.Rlineraxis.maximum = this._hmax ; 	
+				 	 	
+				 	 	setHumidity()												//设置湿度面板的值
+				 	 	
+				 	 	this.flag = true ;			 	 		                  	//标识湿度面板已经初始化了
+		 	 		}					
+		 	 } 	
+		 	 
+		 	 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		 	 
+		 	 /**
+		 	 * 		根据条件获取冷库的历史数据
+		 	 * */
+		 	 public function resultHandler_getRefData(event:ResultEvent):void{
+		 	 	
+		 	 		tDataList = event.result as ArrayCollection ;
+		 	 		hDataList = event.result as ArrayCollection ; 
+		 	 		
+		 	 		if(tDataList==null || tDataList.length<2){
+		 	 			Alert.show("选择的时间范围内没有数据显示","提示");		
+		 	 		}
+		 	 	
+		 		 setTemp() ;			//设置温度 linechart2的数据源
+		 		 
+		 		 if(this.flag)
+		 		 	setHumidity() ;	//设置湿度 linechart2的数据源
+		 		 
+		 	 		
+		 	 		
+		 	 }
+		 	 
+		 	 
+		 	 /**
+		 	 *		为温度linechart1设置属性 
+		 	 * */
+		 	 private function setTemp():void{		 	 		
+		 	 	 var stime :Date = buildDate(0) ;				//获取起始时间
+		 		 var etime :Date = buildDate(1) ;	 		 	
+		 		 //获取文本间隔	 		 
+		 	     var  intervalText :String = getLabelUnits(stime,etime);	
+		 		  // 这个是设置温度的水平轴 的最小值和最大值 、文本间隔和值
+		 		 this.TtimeAxis.minimum = stime ; 
+		 		 this.TtimeAxis.maximum = etime ;			
+		 		 this.TtimeAxis.labelUnits = intervalText ;
+		 		 this.TtimeAxis.interval = 1 ;
+		 		 
+		 		 this.linechart1.dataProvider =  tDataList ;		//设置linechart1的数据源
+		 	 }
+		 	 
+		 	 
+		 	  /**
+	 		 * 为湿度面板设置数据源的时候调用
+	 		 * */
+	 		 private function setHumidity():void{
+	 		 	
+	 		 	if(this.startDate.text!="" && this.endDate.text!=""){
+	 		 	 var stime :Date = buildDate(0) ;
+		 		 var etime :Date = buildDate(1) ;
+		 		 	
+		 		 //获取文本间隔	 		 
+		 	     var  intervalText :String = getLabelUnits(stime,etime);
+		 	     
+	 		    //这个是设置湿度大水平轴的最大值和最小值、文本间隔和值
+		 		 this.Rtimeaxis.minimum = stime ;
+		 		 this.Rtimeaxis.maximum = etime ;
+		 		 this.Rtimeaxis.labelUnits = intervalText ;
+		 		 this.Rtimeaxis.interval = 1 ;
+		 		 
+		 		 this.linechart2.dataProvider = hDataList ;
+		 		}
+	 		 }
+		 	 
+		 	 
+		 	  /**
+	 		 * 		单击查询时的操作
+	 		 * */
+	 		 public function queryHandler():void{
+	 		 	
+	 		 	if(this.proRef.selectedItem==null){
+	 		 		Alert.show("请选择一个合法的冷库!","提示");
+	 		 		return  ;
+	 		 	}
+	 		 	
+	 		 	
+	 		 	if(this.startDate.text=="" || this.endDate.text==""){
+		 			Alert.show("请选择起始时间!","提示");
+		 			return  ;
+		 		}
+		 		
+		 		if(this.timeValue.text==""){
+		 			Alert.show("请选择查询的间隔！","提示");
+		 			return ;
+		 		}
+		 		
+		 		
+	 		 	
+	 		 	var id:String = this.proRef.selectedItem.data ;		//冷库标识
+		 	 	
+		 	 	
+		 	 	//起始时间的查询字符串
+		 	 	var queryTime1 :String =
+		 	     	startDate.text +" " +startTime.hours.toString()+":"+startTime.minutes.toString()+":"+startTime.seconds.toString()
+		 	 	
+		 		var queryTime2 :String = 
+		 		    endDate.text +" "+ endTime.hours.toString()+":"+endTime.minutes.toString()+":"+endTime.seconds.toString() ;
+				
+				//时间间隔字符串
+		 		var timeinterval:String   = this.timeValue.text ;
+		 		
+		 		//时间类型 时、分、秒
+		 		var timeby:String  = this.timeType.selectedItem.data ;
+		 		
+		 		var num :Number = Number(timeinterval);
+		 		
+		 		if(getSecondscha()<=0){
+		 			Alert.show("结束时间必须大于开始时间!","提示");
+		 			return  ;
+		 		}
+		 		
+		 		if(isNaN(num))
+		 		{
+		 			Alert.show("时间间隔为整数","提示");
+		 			return ;
+		 		}else{
+		 			if(num<1 || num%1!=0){
+		 				Alert.show("时间间隔必须为正整数","提示");
+		 				return ;
+		 			}
+		 		
+		 		}
+		 				 		
+		 		
+		 		
+		 		//为了绘图计算
+		 		var secondsAll :Number = getSecondscha() ;   //获取时间的秒数差值
+		 		
+		 		var daysAll:Number = getSecondToDays(secondsAll) ;		//获取间隔的天数
+		 		
+		 		var index:int = timeType.selectedIndex ;     //获取查询时间的间隔类型 0(秒)、1（分）、2（时）
+		 		
+		 		var tvalue :Number = Number(timeValue.text);	//获取查询时间的间隔值
+		 		
+		 		var total :Number = 0 ; 						//定义一个变量用来保存转化为秒的整数
+		 		
+		 		
+		 		if(index==0){
+		 			if(daysAll>1){
+		 				Alert.show("若按照秒数查询时，只能查询一天的数据量!","提示");
+		 				return  ;
+		 			}
+		 			
+		 			if(tvalue%30!=0){
+		 				Alert.show("按秒查询的间隔必须是30(s)的正整数倍！","提示") ;
+		 				return ;
+		 			}
+		 		}else if(index==1){
+		 			if(daysAll>2){
+		 				
+		 				var atleast:Number = Math.ceil(getSecondToMinitue(secondsAll)/2880) ;
+		 				if(tvalue<atleast)
+		 				{
+			 				Alert.show("按照分钟查询时,只能够查询 2 天的数据量\n确定查询,则间隔至少要在 "+atleast+" 分钟以上","提示") ;
+			 				return  ;
+		 				}
+		 			}
+		 		}else if(index==2){
+		 			if(daysAll>120){
+		 				var atleast2 :Number = Math.ceil(getSecondToHours(secondsAll)/2880) ;
+		 				if(tvalue<atleast)
+		 				{
+		 					Alert.show("按照小时查询时,只能够查询 4 个月的数据量\n确定查询,则间隔至少要在 "+atleast2+" 小时以上","提示") ;
+		 					return  ;
+		 				}
+		 			}
+		 		}
+		 		
+		 		
+		 		/**
+		 		 * 
+		 		
+		 		if(secondsAll>3600){              //如果查询的时间间隔不大于1个小时，可以任意取值查询
+		 			
+		 			if(index==0)  					//选择秒数
+		 				total = tvalue  ; 							
+					else if(index == 1)				 //选择分钟
+						total = tvalue *60 ;
+					else	
+						total = tvalue  *60 * 60 ;		//选择小时
+				 	
+					
+					var cha :Number = secondsAll/total ;  //根据查询条件计算一共有多少条数，需要描绘
+					
+					if(cha>360)								//为了显示清晰、如果超过360个数据点，要求重新选择范围
+					{			
+						
+						 // 这个地方还要扩展，需要提示用户最小的查询范围
+						 
+						var leaset:Number = 0 ;
+						var world :String = "" ;
+						if(index==0){
+							
+						    	leaset = Math.ceil(secondsAll/360)  ;
+							world = leaset + " 秒"  ;
+							
+						} else if(index==1){
+								leaset = Math.ceil(secondsAll/(360*60)) ;
+							world = leaset + " 分" ;
+						}else{
+							Alert.show("请选择合理的时间范围!","提示");
+							return ;
+						}
+						
+							Alert.show("为了更好的数据的显示，至少在"+world+"以上!","提示");
+							return ;					
+					}								
+		 		}
+		 		 * */
+		 		 
+		 		 
+		 		 
+		 		//调用远程接口,获取历史曲线数据
+		 		remoteRef.getRefHisData(id,queryTime1,queryTime2,timeby,timeinterval); 		
+	 		 }
+	 		 
+	 		 
+		 	 
+		 	 /**
+	 		 * 	写一个方法用来根据起始时间String构建Date对象
+	 		 * 就是实例化两个日期对象 0 代表开始时间、1 代表为结束时间
+	 		 * */
+	 		 
+	 		 public function buildDate(type:int):Date{
+	 		 	//开始时间
+	 		 	if(type==0){ 		 	
+	 		 	var s :Date = this.startDate.selectedDate;
+	 		 	s.hours = this.startTime.hours ;
+	 		 	s.minutes = this.startTime.minutes ;
+	 		 	s.seconds = this.startTime.seconds ;
+	 		 	return s ;	
+	 		 	}else{ //结束时间
+	 		 		var e:Date = this.endDate.selectedDate ;
+	 		 		e.hours = this.endTime.hours ;
+	 		 		e.minutes = this.endTime.minutes ;
+	 		 		e.seconds = this.endTime.seconds ;
+	 		 		return e ;
+	 		 	}
+	 		 }
+	 		 
+	 		/**
+	 		 * 	根据时间间隔和类型设置x坐标轴的 文本显示单位
+	 		 *  如果大于一天，怎显示间隔是days，如果是一天之内，怎是以hours为单位
+	 		 * 
+	 		 * */
+	 		 
+	 		 public function  getLabelUnits(sTime:Date,eTime:Date):String{
+	 		 	var mi :Number = eTime.getTime()-sTime.getTime() ;
+	 		 	
+	 		 	if((mi/1000/60/60/24)<=1)
+	 		 		return "hours" ;
+	 		 	else
+	 		 		return "days";	
+	 		 }
+	 		 
+	 		 /**
+	 		 * 获取时间间隔秒数    time.getTime()获取毫秒数
+	 		 * */
+	 		 public function getSecondscha():Number{
+	 		 	var s :Date = buildDate(0) ;
+	 		 	var e :Date = buildDate(1) ;	 		 	
+	 		 	return (e.getTime()-s.getTime())/1000 ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		根据选择的冷库类型，设置相应的温度的上下限
+	 		 * */
+	 		 public function setTempRange(type:Number):void{
+	 		 
+	 		 	if(type==1){				//代表中温冷库
+	 		 		this.templlinearAxis.minimum = -2 ;
+	 		 		this.templlinearAxis.maximum = 10 ;
+	 		 	}else if(type==2){			//代表阴凉间
+	 		 		this.templlinearAxis.minimum = 0 ;
+	 		 		this.templlinearAxis.maximum = 30 ;
+	 		 	}else if(type==3){			//代表常温库
+	 		 		this.templlinearAxis.minimum = 0 ;
+	 		 		this.templlinearAxis.maximum = 30 ;
+	 		 	}else if(type==4){			//代表低温库
+	 		 		this.templlinearAxis.minimum = -25 ;
+	 		 		this.templlinearAxis.maximum = 0 ;
+	 		 	}
+	 		 	
+	 		 }
+	 		 
+	 		 
+	 		 
+	 		 /**
+	 		 * 		处理时间的秒数为0 或者30的问题
+	 		 * */
+	 		 public function checkSecond(obj:TimeInputEx):void{	 	
+	 			 var s:Number = obj.seconds ;
+	 			 if(s>=0 && s<29){
+	 			 	obj.seconds = 0 ;
+	 			 }else{
+	 			 	obj.seconds = 30 ;
+	 			 }
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		当查询间隔方式发生变化时，设置默认间隔值
+	 		 * 		秒： 30 ，60，90
+	 		 * 		分钟：１，２，３
+	 		 * 		小时：１，２，３
+	 		 * */
+	 		 public function typeChange():void{
+	 		 	
+	 		 	var i:Number = this.timeType.selectedIndex ;
+	 		 	if(i==0){
+	 		 		this.timeValue.text = new String(30) ;
+	 		 	}else{
+	 		 		this.timeValue.text = new String(1) ;
+	 		 	}
+	 		 	
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		获取间隔秒数相隔的天数
+	 		 * */
+	 		 public function getSecondToDays(s:Number):Number{
+	 		 	return Math.ceil(s/(60*60*24)) ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		获取间隔秒数相隔的小时
+	 		 * */
+	 		 
+	 		 public function getSecondToHours(s:Number):Number{
+	 		 	return Math.ceil(s/(60*60)) ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		获取间隔秒数相隔的分钟
+	 		 * */
+	 		 
+	 		 public function getSecondToMinitue(s:Number):Number{
+	 		 	return Math.ceil(s/60) ;
+	 		 }
+	 		 
+		]]>
+	</mx:Script>
+	<mx:RemoteObject id="remoteRef" destination="hisref" endpoint="http://{hostname}/ccdcc/messagebroker/amf">
+		<mx:method name="getRefList" 		fault="errorHandler(event)" 			result="resultHandler_getRefListByBranchId(event)"/>
+		<mx:method name="getAiList"  		fault="errorHandler_ai(event)" 			result="resultHandler_getAI(event)"/>
+		<mx:method name="getRefHisData" 	fault="errorHanlder_data(event)" 		result="resultHandler_getRefData(event)"/>
+		
+		<mx:method name="getRefProj" 		fault="errorHandler_refproj(event)" 	result="resultHandler_getRefProjectList(event)"/>
+		<mx:method name="getRefListByPid" 	fault="errorHandler_projtoref(event)" 	result="resultHandler_getRefListByProjectId(event)" />
+	</mx:RemoteObject>
+	
+	<mx:Panel layout="absolute" x="0" y="0" width="100%"  height="100%" fontSize="12">
+		<mx:Label x="53" y="48" text="选择冷库：" fontSize="12"/>
+		
+		<mx:ComboBox x="115" y="43" width="120" id="proRef" itemRenderer="mx.controls.Label" change="change_handler(event);"  height="25">
+		</mx:ComboBox>
+		
+		<mx:Label x="292" y="13" text="开始时间：" fontSize="12" id="lblstart"/>
+		<mx:Label x="290" y="45" text="结束时间：" fontSize="12"/>
+		<mx:Button x="707" y="44" label="查询" width="74"  click="queryHandler()"  id="btnQuery"/>
+		<ns2:ChineseDateField  x="351" y="11"  formatString="YYYY-MM-DD" id="startDate"/>
+		<ns1:TimeInputEx x="432" y="11" id="startTime" focusOut="checkSecond(startTime)" />
+		<ns2:ChineseDateField  x="350" y="43" formatString="YYYY-MM-DD" id="endDate"/>
+		<ns1:TimeInputEx x="431" y="43" id="endTime"   focusOut="checkSecond(endTime)"/>
+		<mx:Label x="577" y="15" text="间隔:" fontSize="12"/>
+		<mx:TextInput x="610" y="12" width="35" id="timeValue" text="30"/>
+		<mx:ComboBox x="644" y="12" width="54" id="timeType" change="typeChange()">
+			<mx:Array>
+				<mx:Object id="second" label="秒" data="3"/>
+				<mx:Object id="minute" label="分" data="2"/>
+				<mx:Object id="hour" label="时" data="1"/>
+			</mx:Array>
+		</mx:ComboBox>
+		
+		<mx:Button x="946" y="52"  label="返回" id="linkback" click="toBack();" enabled="false" visible="false"  />
+		<mx:Button x="810" y="44" label="设置" click="showTitleWin();" id="btnSetUp" width="66"/>
+		
+		
+		<mx:TabNavigator x="29" y="76" width="896" height="466">
+		<!--
+			温度面板
+		-->
+			<mx:Canvas label="温度" width="100%" height="100%">
+				<mx:LineChart x="10" y="10" id="linechart1" width="85%" height="95%" showDataTips="true" seriesFilters="[]" 
+					dataTipFunction="showdataTip" series="{lineseriesList.source}" dataProvider="{tDataList.source}">
+					<mx:backgroundElements>
+						
+						<mx:GridLines id="gridline1" direction="both">
+								
+								<mx:horizontalStroke>
+									<mx:Stroke id="Tvstroke" color="haloSilver" alpha=".2"/>
+								</mx:horizontalStroke>
+									
+								<!--垂直网格-->
+								<mx:verticalStroke>
+									<mx:Stroke id="HvStroke" color="haloSilver" alpha=".2"/>
+								</mx:verticalStroke>
+						</mx:GridLines>	
+						
+					</mx:backgroundElements>
+					
+					<!--垂直方向-->
+					<mx:verticalAxis>
+						<mx:LinearAxis id="templlinearAxis"  minimum="-5" maximum="30" labelFunction="TYlabel_handler"  minorInterval="1" interval="1"    />
+					</mx:verticalAxis>
+					
+					<!--水平方向-->
+					<mx:horizontalAxis >
+							
+							<!-- 时间坐标轴-->
+							<mx:DateTimeAxis id="TtimeAxis" displayLocalTime="true" />
+					
+					</mx:horizontalAxis>
+					
+					<!--水平渲染-->
+					<mx:horizontalAxisRenderer>
+						<mx:AxisRenderer axis="{TtimeAxis}" canDropLabels="true"   />
+					</mx:horizontalAxisRenderer>
+					
+					
+					
+					<!--绘图序列
+					<mx:series>
+					
+						<mx:LineSeries displayName="T1" form="curve" yField="ai1"  interpolateValues="false"  xField="updateTime"   alpha=".4" />
+						<mx:LineSeries displayName="T2" form="curve" yField="ai2"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+						<mx:LineSeries displayName="T3" form="curve" yField="ai3"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+						<mx:LineSeries displayName="T4" form="curve" yField="ai4"  visible="false"  interpolateValues="false"  xField="updateTime"   alpha=".4" />
+						<mx:LineSeries displayName="T5" form="curve" yField="ai5"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+						<mx:LineSeries displayName="T6" form="curve" yField="ai6"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+						<mx:LineSeries displayName="T7" form="curve" yField="ai7"  interpolateValues="false"  xField="updateTime"   alpha=".4" />
+						<mx:LineSeries displayName="T8" form="curve" yField="ai8"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+						<mx:LineSeries displayName="T9" form="curve" yField="ai9"  interpolateValues="false"  xField="updateTime"  alpha=".4" />
+					
+					</mx:series>
+					-->
+					
+				</mx:LineChart>
+				<mx:Legend dataProvider="{linechart1}" x="806" y="10" right="10"/>
+			</mx:Canvas>
+			
+			<!-- 
+			湿度面板
+			 -->
+			<mx:Canvas label="湿度" width="100%" height="100%" initialize="initCanvas()">
+				<mx:LineChart x="10" y="10" id="linechart2" width="85%" height="95%" showDataTips="true" seriesFilters="[]"
+					 dataTipFunction="showdataTip" series="{lineseriesList2.source}" dataProvider="{hDataList.source}">
+					<!--背景元素-->
+				<mx:backgroundElements>
+					<mx:GridLines id="Rgridlines" direction="both">
+					
+						<mx:horizontalStroke>
+							<mx:Stroke id="Rhstroke" color="haloSilver" alpha=".2"/>
+						</mx:horizontalStroke>
+						<mx:verticalStroke>
+							<mx:Stroke id="Rvstroke" color="haloSilver" alpha=".2"/>
+						</mx:verticalStroke>
+					</mx:GridLines>
+				</mx:backgroundElements>
+				
+				
+				<!--竖直轴-->			
+				<mx:verticalAxis>
+					<mx:LinearAxis id="Rlineraxis" minimum="0" minorInterval="2" maximum="100" interval="10" labelFunction="HYlabel_handler"/>
+				</mx:verticalAxis>
+				
+				<!--水平轴-->
+					<mx:horizontalAxis>					
+						<mx:DateTimeAxis id="Rtimeaxis"  displayLocalTime="true"/><!--时间坐标轴-->
+					</mx:horizontalAxis>
+						
+				<!--水平渲染-->
+				<mx:horizontalAxisRenderer>
+					<mx:AxisRenderer axis="{Rtimeaxis}" canDropLabels="true"/>
+				</mx:horizontalAxisRenderer>
+				
+			
+				<!--数据序列
+				<mx:series>
+						<mx:LineSeries  displayName="HR1" yField="ai4" form="curve" xField="updateTime" interpolateValues="false" alpha=".4"/>
+				</mx:series>
+				-->
+				</mx:LineChart>
+				<mx:Legend dataProvider="{linechart2}" y="10" right="13"/>
+			</mx:Canvas>
+			
+			
+		</mx:TabNavigator>
+		<mx:Label x="53" y="14" text="选择仓库:"/>
+		<mx:ComboBox x="114" y="10" width="130" id="cmbrefplist" change="changeRefProject_handler(event)" height="26"></mx:ComboBox>
+	
+	</mx:Panel>
+	
+</mx:Application>
