@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="ccdccservice"
+  id="myeclipse.1253858380531"
+  context-root="/ccdccservice"
+  j2ee-spec="5.0"
+  archive="ccdccservice.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,13 @@
+driverClass=com.microsoft.sqlserver.jdbc.SQLServerDriver
+<<<<<<< .mine
+url=jdbc\:sqlserver\://192.168.1.134\:1433;databaseName\=ccdcc_db
+user=sa
+password=tbcc-1q2w3e
+=======
+url=jdbc\:sqlserver\://192.168.1.119\:1433;databaseName\=ccdcc_db_test
+user=sa
+password=1q2w3e
+>>>>>>> .r12
+minPoolSize=3
+maxPoolSize=30
+initialPoolSize=5

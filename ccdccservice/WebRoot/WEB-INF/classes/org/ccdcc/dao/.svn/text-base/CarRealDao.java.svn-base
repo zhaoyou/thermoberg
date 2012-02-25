@@ -1,0 +1,24 @@
+package org.ccdcc.dao;
+
+import java.util.List;
+
+import org.ccdcc.entity.CarRealView;
+
+/**
+ * 车载实时数据访问接口
+ * @author Administrator
+ *
+ */
+public interface CarRealDao {
+	
+	
+		/**
+		 * 根据移动终端的projectId 获取移动终端实时数据
+		 * @param projectId		移动终端projectId 
+		 * @return				返回移动终端实时数据
+		 */
+		public List<CarRealView> getByProject(String projectId) ;
+		
+		
+		
+}

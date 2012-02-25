@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/biz
+END
+RefRealBiz.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/biz/RefRealBiz.java
+END
+StartUpBiz.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/biz/StartUpBiz.java
+END
+CarHisBiz.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/biz/CarHisBiz.java
+END
+CarRealBiz.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/biz/CarRealBiz.java
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/ccdccservice/!svn/ver/7/branches/dev/ccdccservice/src/org/ccdcc/dao/impl
+END
+CarHisDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ccdccservice/!svn/ver/7/branches/dev/ccdccservice/src/org/ccdcc/dao/impl/CarHisDaoImpl.java
+END
+CarRealDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/dao/impl/CarRealDaoImpl.java
+END
+StartUpDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ccdccservice/!svn/ver/7/branches/dev/ccdccservice/src/org/ccdcc/dao/impl/StartUpDaoImpl.java
+END
