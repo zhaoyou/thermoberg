@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" fontSize="13"
+	verticalAlign="middle" backgroundColor="white" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.charts.events.ChartItemEvent;
+			import mx.collections.ArrayCollection;
+			import mx.charts.series.items.BarSeriesItem;
+			import mx.charts.series.items.PieSeriesItem;
+			import mx.charts.HitData;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.charts.chartClasses.ChartsLicenseHandler;
+			
+			
+			[Bindable]
+			public var hostname:String ;
+			public var alarmlist:ArrayCollection;
+			
+			public var flag:Boolean = false;
+			public var flag1:Boolean = false;
+			public var oid :String = "";
+			
+			public var mainDataProvider:ArrayCollection = new ArrayCollection();
+			public var intoDataSet : ArrayCollection;
+			
+			
+			private function init():void {
+				hostname = ExternalInterface.call("window.location.host.toString");
+				getParams();
+				if(oid!=""){
+					hisalarm.getAlarmCounts(oid);
+				}
+			}
+			
+			private function setMaximum():void{
+					var max:Number = 0;
+					for(var i = 0;i<alarmlist.length;i++){
+						if(max<alarmlist.getItemAt(i).msg){
+							max = alarmlist.getItemAt(i).msg;
+						}
+					}
+					linearAxis.maximum = max+5;
+			}
+			
+			private function getParams():void{
+				var pStr:String = ExternalInterface.call("window.location.search.substring", 1);
+				var arr : Array = pStr.split("=");
+				oid = arr[1];
+			}
+			
+			private function getCounts(event:ResultEvent):void{
+				alarmlist = event.result as ArrayCollection;
+				if(alarmlist!=null&&alarmlist.length!=0){
+					mainDataProvider=alarmlist;
+					barChart.dataProvider = mainDataProvider;
+					setMaximum();
+				}else{
+					Alert.show("该机构或企业下没有历史报警数据");
+				}
+			}
+			
+			private function errorHandler(event:FaultEvent):void{
+	 			Alert.show("获取历史报警统计发生错误: \n"+event.fault.faultDetail,"错误");
+	 		}
+	 		
+	 		private function initCanvas():void{
+	 			if(!flag){
+	 				piechart.dataProvider = alarmlist;
+	 				flag = true;
+	 			}
+	 		}
+	 		
+	 		private function initCanvas1():void{
+	 			if(!flag1){
+	 				dg.dataProvider = alarmlist;
+	 				flag1 = true;
+	 			}
+	 		}
+	 		
+	 		private function pieChart_dataTipFunction(item:HitData):String { 
+                var pSI:PieSeriesItem = item.chartItem as PieSeriesItem; 
+                return "<font size='13'><b>" + pSI.item.orgName + "</b><br />" + 
+                        pSI.item.msg + " (<i>" + 
+                        pSI.percentValue.toFixed(2) + "%</i>)</font>"; 
+            } 
+	 		private function pieChart_dataTipFunction1(item:HitData):String { 
+                var pSI:PieSeriesItem = item.chartItem as PieSeriesItem; 
+                return "<font size='13'><b>" + pSI.item.types + "</b><br />" + 
+                        pSI.item.amount + " (<i>" + 
+                        pSI.percentValue.toFixed(2) + "%</i>)</font>"; 
+            } 
+	 		
+	 		private function barChart_tipfunction(item : HitData):String{
+	 			var bSI:BarSeriesItem = item.chartItem as BarSeriesItem;
+	 			return "<b>"+bSI.item.orgName + "</b>\n"+ bSI.item.msg+"条";
+	 		}
+	 		
+	 		private function barChart_tipfunction1(item : HitData):String{
+	 			var bSI:BarSeriesItem = item.chartItem as BarSeriesItem;
+	 			return "<b>"+bSI.item.types + "</b>\n"+ bSI.item.amount+"条";
+	 		}
+	 		
+	 		private function clickInto(e:ChartItemEvent):void{
+	 			if(mainDataProvider==alarmlist){
+	 				intoDataSet = new ArrayCollection(createData(e));
+	 				mainDataProvider = intoDataSet ;
+	 				blabel.text = e.hitData.item.orgName+"下各报警级别的统计";
+	 				barChart.dataTipFunction = barChart_tipfunction1;
+	 				barVertical.categoryField = "types";
+	 				bs.xField = "amount";
+	 				bs.yField = "types";
+	 				barChart.dataProvider = mainDataProvider;
+	 				
+	 				if(flag){
+	 					plabel.text = e.hitData.item.orgName+"下各报警级别的统计";
+		 				piechart.dataTipFunction = pieChart_dataTipFunction1;
+		 				ps.field = "amount";
+		 				ps.labelField = "types";
+		 				piechart.dataProvider = mainDataProvider;
+	 				}
+	 			}else{
+	 				mainDataProvider = alarmlist ;
+	 				blabel.text = "历史报警统计";
+	 				barChart.dataTipFunction = barChart_tipfunction;
+	 				barVertical.categoryField = "orgName";
+	 				bs.xField = "msg";
+	 				bs.yField = "orgName";
+	 				barChart.dataProvider = mainDataProvider;
+	 				
+	 				if(flag){
+	 					plabel.text = "历史报警统计";
+		 				piechart.dataTipFunction = pieChart_dataTipFunction;
+		 				ps.field = "msg";
+		 				ps.labelField = "orgName";
+		 				piechart.dataProvider = mainDataProvider;
+	 				}
+	 			}
+	 		}
+	 		
+	 		private function createData(e:ChartItemEvent):Array{
+	 			var arr :Array = [];
+	 			var serious : Object = {types:"严重报警",amount:e.hitData.item.serious};
+	 			var common : Object = {types:"普通报警",amount:e.hitData.item.common};
+	 			var light : Object = {types:"轻微报警",amount:e.hitData.item.light};
+	 			arr.push(serious);
+	 			arr.push(common);
+	 			arr.push(light);
+	 			return arr;
+	 		}
+	 		
+	 		private function updateDP():void{
+	 			var str:String = showDataEffectComboBox.selectedItem.data;
+	 			if(str=="interPolate"){
+	 				bs.setStyle("showDataEffect",interPolate);
+	 				bs.setStyle("hideDataEffect","");
+	 			}else if(str=="seriesSlide"){
+	 				bs.setStyle("showDataEffect",slideIn);
+	 				bs.setStyle("hideDataEffect",slideOut);
+	 			}else{
+	 				bs.setStyle("showDataEffect",zoom);
+	 				bs.setStyle("hideDataEffect","");
+	 			}
+	 		}
+	 		
+	 		private function updateDP1():void{
+	 			var str:String = showDataEffectComboBox1.selectedItem.data;
+	 			if(str=="interPolate"){
+	 				ps.setStyle("showDataEffect",interPolate);
+	 				ps.setStyle("hideDataEffect","");
+	 			}else if(str=="seriesSlide"){
+	 				ps.setStyle("showDataEffect",slideOut);
+	 				ps.setStyle("hideDataEffect",slideIn);
+	 			}else{
+	 				ps.setStyle("showDataEffect",zoom);
+	 				ps.setStyle("hideDataEffect","");
+	 			}
+	 		}
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+	   	BarChart,PieChart,DataTip{
+			font-size : 13px;
+		}
+		
+	</mx:Style>
+	<mx:SeriesSlide id="slideIn" duration="500" direction="left"/>
+   	<mx:SeriesSlide id="slideOut" duration="500" direction="right"/>
+   	
+   	<mx:SeriesInterpolate id="interPolate" duration="1000" />
+   	
+   	<mx:SeriesZoom id="zoom" duration="1000"/>
+   	
+   	<mx:Array id="dataEffects">
+        <mx:Object label="seriesSlide" data="seriesSlide" />
+        <mx:Object label="seriesInterpolate" data="interPolate" />
+        <mx:Object label="seriesZoom" data="seriesZoom" />
+    </mx:Array>
+   	
+   
+	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/fdap/messagebroker/amf">
+		<mx:method name="getAlarmCounts" result="getCounts(event)" fault="errorHandler(event)" />
+	</mx:RemoteObject>
+	<mx:ToggleButtonBar dataProvider="{viewstack}" direction="horizontal" />
+	
+	    <mx:ViewStack id="viewstack" width="100%" height="100%">
+	    	<mx:Canvas label="直方图" fontSize="13">
+	    		<mx:Label id="blabel" text="历史报警统计" fontSize="13" fontWeight="bold" left="400"/>
+		    	<mx:Label text="特效:" fontWeight="bold" right="180"/>
+				<mx:ComboBox id="showDataEffectComboBox"
+				                        dataProvider="{dataEffects}"
+				                        change="updateDP();" right="0" />
+				            
+			    <mx:BarChart id="barChart" dataProvider="{mainDataProvider}" showDataTips="true" dataTipFunction="barChart_tipfunction" 
+			    	itemClick="clickInto(event)" width="100%" height="80%" top="20">
+			    	<mx:verticalAxis>
+			    		<mx:CategoryAxis id="barVertical" categoryField="orgName" />
+			    	</mx:verticalAxis>
+			    	<mx:horizontalAxis>
+			    		<mx:LinearAxis id="linearAxis" minimum="0" maximum="10" />
+			    	</mx:horizontalAxis>
+			    	<mx:series>
+			    		<mx:BarSeries id="bs" xField="msg" yField="orgName" displayName="counts" maxBarWidth="15"
+			    			showDataEffect="{slideIn}" hideDataEffect="{slideOut}">
+			    			<mx:fill>
+			                    <mx:RadialGradient>
+			                        <mx:entries>
+			                            <mx:Array>
+			                                <mx:GradientEntry color="white"
+			                                        ratio="0.0"
+			                                        alpha="1.0" />
+			                                <mx:GradientEntry color="haloBlue"
+			                                        ratio="1.0"
+			                                        alpha="1.0" />
+			                            </mx:Array>
+			                        </mx:entries>
+			                    </mx:RadialGradient>
+			                </mx:fill>
+			    		</mx:BarSeries>
+			    	</mx:series>
+			    </mx:BarChart>
+			    <mx:Legend dataProvider="{barChart}" right="1" top="20"/>
+		    </mx:Canvas>
+		    <mx:Canvas label="饼图" creationComplete="initCanvas()" fontSize="13">
+		    	<mx:Label id="plabel" text="历史报警统计" fontSize="13" fontWeight="bold" left="400"/>
+		    	<mx:Label text="特效:" fontWeight="bold" right="180"/>
+		    	<mx:ComboBox id="showDataEffectComboBox1"
+				                        dataProvider="{dataEffects}"
+				                        change="updateDP1();" right="0" />
+			    <mx:PieChart id="piechart" dataProvider="{mainDataProvider}" showDataTips="true" width="100%" height="80%" 
+			    	dataTipFunction="pieChart_dataTipFunction" itemClick="clickInto(event)" top="20">
+			    	<mx:series>
+			    		<mx:PieSeries id="ps" field="msg" labelPosition="callout" displayName="orgName" labelField="orgName" 
+			    			showDataEffect="{slideOut}" hideDataEffect="{slideIn}" />
+			    		
+			    	</mx:series>
+			    </mx:PieChart>
+	   		</mx:Canvas>
+	   		<mx:Canvas label="统计表" creationComplete="initCanvas1()" fontSize="13" textAlign="center">
+	   			<mx:Label id="dlabel" text="历史报警统计图表" fontSize="13" fontWeight="bold" left="410" />
+	   			<mx:DataGrid id="dg" dataProvider="{mainDataProvider}" rowCount="10" top="20" left="180">
+	   				<mx:columns>
+	   					<mx:DataGridColumn headerText="企业(机构)名称" dataField="orgName" width="110"/>
+	   					<mx:DataGridColumn headerText="严重报警数" dataField="serious" />
+	   					<mx:DataGridColumn headerText="普通报警数" dataField="common" />
+	   					<mx:DataGridColumn headerText="轻微报警数" dataField="light" />
+	   					<mx:DataGridColumn headerText="总报警数" dataField="msg" />
+	   					<mx:DataGridColumn headerText="总报警比例" dataField="percent"/>
+	   				</mx:columns>
+	   			</mx:DataGrid>
+	   		</mx:Canvas>
+	    </mx:ViewStack>
+</mx:Application>

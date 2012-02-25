@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="410" height="246" title="温湿度设置" fontSize="12">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			public var callbackfunc:Function ;
+			
+			
+			[Bindable]
+			public var tmin:Number = -5 ;	
+				
+			[Bindable]
+			public var tmax:Number = 30 ;	
+				
+			[Bindable]			
+			public var hmin:Number = 0;
+			
+			[Bindable]
+			public var hmax:Number = 120;
+			
+			public function savaValue():void{
+				if(this.Tmax.value<=this.Tmin.value){
+					Alert.show("最大温度要大于最小温度!","提示");
+					return ;
+				}
+				
+				if(this.Rmax.value<=this.Rmin.value){
+					Alert.show("最大湿度要大于最小湿度!","提示");
+					return  ;
+				}
+				
+				
+				callbackfunc.call(parent,this.Tmin.value,this.Tmax.value,this.Rmin.value,this.Rmax.value);
+				closeThis();
+			}
+			
+			public function closeThis():void{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+	<mx:HRule x="53" y="76" width="250" height="1"/>
+	
+	
+	<mx:Label text="温度：" x="64" y="37"/>
+	<mx:NumericStepper x="113" y="35" width="63" height="22" id="Tmin" minimum="-80" maximum="50"  value="{tmin}"/>
+	<mx:NumericStepper x="223" y="35" width="55" height="22" id="Tmax" minimum="-80" maximum="50" value="{tmax}"/>
+	
+
+	<mx:Label text="湿度：" x="64" y="87"/>
+	<mx:NumericStepper x="115" y="85" width="64" height="22" id="Rmin" minimum="0" maximum="100" value="{hmin}"/>
+	<mx:NumericStepper x="224" y="85" width="59" height="22" id="Rmax" minimum="0" maximum="100" value="{hmax}"/>
+	
+	
+	
+	
+	<mx:Button x="115" y="142" label="保存" id="btnSave" click="savaValue()"/>
+	<mx:Button x="223" y="142" label="取消" id="btnCancel" click="closeThis()"/>
+	<mx:Label x="198" y="37" text="至"/>
+	<mx:Label x="178" y="37" text="℃"/>
+	<mx:Label x="280" y="37" text="℃"/>
+	<mx:Label x="197" y="87" text="至"/>
+	<mx:Label x="177" y="87" text="%" width="16"/>
+	<mx:Label x="284" y="87" text="%"/>
+	
+</mx:TitleWindow>

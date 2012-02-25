@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" fontSize="13"
+	horizontalAlign="center" backgroundColor="white" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.charts.events.ChartItemEvent;
+			import mx.charts.series.items.ColumnSeriesItem;
+			import mx.charts.series.items.PieSeriesItem;
+			import mx.charts.HitData;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.charts.chartClasses.ChartsLicenseHandler;
+			
+			[Bindable]
+			public var hostname:String ;
+			public var alarmlist:ArrayCollection;
+			
+			public var flag:Boolean = false;
+			public var oid :String = "";
+			
+			public var mainDataProvider:ArrayCollection = new ArrayCollection();
+			public var intoDataSet : ArrayCollection;
+			
+			
+			private function init():void {
+				hostname = ExternalInterface.call("window.location.host.toString");
+				getParams();
+				if(oid!=""){
+					hisalarm.getAlarmCounts(oid);
+				}
+//				hisalarm.getAlarmCounts("2");
+			}
+			
+			private function setMaximum():void{
+					var max:Number = 0;
+					for(var i = 0;i<alarmlist.length;i++){
+						if(max<alarmlist.getItemAt(i).msg){
+							max = alarmlist.getItemAt(i).msg;
+						}
+					}
+					linearAxis.maximum = max+5;
+			}
+			
+			private function getParams():void{
+				var pStr:String = ExternalInterface.call("window.location.search.substring", 1);
+				var arr : Array = pStr.split("=");
+				oid = arr[1];
+			}
+			
+			private function getCounts(event:ResultEvent):void{
+				alarmlist = event.result as ArrayCollection;
+				if(alarmlist!=null&&alarmlist.length!=0){
+					mainDataProvider=alarmlist;
+					columnChart.dataProvider = mainDataProvider;
+					setMaximum();
+				}
+			}
+			
+			private function errorHandler(event:FaultEvent):void{
+	 			Alert.show("获取历史报警统计发生错误: \n"+event.fault.faultDetail,"错误");
+	 		}
+	 		
+	 		private function initCanvas():void{
+	 			if(!flag){
+	 				piechart.dataProvider = alarmlist;
+	 				flag = true;
+	 			}
+	 		}
+	 		
+	 		private function pieChart_dataTipFunction(item:HitData):String { 
+                var pSI:PieSeriesItem = item.chartItem as PieSeriesItem; 
+                return "<font size='13'><b>" + pSI.item.orgName + "</b><br />" + 
+                        pSI.item.msg + " (<i>" + 
+                        pSI.percentValue.toFixed(2) + "%</i>)</font>"; 
+            } 
+	 		private function pieChart_dataTipFunction1(item:HitData):String { 
+                var pSI:PieSeriesItem = item.chartItem as PieSeriesItem; 
+                return "<font size='13'><b>" + pSI.item.types + "</b><br />" + 
+                        pSI.item.amount + " (<i>" + 
+                        pSI.percentValue.toFixed(2) + "%</i>)</font>"; 
+            } 
+	 		
+	 		private function columnChart_tipfunction(item : HitData):String{
+	 			var bSI:ColumnSeriesItem = item.chartItem as ColumnSeriesItem;
+	 			return "<b>"+bSI.item.orgName + "</b>\n"+ bSI.item.msg+"条";
+	 		}
+	 		
+	 		private function columnChart_tipfunction1(item : HitData):String{
+	 			var bSI:ColumnSeriesItem = item.chartItem as ColumnSeriesItem;
+	 			return "<b>"+bSI.item.types + "</b>\n"+ bSI.item.amount+"条";
+	 		}
+	 		
+	 		private function clickInto(e:ChartItemEvent):void{
+	 			if(mainDataProvider==alarmlist){
+	 				intoDataSet = new ArrayCollection(createData(e));
+	 				mainDataProvider = intoDataSet ;
+	 				blabel.text = e.hitData.item.orgName+"下各报警级别的统计";
+	 				columnChart.dataTipFunction = columnChart_tipfunction1;
+	 				barVertical.categoryField = "types";
+	 				bs.xField = "types";
+	 				bs.yField = "amount";
+	 				columnChart.dataProvider = mainDataProvider;
+	 				
+	 				if(flag){
+	 					plabel.text = e.hitData.item.orgName+"下各报警级别的统计";
+		 				piechart.dataTipFunction = pieChart_dataTipFunction1;
+		 				ps.field = "amount";
+		 				ps.labelField = "types";
+		 				piechart.dataProvider = mainDataProvider;
+	 				}
+	 			}else{
+	 				mainDataProvider = alarmlist ;
+	 				blabel.text = "历史报警统计";
+	 				columnChart.dataTipFunction = columnChart_tipfunction;
+	 				barVertical.categoryField = "orgName";
+	 				bs.xField = "orgName";
+	 				bs.yField = "msg";
+	 				columnChart.dataProvider = mainDataProvider;
+	 				
+	 				if(flag){
+	 					plabel.text = "历史报警统计";
+		 				piechart.dataTipFunction = pieChart_dataTipFunction;
+		 				ps.field = "msg";
+		 				ps.labelField = "orgName";
+		 				piechart.dataProvider = mainDataProvider;
+	 				}
+	 			}
+	 		}
+	 		
+	 		private function createData(e:ChartItemEvent):Array{
+	 			var arr :Array = [];
+	 			var serious : Object = {types:"严重报警",amount:e.hitData.item.serious};
+	 			var common : Object = {types:"普通报警",amount:e.hitData.item.common};
+	 			var light : Object = {types:"轻微报警",amount:e.hitData.item.light};
+	 			arr.push(serious);
+	 			arr.push(common);
+	 			arr.push(light);
+	 			return arr;
+	 		}
+	 		
+		]]>
+	</mx:Script>
+	
+	<mx:Style>
+	   	ColumnChart,PieChart,DataTip{
+			font-size : 13px;
+		}
+		
+	</mx:Style>
+	
+	<mx:SeriesSlide id="slideIn" duration="1000" direction="down"/>
+   	<mx:SeriesSlide id="slideOut" duration="1000" direction="up"/>
+	
+	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/fdap/messagebroker/amf">
+		<mx:method name="getAlarmCounts" result="getCounts(event)" fault="errorHandler(event)" />
+	</mx:RemoteObject>
+	<mx:ToggleButtonBar dataProvider="{viewstack}" direction="horizontal" />
+	
+    
+    <mx:ViewStack id="viewstack" width="100%" height="100%">
+    	<mx:Canvas label="直方图" fontSize="13">
+    		<mx:Label id="blabel" text="历史报警统计" fontSize="13" fontWeight="bold" left="420"/>
+		    <mx:ColumnChart id="columnChart" dataProvider="{mainDataProvider}" showDataTips="true" width="100%" height="100%" dataTipFunction="columnChart_tipfunction"
+		    	itemClick="clickInto(event)" top="20">
+		    	<mx:horizontalAxis>
+		    		<mx:CategoryAxis id="barVertical" categoryField="orgName" />
+		    	</mx:horizontalAxis>
+		    	<mx:verticalAxis>
+		    		<mx:LinearAxis id="linearAxis" minimum="0" maximum="8" />
+		    	</mx:verticalAxis>
+		    	<mx:series>
+		    		<mx:ColumnSeries id="bs" xField="orgName" yField="msg" displayName="orgName" maxColumnWidth="15"
+		    			hideDataEffect="{slideOut}" showDataEffect="{slideIn}">
+		    			<mx:fill>
+			                    <mx:RadialGradient>
+			                        <mx:entries>
+			                            <mx:Array>
+			                                <mx:GradientEntry color="white"
+			                                        ratio="0.0"
+			                                        alpha="1.0" />
+			                                <mx:GradientEntry color="haloBlue"
+			                                        ratio="1.0"
+			                                        alpha="1.0" />
+			                            </mx:Array>
+			                        </mx:entries>
+			                    </mx:RadialGradient>
+			                </mx:fill>
+		    		</mx:ColumnSeries>	
+		    	</mx:series>
+		    </mx:ColumnChart>
+		    <mx:Legend dataProvider="{columnChart}" right="1" top="20"/>
+	    </mx:Canvas>
+	    <mx:Canvas label="饼图" creationComplete="initCanvas()" fontSize="13">
+	    	<mx:Label id="plabel" text="历史报警统计" fontSize="13" fontWeight="bold" left="420"/>
+		    <mx:PieChart id="piechart" dataProvider="{mainDataProvider}" showDataTips="true" width="50%" height="100%" dataTipFunction="pieChart_dataTipFunction"
+		    	 itemClick="clickInto(event)" top="20">
+		    	<mx:series>
+		    		<mx:PieSeries id="ps" field="msg" labelPosition="callout" labelField="orgName">
+		    			<mx:showDataEffect>
+			    				<mx:SeriesInterpolate duration="1000" />
+			    		</mx:showDataEffect>
+		    		</mx:PieSeries>
+		    	</mx:series>
+		    </mx:PieChart>
+   		</mx:Canvas>
+    </mx:ViewStack>
+</mx:Application>
