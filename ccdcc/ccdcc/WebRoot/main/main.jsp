@@ -38,7 +38,7 @@
 <li class="tab_a"> <a href="#"><img src="images/index/icon_a.gif" width="20" height="22" />首页 </a> </li>
 <li class="tab_b"><a href="javascript:golist('toRefList');"><img src="images/index/ref.gif" width="20" height="21" />仓库工程</a></li>
 <li class="tab_b"><a href="javascript:golist('toCarList')"><img src="images/index/icon_bb.gif" width="20" height="21" />车载工程</a></li>
-<%--<li class="tab_b"><a href="javascript:window.alert('暂不提供小批零操作!');"><img src="images/index/icon.gif" width="20" height="21" />小批零工程</a></li> --%>
+<li class="tab_b"><a href="javascript:golist('toBoxList')"><img src="images/index/icon.gif" width="20" height="21" />小批零工程</a></li>
 <li class="tab_c"><a href="#">&nbsp;</a></li>
 </ul>
 

@@ -1,219 +1,189 @@
-<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
-<%@include file="common/taglib.jsp" %>
+<%@ page language="java" import="java.util.*,org.tbcc.entity.TbccBaseHisCar,java.text.DecimalFormat" pageEncoding="gbk"%>
+<%@include file="taglib.jsp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>小批零历史数据查看</title>
+<link rel="Shortcut Icon" href="img/add/logo.ico" />
+<link href="css/chezai/tcd.css" rel="stylesheet" type="text/css" />
+<link href="css/chezai/input5.css" rel="stylesheet" type="text/css" />
+<script src="DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="script/cExcel.js"></script>
+<script src="script/common.js"></script>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    
-    <title>历史小批零数据查询</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+
+
+<script type="text/javascript">
+	function golist(url,operate){
+		document.myform.time1.value = document.getElementById('t1').value ;
+		document.myform.time2.value = document.getElementById('t2').value ;
+		document.getElementById('ope').value = operate ;
+		document.getElementById('myform').action = url ;
+		document.myform.submit();
+	}
 	
-		<link href="css/style.css" rel="stylesheet" type="text/css">
-		<LINK href="css/mainWin.css" type=text/css media=screen rel=stylesheet>
-		<LINK href="css/mainWin2.css" type=text/css media=screen rel=stylesheet>
-		<LINK href="css/desktop.css" type=text/css media=screen rel=stylesheet>
-		 <link rel="Shortcut Icon" href="img/add/logo.ico" >
-		 
-		<script src="script/common.js"></script>
-
-		<script src="DatePicker/WdatePicker.js"></script>
-		
-		<script type="text/javascript" src="script/titleTime.js"></script>
-		<script type="text/javascript" src="script/queryTime.js"></script> 
-        <script type="text/javascript">
-        	//查询数据
-			function query(){
-				
+		function query(){
+			
 				var val = document.getElementById("timevalue").value;
 				var inter = document.getElementById("interval").value;
 				
-				if(val=="" || val==0){
-					window.alert("请选择合适的时间间隔!");
-					document.getElementById("timevalue").focus();
-					return ;
+				if(val=="" || val ==0)
+				{
+					window.alert("请选择合适间隔数!");
+					document.getElementById("timevalue").focus() ;
+					return  ;
 				}
 				
-				
-				
+				document.getElementById('myform').action = 'hisbox.do' ;
+				document.getElementById('ope').value = 'doHisBoxByStart' ;
 				document.myform.submit() ;
 			}
 			
+			/**
+			*	提示查询间隔的信息
+			**/
 			function showInfo(obj){
 				var intervalValue = document.getElementById("interval").value ;
 				var total = obj.value * intervalValue ;
 				var str = "隔 "+total+"(S)查询"
 				document.getElementById("Queryinfo").innerHTML = str ;
+				document.getElementById("queryinfoTip").value = str ;
 			}
-			
-			/**
-			  *返回历史数据查询页面
-			  */
-			function goback(){
-				document.myform.time1.value = document.myform.t1.value ;
-				document.myform.time2.value = document.myform.t2.value ;
-				document.myform.action = 'startup.do?ope=doStartUpBox' ;
-				document.myform.submit() ;
-			}
-        </script>
-  
-<script type="text/javascript" src="script/bExcel3.js"></script></head>
-  
- <body onload="showtime();" bgcolor="#FFFFFF" leftmargin="0" topmargin="4" marginwidth="0" marginheight="0">
- 		<jsp:include page="header.jsp" flush="true"></jsp:include>		
-		<table width="990" border="0" align="center" cellpadding="0"
-			cellspacing="0" bordercolorlight="#CCCCCC" bordercolor="#FFFFFF"
-			bordercolordark="#FFFFFF">		
-			<td width="990" height="550" colspan="3" valign="top"
-					background="img/stock_index_08.gif">
-					<div id="main" style="width:990px; height:100%; float:left" >
-						<div class="page_title">您正在做的业务是：<img src="img/add/club.JPG" alt=">>"><font size="2px">&nbsp;小批零历史数据查看</font></div>
-						<form name="myform" action="hisbox.do?ope=doHisBoxByStart" method="post">
-							<div class="button_bar">
-							<input type="hidden" id="branchId" name="branchId" value="${param.branchId }">
-								<input type="hidden" id="t1" name="t1" value="${param.t1 }"/>
-								<input type="hidden" id="t2" name="t2" value="${param.t2 }"/>
-								<button class="common_button" onclick="query()" type="button">
-									查询
-								</button>
-								&nbsp;
-								<input type="button" value="打印" class="common_button" ${hisboxList==null ?"disabled='disabled'":"" } name="out_word1" 
-								onclick="printData(time1.value,time2.value);"/>
-								&nbsp;
-								<button class="common_button" onclick="javascript:goback();" type="button">
-									返回
-									<%--window.location.href='startup.do?ope=doStartUpBox&branchId=${param.branchId}&proId=${param.proId }&time1=${param.time1 }&time2=${param.time2 }' --%>
-								</button>
-								&nbsp;
-								<button class="common_button" type="button" onclick="javascript:window.location.href='branch.do?ope=toListByBranch&branchId=${param.branchId }'">
-									返回主页面
-								</button>
-							</div>
-							
-							<table class="query_form_table">
-								<tr>
-								
-									<th>
-										小批零名称:
-									</th>
-									<td>
-									  <input type="hidden" id="proId" name="proId" value="${project==null?param.proId:project.projectId }"/>
-									  <input type="text" id="proName"  name="proName" value="${project==null?param.proName:project.projectName }" readonly="readonly" 
-									  style="border-style: solid">
-									</td>
-									<th>
-										起始时间:
-									</th>
-									<td >
-										<input  name="time1" id="d4311" value="${startup==null?param.time1:startup.btimeStr}"  class="Wdate" type="text"
-										 readonly="readonly" />	</td>
-									<%-- 默认时间为启停时间段
-										onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00',maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})"
-									 --%>
-									<th>
-										终止时间:
-									</th>
-									<td >
-										<input name ="time2" id="d4312" value="${startup==null?param.time2:startup.etimeDisplay}" class="Wdate" type="text"
-									 readonly="readonly" />
-									<%-- 默认为启停时间段
-									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'#F{$dp.$D(\'d4311\',{d:7});}'})"
-									--%>
-									</td>
-									<th>
-										间隔数量:
-									</th>
-									<td>
-									<input id="timevalue" name="timevalue" type="text" size="4" value="${param.timevalue==null?1:param.timevalue}"
-									onblur="showInfo(this);" onKeyPress="return isNumber(event)"/>
-										<span id="Queryinfo"></span>
-									</td>
-								</tr>
-								<tr>
-									<th>出发地:</th>
-											<td >
-												<input name="beginaddr" id="beginaddr" value="${startup==null?param.beginaddr:startup.beginAddress }" readonly="readonly" style="border-style: solid;"/>
-											</td>
-											<th >目的地:</th>
-											<td>
-												<input name="endaddr" id="endaddr" value="${startup==null?param.endaddr:startup.endAddress }" readonly="readonly" style="border-style: solid;"/>
-											</td>
-											<th >承运人:</th>
-											<td>
-												<input name="carrier" id="carrier" value="${startup==null?param.carrier:startup.carrier }" readonly="readonly" style="border-style: solid;">
-											</td>
-											<th>启停间隔:</th>
-											<td >
-												<input id="interval" name="interval" value="${startup==null?param.interval:startup.recordInterval}" 
-												readonly="readonly" style="border-style: solid" size="3" >(S)
-											</td>			
-								</tr>
-							</table>
-				</form>
-			<!-- 列表从这开始 -->
-			<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="990" align="center"  id="data" >
-				<TR HEIGHT=23 CLASS=Page_tools_bar>
-					<TD CLASS=Page_title align="center"> 
-						时间
-					</TD>
-					<TD CLASS=Page_title align="center"> 
-						温度
-					</TD>
-					<TD CLASS=Page_title align="center">
-						经度方向
-					</TD>
-					<TD CLASS=Page_title align="center">
-						经度数据
-					</TD>
-					<TD CLASS=Page_title align="center">
-						纬度方向
-					</TD>
-					<TD CLASS=Page_title align="center">
-						纬度数据
-					</TD>	
-					<TD CLASS=Page_title align="center">
-						报警状态
-					</TD>	
-				</TR>		
-				<logic:notEmpty name="hisboxList">
-				<logic:iterate id="hisbox" name="hisboxList">
-					<tr onMouseOver="this.style.backgroundColor = '#EEEEEE';"
-						onMouseOut="this.style.backgroundColor = ''">
-						<td align="center" >
+	
+	
+</script>
+
+</head>
+<body>
+<div>
+  <iframe scrolling="no" src="common/header2.jsp" width=100% height=126 frameborder=0></iframe >
+</div>
+<form action="" method="post" name="myform" id="myform">	
+<input type="hidden" name="branchId" id="branchId" value="${param.branchId }" />
+<input type="hidden" id="ope" name="ope" value =""/>
+<input type="hidden" name="t1" id="t1" value="${param.t1 }"/>
+<input type="hidden" name="t2" id="t2"  value="${param.t2 }"/>
+<input type="hidden" id="sid" name="sid" value="${param.sid}"/>
+<input type="hidden" id="proId" name="proId" value="${project==null?param.proId:project.projectId }"/>
+
+<div id="right">
+  <div id="top"><a href="#"><img src="images/chezai/icon_c.gif" width="16" height="15"  class="tb4"/>
+  <strong>位置:首页</strong>&lt;您正在查看小批零历史数据</a>
+  <img src="images/chezai/back.gif" width="48" height="20" class="tb3"/>
+  <img src="img/util/back.gif" width="48" height="20"  class="tb3" style="cursor: pointer;" onclick="javascript:golist('startup.do','doStartUpBox');"/>
+  <img src="images/chezai/chaxun.gif" width="58" height="21"  class="tb5" style="cursor: pointer;" onclick="javascript:query();" />
+  <img src="images/chezai/da_confirm.gif" width="58" height="21"  class="tb6" style="cursor: pointer; display:${hisboxList==null?'none':'inline' }" onclick="printData(time1.value,time2.value);"/></div>
+  <div id="center"></div>
+  <div id="center">
+    <table width="100%" id="bd3">
+      <tr>
+        <td width="65" style="width:65px;">
+        <h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">小批零：</h3></td>
+        <td style="width:160px;">
+        <input type="text"  id="proName" name="proName" value="${project==null?param.proName:project.projectName }" readonly="readonly" 
+									></td>
+									
+        <td width="63" style="width:65px;">
+        <h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">起始时间：</h3></td>
+        <td style="width:160px;">
+        <input  name="time1" id="d4311" value="${startup==null?param.time1:startup.btimeStr}"  class="Wdate" type="text"
+									 readonly="readonly"/> 
+          
+          </td>
+        <td width="65" style="width:65px;">
+        <h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">终止时间：</h3></td>
+        <td style="width:160px;">
+       		<input name ="time2" id="d4312" value="${startup==null?param.time2:startup.etimeDisplay}" class="Wdate" type="text"
+									 readonly="readonly"/>
+          </td>
+        <td style="width:85px;"><h3 style="text-align:left; font-size:12px; padding-left:0px; padding-right:0px; width:95px; color:#454343;">查询间隔数量：</h3></td>
+        <td width="183"><span style="float:left;">
+         <input id="timevalue" name="timevalue" type="text" size="4"  onblur="showInfo(this);"
+										value="${param.timevalue==null?1:param.timevalue }" onKeyPress="return isNumber(event)"/>
+		 <input type="hidden" name="queryinfoTip" id="queryinfoTip" value="${param.queryinfoTip }"/>
+						<span id="Queryinfo">
+										${param.queryinfoTip }
+									</span>			
+          </span></td>
+      </tr>
+    </table>
+  </div>
+  <div id="center">
+    <table width="100%" id="bd3">
+      <tr>
+        <td width="65" style="width:65px;"><h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">出发地：</h3></td>
+        <td style="width:160px;">
+        
+        <input name="beginaddr" id="beginaddr" value="${startup==null?param.beginaddr:startup.beginAddress }" readonly="readonly"/>
+        
+        </td>
+        <td width="63" style="width:65px;"><h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">目的地：</h3></td>
+        <td style="width:160px;">
+        <input name="endaddr" id="endaddr" value="${startup==null?param.endaddr:startup.endAddress }" readonly="readonly" />
+          </td>
+          
+        <td width="65" style="width:65px;"><h3 style="text-align:left; font-size:12px;padding-left:0px; padding-right:0px; width:65px; color:#454343;">承运人：</h3></td>
+        <td style="width:160px;">
+        
+        <input name="carrier" id="carrier" value="${startup==null?param.carrier:startup.carrier }" readonly="readonly" />
+          
+          </td>
+        <td style="width:85px;"><h3 style="text-align:left; font-size:12px; padding-left:0px; padding-right:0px; width:95px; color:#454343;">启停间隔：</h3></td>
+        <td width="163"><span style="float:left;">
+          <input id="interval" name="interval" value="${startup==null?param.interval:startup.recordInterval}" 
+												readonly="readonly"  size="3" />(S)
+          </span></td>
+      </tr>
+    </table>
+  </div>
+  <div id="bottom">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tb"  >
+      <tr id="tb1">
+        <td>时间 </td>
+        <td>温度</td>
+        <td>经度方向</td>
+        <td>经度数据</td>
+        <td>纬度方向 </td>
+ 		<td>纬度数据</td>
+        <td>报警状态</td>
+      </tr>
+      <logic:notEmpty name="hisboxList">
+				<logic:iterate id="hisbox" name="hisboxList" indexId="irow">
+				
+					<tr ${irow%2==0?"class='altrow'":"" }>
+						<td align="center"  nowrap="nowrap">
 							<bean:write name="hisbox" property="updateTime" format="yyyy-MM-dd HH:mm:ss"/>
 						</td>
-						<td align="center" >
+						
+						<td align="center" nowrap>	
 							<bean:write name="hisbox" property="ai1"/>
 						</td>
-						<td align="center" >
-							${hisbox.longitude_dir==0?"东经":"西经" }						
+						
+						<td align="center" nowrap="nowrap">
+							${hisbox.longitude_dir==0?"东经":"西经" }
 						</td>
-						<td align="center" >
+						
+						<td align="center"  nowrap="nowrap">
 							${hisbox.longitudeStr}
 						</td>
-						<td align="center" > 
-							${hisbox.longitude_dir==0?"南纬":"北纬"}
+						
+						<td align="center"  nowrap="nowrap">
+							${hisbox.latitude_dir==0?"南纬":"北纬"}
 						</td>
-						<td align="center" >
+							 
+						<td align="center" nowrap>
 							${hisbox.latitudeStr }
 						</td>
-						<td align="center" >
-						<%-- ${hisbox.alarmStatus==1?"<font color='red'>报警</font>":"正常"}--%>	
-							${hisbox.alarmStatusStr }			
+						<td align="center" nowrap>
+							${hisbox.alarmStatusStr}
 						</td>
 					</tr>
-				</logic:iterate>
-				<!-- 控制数据和统计信息的分开 --> 
+				</logic:iterate>			
+				<!-- 控制数据与统计的数据 -->		
 				<tr>
 					<td colspan="7">
-						<hr color="pink">
+						<hr color="pink"/>
 					</td>
 				</tr>
 				<tr>
@@ -252,24 +222,34 @@
 					<td></td>
 					<td></td>
 				</tr>
-				
-				
-				
-				
-			</logic:notEmpty>
-			<logic:empty name="hisboxList">
-					<tr>
-						<td height="25" colspan="7" align="center" class="STYLE1"
-							style="border-style:inherit;">
-							<span style="color:red">${flag==null?"选择的时间范围内没有的数据！":""}</span>
-						</td>			
-					</tr>
+			</logic:notEmpty>		
+    </table>
+    <div>
+    		<logic:empty name="hisboxList">
+    			<div style="height: 450px">&nbsp;</div>
 			</logic:empty>
 			
-			</TABLE>
-				<%--</div> 
-				</td> --%>		
-			</table>
-			<jsp:include page="footer.jsp" flush="true"></jsp:include>
-	</body>
+				<%--为了也没风格统一，根据记录条数设置行高 --%>
+			    <logic:notEmpty name="hisboxList">
+			    	<bean:size id="rheight" name="hisboxList" />
+			    	
+			    	<c:if test="${rheight lt 10}">
+			    		<div style="height: 250px">&nbsp;</div>
+			    	</c:if>
+			    	
+			    	<c:if test="${rheight ge 10 }">
+			    		<div style="height: 110px">&nbsp;</div>
+			    	</c:if>
+			    	
+			    </logic:notEmpty>
+    </div>
+  
+  </div>
+</div>
+</form>
+<div class="clear"></div>
+<div>
+  <iframe scrolling="no" src="common/footer2.jsp" width=100% height=43 frameborder=0></iframe >
+</div>
+</body>
 </html>

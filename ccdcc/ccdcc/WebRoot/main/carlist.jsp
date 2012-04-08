@@ -30,9 +30,7 @@
     <li class="tab_a"> <a href="javascript:golist('branch.do','toMain');"><img src="images/chezai/s.gif" width="20" height="22" />首页</a> </li>
     <li class="tab_b"><a href="javascript:golist('pro.do','toRefList');"><img src="images/chezai/icon_a.gif" width="22" height="17" />仓库工程</a></li>
     <li class="tab_b"><a href="javascript:golist('pro.do','toCarList')"><img src="images/chezai/icon_b.gif" width="18" height="20" />车载工程</a></li>
-    <%-- 
-    <li class="tab_b"><a href="javascript:window.alert('暂不提供小批零操作!');"><img src="images/chezai/icon.gif" width="19" height="20" />小批零工程</a></li>
-    --%>
+    <li class="tab_b"><a href="javascript:golist('pro.do', 'toBoxList')"><img src="images/chezai/icon.gif" width="19" height="20" />小批零工程</a></li>
     <li class="tab_c"><a href="#">&nbsp;</a></li>
 
   </ul>
@@ -84,9 +82,6 @@
 	            <td>${p.projectNote }</td>
          	 </tr>
           </c:forEach>
-          
-
-         
         </table></td>
       </tr>
     </table>

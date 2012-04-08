@@ -190,7 +190,42 @@ public class ProjectAction extends BaseAction {
 	public ActionForward toBoxList(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		return null ;
+		//获取分支标示Id
+		String branchId = request.getParameter("branchId") ;
+		
+		//判断分支标示Id有效性
+		if(branchId==null || branchId.equals("")){
+			request.setAttribute("errorMsg", "分支标识不存在或已经删除!");
+			logger.error(((TbccBaseUser)request.getSession().getAttribute("LoginUser")).getUname()+ " (toCarList)传递了非法的分支标示！");
+			throw new Exception("分支标识不存在!!") ;
+		}
+		
+		
+		//获取分支对象
+		TbccBranchType branchType = this.branchBiz.getById(new Long(branchId));
+		
+		
+		//判断分支对象是否存在
+		if(branchType==null){
+			request.setAttribute("errorMsg", "分支标识不存在或已经删除!");
+			logger.error(((TbccBaseUser)request.getSession().getAttribute("LoginUser")).getUname()+" (toCarList)当前引用的分支标识不存在 ！");
+			throw new Exception("分支标识不存在！");
+		}
+			
+		
+		
+		//定义变量保存所有的车载工程
+		List<TbccPrjType> boxList = new ArrayList<TbccPrjType>();
+		
+		for (TbccPrjType tbccPrjType : branchType.getPrjTypes()) {
+			//保存所有的车载工程
+			if(tbccPrjType.getProjectType().equals(ProjectBiz.BOX)){
+				boxList.add(tbccPrjType) ;
+				continue ;
+			}							
+		}
+		request.setAttribute("boxList", boxList);
+		return mapping.findForward("boxlist") ;
 	}
 
 

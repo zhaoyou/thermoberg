@@ -40,7 +40,9 @@
   <StrutsActivity path="/car/hiscaralarm.jsp" location="950,2150" dimension="160,48" />
   <StrutsActivity path="/hiscaralarm.jsp" location="50,2150" dimension="136,48" />
   <StrutsActivity path="/realcarlist.jsp" location="50,750" dimension="136,48" />
+  <StrutsActivity path="/exeget/carrealmap2.jsp" location="2750,950" dimension="178,48" />
   <StrutsActivity path="/carrealMap.jsp" location="1550,450" dimension="130,48" />
+  <StrutsActivity path="/exeget/realcarlist2.jsp" location="1550,2150" dimension="184,48" />
   <StrutsActivity path="/car/carrealmap2.jsp" location="2150,1750" dimension="153,53" />
   <StrutsActivity path="/car/realcarlist2.jsp" location="50,1750" dimension="143,53" />
   <StrutsActivity path="/boxstartup.jsp" location="350,1250" dimension="130,48" />
@@ -98,8 +100,7 @@
   <StrutsActivity path="/refcurve.jsp" location="1250,1250" dimension="118,48" />
   <StrutsActivity path="/ccdc_debug/hisref.html" location="50,1350" dimension="178,48" />
   <StrutsActivity path="/aa.jsp" location="950,2050" dimension="82,48" />
-  <StrutsActivity path="/exeget/realcarlist2.jsp" location="1550,2150" dimension="184,48" />
-  <StrutsActivity path="/exeget/carrealmap2.jsp" location="2750,950" dimension="178,48" />
+  <StrutsActivity path="/main/boxlist.jsp" />
   <StrutsTransition id="/hisbox.do,hboxStart,/boxstartup.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="64,910" />
@@ -150,17 +151,17 @@
       <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/hiscarlist.jsp,null,/hiscar.do,2" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="715,374" />
+      <AbsolutePoint location="229,592" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="/realcarlist.jsp,null,/realcar.do,2" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="118,750" />
       <AbsolutePoint location="118,662" />
       <AbsolutePoint location="650,662" />
-    </AutomaticBendpoints>
-  </StrutsTransition>
-  <StrutsTransition id="/hiscarlist.jsp,null,/hiscar.do,2" routingType="0">
-    <AutomaticBendpoints>
-      <AbsolutePoint location="715,374" />
-      <AbsolutePoint location="229,592" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/realref.do,realrefsys_exe,/exeget/realrefsys.jsp,1" routingType="0">
@@ -230,14 +231,6 @@
     <AutomaticBendpoints>
       <AbsolutePoint location="2031,402" />
       <AbsolutePoint location="0,0" />
-    </AutomaticBendpoints>
-  </StrutsTransition>
-  <StrutsTransition id="/realcar.do,realmap2,/exeget/carrealmap2.jsp,1" routingType="0">
-    <AutomaticBendpoints>
-      <AbsolutePoint location="829,650" />
-      <AbsolutePoint location="829,625" />
-      <AbsolutePoint location="2839,625" />
-      <AbsolutePoint location="2839,950" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/configUser.do,listUser2,/admin/configuserlist.jsp,1" routingType="0">
@@ -377,14 +370,6 @@
     <AutomaticBendpoints>
       <AbsolutePoint location="1294,580" />
       <AbsolutePoint location="1315,774" />
-    </AutomaticBendpoints>
-  </StrutsTransition>
-  <StrutsTransition id="/realcar.do,reallist2_exe,/car/realcarlist2.jsp,1" routingType="0">
-    <AutomaticBendpoints>
-      <AbsolutePoint location="650,692" />
-      <AbsolutePoint location="-195,692" />
-      <AbsolutePoint location="-195,1776" />
-      <AbsolutePoint location="50,1776" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/realcool.do,realsys,/realcoolersys.jsp,1" routingType="0">
@@ -569,6 +554,12 @@
   <StrutsTransition id="/realcar.do,reallist2,/car/realcarlist2.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="829,692" />
+      <AbsolutePoint location="0,0" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
+  <StrutsTransition id="/pro.do,boxlist,/main/boxlist.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="1129,292" />
       <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>

@@ -131,7 +131,6 @@ public class HisBoxAction extends BaseAction {
 			request.getSession().setAttribute("boxprjList", boxList);
 		
 		request.setAttribute("flag", 1) ;		//没有什么作用，控制界面显示
-		
 		return mapping.findForward("hboxStart");
 	}
 	

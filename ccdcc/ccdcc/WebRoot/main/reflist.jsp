@@ -89,12 +89,10 @@
 							src="images/canku/icon_b.gif" width="18" height="20" />车载工程</a>
 				</li>
 
-				<%--
 				<li class="tab_b">
-					<a href="javascript:window.alert('暂不提供小批零操作!');"><img
+					<a href="javascript:golist('pro.do', 'toBoxList')"><img
 							src="images/canku/icon.gif" width="19" height="20" />小批零工程</a>
 				</li>
-				 --%>
 				
 				<li class="tab_c">
 					<a href="#">&nbsp;</a>

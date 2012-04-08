@@ -1,29 +1,23 @@
-<%@ page language="java" import="java.util.*" pageEncoding="gbk"%>
-<%@include file="common/taglib.jsp" %>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    
-    <title>搜索时间段的启停记录</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-		<link href="css/style.css" rel="stylesheet" type="text/css">
-		<LINK href="css/mainWin.css" type=text/css media=screen rel=stylesheet>
-		<LINK href="css/mainWin2.css" type=text/css media=screen rel=stylesheet>
-		<LINK href="css/desktop.css" type=text/css media=screen rel=stylesheet>
-		 <link rel="Shortcut Icon" href="img/add/logo.ico" >
-		<script src="script/common.js"></script>
-		<script type="text/javascript" src="script/Exce.js"></script>
-		<script src="DatePicker/WdatePicker.js"></script>
-		
-		<script type="text/javascript" src="script/titleTime.js"></script>
+<%@ page language="java"  pageEncoding="gbk"%>
+<%@include file="taglib.jsp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>查看小批零的启停记录</title>
+<link rel="Shortcut Icon" href="img/add/logo.ico" />
+<link href="css/chezai/input1.css" rel="stylesheet" type="text/css" />
+<link href="css/chezai/tcd.css" rel="stylesheet" type="text/css" />
+<script src="DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	function golist(url,operate){
 	
-		<script type="text/javascript">
-			function getStartData(){
+			document.getElementById("myform").action = url ;
+			document.getElementById("ope").value = operate ;
+			document.myform.submit() ;
+	}
+	
+	      function getStartData(){
 				var time1 = document.getElementById("d4311").value ;
 				var time2 = document.getElementById("d4312").value ;
 				if(time1=="" || time2=="" ){
@@ -31,20 +25,35 @@
 					return  ;
 				}
 				
-				var t1 = buildDate(time1);
-				var t2 = buildDate(time2);
-				if((t2-t1)/1000/60/60/24>30){
-					window.alert("起始时间间隔不能超过30天!");
+				if(!(isvalid(time1) && isvalid(time2)))
+				{
+					window.alert("请输入合法的日期格式!");
 					return  ;
 				}
+							
+				var t1 = buildDate(time1);
+				var t2 = buildDate(time2);
 				
+				/*if((t2-t1)/1000/60/60/24>30){
+					window.alert("起始时间间隔不能超过30天!");
+					return  ;
+				}*/
 				
-				document.myform.submit() ;
+				//查询车载历史起停记录
+				golist('startup.do','doStartUpBox');
+				
 			}
 			
-				/**
-		*根据一个字符串yyyy-MM-dd HH:mm:ss构造一个Date对象
-		*/
+			function isvalid(str){
+				if(str.charAt(4)=="-" && str.charAt(7)=="-" &&
+				   str.charAt(10)==" " && str.charAt(13)==":" && str.charAt(16)==":")
+					return true ;
+				return false ;
+			}
+			
+			/**
+			*	根据一个字符串yyyy-MM-dd HH:mm:ss构造一个Date对象
+			*/
 			function buildDate(str){
 			var t2 = str.split(" ");
 			var date1 = t2[0].split("-");
@@ -54,17 +63,15 @@
 		}
 		
 		
-		/*** 转到历史数据页面
+			/*** 转到历史数据页面
 			*/
 			
 			function goHis(sid,flag){
-				if(flag){
+				if(flag==true){
 					document.getElementById("sid").value = sid ;
-					document.selectForm.submit() ;
+					document.getElementById('')
 				}
-				
 			}
-			
 			
 				/**
    				 *	实现权限的跳转
@@ -74,136 +81,144 @@
    				 		window.location.href = url ;
    				 	}
    				 }
-			
-		</script>
-	
-  </head>
-  
-  <body onload="showtime();">
-    	<jsp:include page="header.jsp" flush="true"></jsp:include>
-		<table width="990" border="0" align="center" cellpadding="0"
-			cellspacing="0" bordercolorlight="#CCCCCC" bordercolor="#FFFFFF"
-			bordercolordark="#FFFFFF">
-			
-			<td width="990" height="550" colspan="3" valign="top"
-					background="img/stock_index_08.gif">
-					<div id="main" style="width:990px; height:100%; float:left" >
-						<div class="page_title">您正在做的业务是：<img src="img/add/club.JPG" alt=">>"><font size="2px">&nbsp;小批零启停数据查看</font></div>
-							<form  name="myform" action="startup.do?ope=doStartUpBox" method="post">
-							<div class="button_bar">
-								<input type="hidden" id="branchId" name="branchId" value="${param.branchId }">
-								<button class="common_button" style="cursor:pointer;"  onClick="getStartData()" type="button">
-									查询启停记录
-								</button>		
-								<button class="common_button" style="cursor:pointer;" type="button" onClick="javascript:window.location.href='branch.do?ope=toListByBranch&branchId=${param.branchId }'">
-									返回主页面
-								</button>
-								
-							</div>
-							<table class="query_form_table">
-								<tr>
-								<th>请选择小批零：</th>
-								<td>
-									<select name="proId" id="proId">
-											<c:forEach var="proj" items="${boxprjList}">		
-												<option value='${proj.projectId}' ${param.proId==proj.projectId?"selected=selected":"" }>${proj.projectName }</option>"
-											</c:forEach>
-									</select>
-								</td>
-									<th>
-										起始时间:
-									</th>
-									<td>
-										<input  name="time1" id="d4311" value="${param.time1}"  class="Wdate" type="text"
+   				 
+   				 
+   				 /**
+   				 **	跳转到历史数据对应的不同详细页面去
+   				 **/
+   				 
+   				 function godetail(url,operate,sid,cando){
+   				 	if(cando==true){
+   				 		document.getElementById('sid').value = sid ;
+   				 		document.getElementById('selectForm').action = url+"?ope="+operate ;
+   				 		document.selectForm.submit() ;
+   				 		
+   				 	}
+   				 }
+</script>
+</head>
+<body>
+<div>
+  <iframe scrolling="no" src="common/header2.jsp" width=100% height=126 frameborder=0></iframe >
+</div>
+<div id="right">
+  <div id="top"><a href="#"><img src="images/chezai/icon_c.gif" width="16" height="15"  class="tb4"/><strong>位置:首页</strong>&lt;您正在查看小批零启停数据</a>
+  <img src="images/chezai/back.gif" width="48" height="20"  class="tb3"/>
+  <img src="img/util/back.gif" width="48" height="20"  class="tb3" style="cursor: pointer;" onclick="javascript:golist('pro.do','toBoxList');"/>
+  <img src="images/chezai/bt_detail2.gif" width="98" height="21"  class="tb5" style="cursor: pointer;" onclick="javascript:getStartData();"/>
+  </div>
+  <form action="" name="myform" id="myform" method="post">
+  <input type="hidden" id="branchId" name="branchId" value = "${param.branchId }"/>
+  <input type="hidden" id="ope" name="ope" value =""/>				
+  <div id="center">
+    <table width="70%" id="bd3">
+      <tr>
+        <td width="73" ><h3 style="color:#454343; font-size:12px; float:left; padding-left:0px; padding-right:0px;">小批零：</h3></td>
+        <td width="140">
+       	  <select name="proId" id="proId">
+			<c:forEach var="proj" items="${boxprjList}">		
+				<option value='${proj.projectId}' ${param.proId==proj.projectId?"selected=selected":"" }>${proj.projectName }</option>
+			</c:forEach>
+		  </select>
+          </td>
+        <td width="63" style="width:65px;"><h3 style="color:#454343; font-size:12px; padding-left:0px; padding-right:0px; align=right">起始时间：</h3></td>
+        <td width="128">
+        	<input  name="time1" id="d4311" value="${param.time1}"  class="Wdate" type="text"
 										 onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00',maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})"/> 
-									<%-- 
-									选择日期没有限制
-									WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00',maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})
-									--%>
-									</td>
-									
-									<th>
-										终止时间:
-									</th>
-									<td>
-										<input name ="time2" id="d4312" value="${param.time2}" class="Wdate" type="text"
+        </td>
+        <td width="110" style="width:65px;"><h3 style="color:#454343; font-size:12px; padding-left:0px; padding-right:0px;">终止时间：</h3></td>
+        <td width="128" align="left"><label>
+            <input name ="time2" id="d4312" value="${param.time2}" class="Wdate" type="text"
 									 onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})"/>
-										<%--
-											WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'#F{$dp.$D(\'d4311\',{d:7});}'})
-										 --%>
-									</td>
-								</tr>
-								</table>
-								<% int i = 1 ; %>
-								</form>
-				<form method="post" name="selectForm" action="hisbox.do?ope=toHisBoxByStart">
-			<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="990"  align="center"  id="data">
-				<TR HEIGHT=23 CLASS=Page_tools_bar>
-					<TD CLASS=Page_title align="center" width="50"> 
-						编号
-					</TD>
-					<TD CLASS=Page_title align="center"> 
-						开启时间
-					</TD>
-					<TD CLASS=Page_title align="center">
-						结束时间
-					</TD>
-					<TD CLASS=Page_title align="center">
-						出发地
-					</TD>
-					<TD CLASS=Page_title align="center">
-						目的地
-					</TD>
-					<TD CLASS=Page_title align="center">
-						发货人
-					</TD>	
-					<TD CLASS=Page_title align="center">
-						承运人
-					</TD>
-					<TD CLASS=Page_title align="center">
-						收货人
-					</TD>	
-					<TD CLASS=Page_title align="center">
-						状态
-					</TD>	
-					<TD CLASS=Page_title align="center" width="100">
-						操作
-					</TD>
-				</TR>
-				<c:forEach var="startup" items="${startList}">
-					<tr align="center" onMouseOver="this.style.backgroundColor = '#EEEEEE';"
-						onMouseOut="this.style.backgroundColor = ''">
-						<td><%=(i++) %></td>
-						<td>${startup.btimeStr }</td>
-						<td>${startup.etimeStr }</td>
-						<td>${startup.beginAddress }</td>
-						<td>${startup.endAddress }</td>
-						<td>${startup.shipper }</td>
-						<td>${startup.carrier }</td>
-						<td>${startup.receiver }</td>
-						<td>${startup.updateStatus==2?"上传完成":"未完成上传" }</td>
-						<td>
-							<img alt="查询" src="img/bt_plan.gif" style="cursor: pointer;"
-							onclick="javascript:goHis(${startup.id },true)" >
-							<%--
-							window.location.href='hisbox.do?ope=toHisBoxByStart&branchId=${param.branchId }&proId=${param.proId }&sid=${startup.id }&time1=${param.time1 }&time2=${param.time2}'
-							 --%>
-							<img alt="历史曲线" src="img/menu/bt_orders.gif" style="cursor: pointer"
-							onclick="javascript:goPowerURL('ccdc-debug/hisbox2.html?branchId=${param.branchId }&proId=${param.proId}&sid=${ startup.id}&time1=${param.time1 }&time2=${param.time2}',${fn:contains(power,"小批零历史曲线")})"/>
-						</td>
+          </label></td>
+      </tr>
+    </table>
+  </div>
+  </form>
+  <form name="selectForm" action="" id="selectForm" method="post">
+  <div id="bottom">
+    <table id="tb" width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr id="tb1">
+        <td width="38">编号</td>
+        <td width="128">开启时间</td>
+        <td width="131">结束时间 </td>
+        <td width="61">出发地 </td>
+        <td width="89">目的地 </td>
+        <td width="70">报警门限</td>
+        <td width="84">发货人</td>
+        <td width="90">承运人 </td>
+        <td width="70">收货人</td>
+        <td width="120">状态</td>
+        <td width="120">操作 </td>
+      </tr>
+      <c:forEach var="startup" items="${startList}" varStatus="i">
+      			<tr ${i.count%2==0?"class='altrow'":"" }>
+					<td>${i.count }</td>
+					<td>${startup.btimeStr }</td>
+					<td>${startup.etimeStr }</td>
+					<td>${startup.beginAddress }</td>
+					<td>${startup.endAddress }</td>
+					<td>
+					<%-- 
+						<c:choose>
+							<c:when test="${startup.tlimitType==1}">
+								2-8℃
+							</c:when>
+							<c:when test="${startup.tlimitType==2}">
+								2-20℃
+							</c:when>
+							<c:when test="${startup.tlimitType==3}">
+								2-30℃
+							</c:when>
+							<c:otherwise>
+								----
+							</c:otherwise>
+						</c:choose>
+					--%>
+						${startup.tdwlimit }-${startup.tuplimit }℃
+					</td>
+					<td>${startup.shipper }</td>
+					<td>${startup.carrier }</td>
+					<td>${startup.receiver }</td>
+					<td>${startup.updateStatus==2?"上传完成":"未完成上传" }</td>
+					<td>
+						<img  src="img/menu/bt_plan.gif"  title="车载历史数据" style="cursor:pointer" onclick="javascript:godetail('hisbox.do','toHisBoxByStart','${startup.id}',true);"/> 
+        			</td>
 					</tr>
-				</c:forEach>
-				<logic:empty name="startList">
-					<tr align="center"><td colspan="9">${flag!=null?"":"<font color='red' size='3'>选择时间范围内没有相应的启停记录</font>" }</td></tr>
-				</logic:empty>
-					<tr><td height="400"></td></tr>
-				</TABLE>
-				<input type="hidden" id="t1" name="t1" value="${param.time1 }"/>
-				<input type="hidden" id="t2" name="t2" value="${param.time2 }"/>
-				<input type="hidden" id="branchId" name="branchId" value="${param.branchId }"/>
-				<input type="hidden" id="sid" name = "sid" value=""/>
-				<input type="hidden" id="proId" name="proId" value="${param.proId }"/>
-				</form>	
-  </body>
-  <jsp:include page="footer.jsp" flush="true"></jsp:include>
+	  </c:forEach>
+	  
+	 
+	  <%--如果当前没有起停记录、则显示提示信息 --%> 
+	  <logic:empty name="startList">
+					<tr align="center"><td colspan="11">${flag!=null?" ":"<font color='red' size='2'>选择时间范围内没有相应的启停记录</font>" }</td></tr>
+	   				<tr><td colspan="11" height="400px"></td></tr>
+	   </logic:empty>
+	   
+	    
+	    <%--为了也没风格统一，根据记录条数设置行高 --%>
+	    <logic:notEmpty name="startList">
+	    	<bean:size id="rheight" name="startList" />
+	    	<c:if test="${rheight lt 10}">
+	    		<tr><td colspan="11" height="250px"></td></tr>
+	    	</c:if>
+	    	
+	    	<c:if test="${rheight ge 10 }">
+	    		<tr><td colspan="11" height="110px"></td></tr>
+	    	</c:if>
+	    </logic:notEmpty>
+    </table>
+  </div>
+  	
+  	<input type="hidden" id="branchId" name="branchId" value="${param.branchId }"/> 
+    <input type="hidden" id="t1"  name="t1" value="${param.time1 }"/>
+    <input type="hidden" id="t2" name="t2" value="${param.time2 }"/>
+    <input type="hidden" id="sid" name="sid" value=""/>
+	<input type="hidden" id="proId" name="proId" value="${param.proId }"/>		
+  </form>
+</div>
+<div class="clear"></div>
+<div>
+  <iframe scrolling="no" src="common/footer2.jsp" width=100% height=43 frameborder=0></iframe >
+</div>
+</body>
 </html>
