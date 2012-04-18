@@ -41,7 +41,7 @@
     <tr>
       <td><table width="100%" align="left" class="datalist">
           <tr>
-            <td width="767" height="10" colspan="4" background="images/piling/menu_bga.gif"><div align="right"><img src="images/piling/icon_c.gif" width="16" height="15" / class="pic"><span ><strong>位置:首页&lt;您正在做的业务是：</strong>查看小批零</span></div></td>
+            <td width="767" height="10" colspan="4" style="float: left;padding-bottom: 4px;padding-top: 5px;" background="images/piling/menu_bga.gif"><div align="right"><img src="images/piling/icon_c.gif" width="16" height="15" / class="pic"><span ><strong>位置:首页&lt;您正在做的业务是：</strong>查看小批零</span></div></td>
 
           </tr>
         </table></td>
@@ -49,22 +49,23 @@
     <tr>
       <td>
       <logic:notEmpty name="boxList">
-      <table width="100%" class="datalist">
+          <table width="100%" class="datalist">
           <tr class="altrows">
-            <td width="444" colspan="4" align="left">
-              <div align="left"><img src="images/piling/bt_detail.gif" style="cursor: pointer;" 
+              <td width="444" colspan="4" align="left" style="float: left;padding-bottom: 5px;padding-top: 5px;padding-right: 4px;padding-left: 4px;"><div align="left"><img src="images/piling/bt_detail.gif" style="cursor: pointer;"  
               	onclick="javascript: window.location.href='hisbox.do?ope=toHisBoxStart&branchId=${param.branchId }'"/></div>
+                <div align="left"><img src="images/piling/bt_upload.gif" style="cursor: pointer;" 
+              	onclick="javascript:golist('pro.do', 'toBoxUploadList')"/></div>
               <%-- TODO (zhaoyou) add other operator button.
               <div align="left"><img src="images/piling/bt_detail.gif" /></div>
               --%>
-             </td>
-          </tr>
-          <tr>
-            <td colspan="4" class="datalist2"><table width="80%" align="left" class="datalist2">
+            </td>     
+            </tr>
+          <tr>        
+              <td colspan="4" class="datalist2"><table width="80%" align="left" class="datalist2">
                 <tr>
                   <th width="42" class="datalist4" scope="col">&nbsp;</th>
-                  <th width="130" scope="col">工程名称</th>
-                  <th width="155" scope="col">工程代码</th>
+                  <th width="130" scope="col">设备名称</th>
+                  <th width="155" scope="col">设备编号</th>
                   <th width="283" scope="col">备注</th>
 
                 </tr>

@@ -25,8 +25,8 @@
 		<property name="lastRecordTime" type="java.util.Date" column="LastRecordTime"></property>
 		<property name="updateStatus" type="java.lang.Integer" column="UpdateStatus"></property>
 		
-		<property name="tdwlimit" type="java.lang.Integer" column="tdwlimit"></property>
-		<property name="tuplimit" type="java.lang.Integer" column="tuplimit"></property>
+		<property name="tdwlimit" type="java.lang.Double" column="tdwlimit"></property>
+		<property name="tuplimit" type="java.lang.Double" column="tuplimit"></property>
 	
 	</class>
 </hibernate-mapping>

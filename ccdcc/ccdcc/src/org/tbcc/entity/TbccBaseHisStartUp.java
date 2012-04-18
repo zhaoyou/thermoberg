@@ -16,6 +16,11 @@ public class TbccBaseHisStartUp {
 	private Long id ;
 	private Date beginTime ;
 	private Date endTime ;
+//modify by aftermath begin	
+	private String transBeginTime ;
+	private String transEndTime ;
+//modify by aftermath end
+	
 	private int pageIndex ;
 	private int pageCount ;
 	private int recordInterval ;
@@ -32,25 +37,25 @@ public class TbccBaseHisStartUp {
 	
 
 	
-	private Integer tuplimit ;
+	private Double tuplimit ;
 	
-	private Integer tdwlimit ;
-	
-	
+	private Double tdwlimit ;
 	
 	
 	
 	
-	public Integer getTuplimit() {
+	
+	
+	public Double getTuplimit() {
 		return tuplimit;
 	}
-	public void setTuplimit(Integer tuplimit) {
+	public void setTuplimit(Double tuplimit) {
 		this.tuplimit = tuplimit;
 	}
-	public Integer getTdwlimit() {
+	public Double getTdwlimit() {
 		return tdwlimit;
 	}
-	public void setTdwlimit(Integer tdwlimit) {
+	public void setTdwlimit(Double tdwlimit) {
 		this.tdwlimit = tdwlimit;
 	}
 
@@ -72,6 +77,23 @@ public class TbccBaseHisStartUp {
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
+	
+//modify by aftermath begin	
+	public String getTransBeginTime() {
+		return transBeginTime;
+	}
+	public void setTransBeginTime(String beginTime) {
+		this.transBeginTime = beginTime;
+	}
+	public String getTransEndTime() {
+		return transEndTime;
+	}
+	public void setTransEndTime(String endTime) {
+		this.transEndTime = endTime;
+	}
+//modify by aftermath end
+	
+	
 	public int getPageIndex() {
 		return pageIndex;
 	}

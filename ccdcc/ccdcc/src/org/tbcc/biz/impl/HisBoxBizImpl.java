@@ -144,4 +144,16 @@ public class HisBoxBizImpl implements HisBoxBiz {
 		return calc.calcHisBoxData(boxList);
 	}
 
+	//modify be aftermath begin	
+	/** 
+	* 上传一条小批零历史记录数据
+	 * @param tableName					小批零历史数据表名	
+	 * @param devHistData				需要上传的1条小批零历史数据
+	 * @return Integer 				    返回历史记录上传结果（0：上传成功；-1：上传失败；)
+	*/	
+	public int uploadHistBoxData(String talbeName,TbccBaseHisBox devHistData){
+		return this.hisboxDao.uploadHistBoxData(talbeName, devHistData);
+	}
+//modify be aftermath end	
+	
 }

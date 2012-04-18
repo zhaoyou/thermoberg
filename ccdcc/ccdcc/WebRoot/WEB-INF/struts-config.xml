@@ -40,6 +40,9 @@
   		<forward name="reflist" path="/main/reflist.jsp"></forward>
   		<forward name="carlist" path="/main/carlist.jsp"></forward>
   		<forward name="boxlist" path="/main/boxlist.jsp"></forward>
+		<!-- modify by aftermath begin-->
+		<forward name="boxuploadlist" path="/boxuploadlist.jsp"></forward>
+		<!-- modify by aftermath end-->		
   	</action>
   	
   	<action path="/area" parameter="ope" type="org.springframework.web.struts.DelegatingActionProxy">

@@ -23,6 +23,20 @@
 		
 		-->
 		
+		<!-- 这是小批零的历史数据远程类  modify by aftermath begin-->
+		<create javascript="hist" creator="new">
+			<param name="class" value="org.tbcc.dwr.HistDwr"></param>
+			<include method="getUploadStartupList"/>
+			<include method="uploadPacketHistData"/>	
+		</create>
+		<convert match="org.tbcc.entity.TbccBaseHisStartUp" converter="bean">
+			<param name="include" value="id,transBeginTime,transEndTime,recordInterval,updateStatus,tuplimit,tdwlimit" ></param>				
+		</convert>	
+		<convert match="org.tbcc.entity.TbccBaseHisBox" converter="bean">
+			<param name="include" value="parentId,ai1,alarmStatus,transUpdateTime" ></param>		
+		</convert>
+		<!-- 这是小批零的历史数据远程类  modify by aftermath end-->
+		
 		<!-- 这是小批零的实时数据远程类 
 		<create javascript="realbox" creator="spring">
 			<param name="beanName" value="realboxBiz"></param>
@@ -39,7 +53,7 @@
 			<include method="getHisCarData"/>
 			<include method="getRefListById"/>		
 			<include method="getProjectImages"/>
-			<include method="getRealRefSys"/>
+			<include method="getRealRefSys"/>	
 		</create>
 		<convert match="org.tbcc.entity.TbccBaseRealBox" converter="bean"></convert>
 		<convert match="org.tbcc.entity.TbccBaseRealCar" converter="bean"></convert>

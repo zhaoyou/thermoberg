@@ -195,8 +195,8 @@ public class ObjectToHistory {
 				hisStart.setLastRecordTime((Date)obj[13]);
 				hisStart.setUpdateStatus((Integer)obj[14]);
 				//hisStart.setTlimitType((Integer)obj[15]) ;
-				hisStart.setTuplimit((Integer)obj[15]) ;
-				hisStart.setTdwlimit((Integer)obj[16]);
+				hisStart.setTuplimit((Double)obj[15]) ;
+				hisStart.setTdwlimit((Double)obj[16]);
 				
 				
 				startUpList.add(hisStart);

@@ -1,7 +1,7 @@
 package org.tbcc.dao;
 
 import java.util.List;
-
+import org.tbcc.entity.TbccBaseHisBox;
 /**
  * 小批零的数据访问接口
  * @author Administrator
@@ -16,5 +16,16 @@ public interface HisBoxDao {
 	 * @param value				查询的间隔
 	 * @return
 	 */
-	public List getHisBoxData(String tableName ,String startTime,String endTime,int value ) ;
+	public List<TbccBaseHisBox> getHisBoxData(String tableName ,String startTime,String endTime,int value ) ;
+	
+	//modify by aftermath begin
+	/** 
+	*上传一条历史记录数据
+	 * @param tableName					小批零历史数据表
+	 * @param devHistData		        需要上传的1条历史数据 
+	 * @return integer                     返回历史记录上传结果（0：上传成功；-1：上传失败；)
+	*/
+    int uploadHistBoxData(String tableName,TbccBaseHisBox devHistData);
+		// modify by aftermath end	
+		
 }

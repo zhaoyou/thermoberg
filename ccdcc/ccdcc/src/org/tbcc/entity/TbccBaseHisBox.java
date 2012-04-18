@@ -23,10 +23,22 @@ public class TbccBaseHisBox  implements java.io.Serializable{
 	private Integer longitude_dir ;
 	private Double longitude ;
 	private Integer	alarmStatus ;
+	//modify by aftermath begin
+	private String transUpdateTime;
+	//modify by aftermath end
 	
 	//ÏÔÊ¾±¨¾¯×´Ì¬µÄ×Ö·û´®
 	private String alarmStatusStr ;
 	
+	//modify by aftermath begin
+	public String getTransUpdateTime() {
+		return transUpdateTime;
+	}	
+
+	public void setTransUpdateTime(String updateTime) {
+		this.transUpdateTime = updateTime;
+	}
+	//modify by aftermath end
 	
 	public Date getUpdateTime() {
 		return updateTime;
