@@ -195,8 +195,17 @@ public class ObjectToHistory {
 				hisStart.setLastRecordTime((Date)obj[13]);
 				hisStart.setUpdateStatus((Integer)obj[14]);
 				//hisStart.setTlimitType((Integer)obj[15]) ;
-				hisStart.setTuplimit((Double)obj[15]) ;
-				hisStart.setTdwlimit((Double)obj[16]);
+				if (obj[15].getClass().toString().contains("Integer")) {
+					hisStart.setTuplimit(((Integer)obj[15]).doubleValue()) ;
+				} else {
+					hisStart.setTuplimit((Double)obj[15]) ;
+				}
+				
+				if (obj[16].getClass().toString().contains("Integer")) {
+					hisStart.setTuplimit(((Integer)obj[16]).doubleValue()) ;
+				} else {
+					hisStart.setTuplimit((Double)obj[16]) ;
+				}
 				
 				
 				startUpList.add(hisStart);

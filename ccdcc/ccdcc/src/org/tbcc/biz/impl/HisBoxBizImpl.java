@@ -75,8 +75,11 @@ public class HisBoxBizImpl implements HisBoxBiz {
 		
 		int total = Integer.parseInt(interval) * Integer.parseInt(value);
 		
-		//判断第一条记录的时间是不是符合条件呀
-		startTime = MyUtil.getValid(startTime);
+		//判断第一条记录的时间是不是符合条件呀, 小批零的第一条根据数据库的记录来查询
+		//startTime = MyUtil.getValid(startTime);
+		
+		startTime = hisboxDao.getFirstDataTime(BuildTable.toHisBoxTable(proId), startTime, endTime).toString();
+		
 		
 		List list = hisboxDao.getHisBoxData(BuildTable.toHisBoxTable(proId), startTime, endTime,total);
 				

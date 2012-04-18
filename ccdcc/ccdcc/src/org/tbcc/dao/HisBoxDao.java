@@ -16,6 +16,7 @@ public interface HisBoxDao {
 	 * @param value				查询的间隔
 	 * @return
 	 */
+
 	public List<TbccBaseHisBox> getHisBoxData(String tableName ,String startTime,String endTime,int value ) ;
 	
 	//modify by aftermath begin
@@ -28,4 +29,15 @@ public interface HisBoxDao {
     int uploadHistBoxData(String tableName,TbccBaseHisBox devHistData);
 		// modify by aftermath end	
 		
+
+	
+	/**
+	 * 获取指定时间内的第一条时间
+	 * @param tableName
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
+	public Object getFirstDataTime(String tableName, String startTime, String endTime);
+
 }

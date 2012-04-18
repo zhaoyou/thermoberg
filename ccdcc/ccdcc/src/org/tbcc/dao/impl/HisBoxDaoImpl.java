@@ -52,4 +52,13 @@ public class HisBoxDaoImpl extends HibernateDaoSupport implements HisBoxDao {
 	}
 // modify by aftermath end		
 
+	public Object getFirstDataTime(String tableName, String startTime,
+			String endTime) {
+		String sql = "select min(updateTime) from " + tableName + " where updateTime between '" + startTime + "' and '" +
+		endTime + "'";
+		Session session = this.getSession() ;
+		SQLQuery query = session.createSQLQuery(sql);
+		return query.uniqueResult();
+	}
+
 }
