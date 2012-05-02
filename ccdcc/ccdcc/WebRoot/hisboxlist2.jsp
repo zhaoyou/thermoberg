@@ -161,7 +161,7 @@
 						</td>
 						
 						<td align="center" nowrap="nowrap">
-							${hisbox.longitude_dir==0?"东经":"西经" }
+								${hisbox.longitudeDirStr}
 						</td>
 						
 						<td align="center"  nowrap="nowrap">
@@ -169,7 +169,7 @@
 						</td>
 						
 						<td align="center"  nowrap="nowrap">
-							${hisbox.latitude_dir==0?"南纬":"北纬"}
+								${hisbox.latitudeDirStr}
 						</td>
 							 
 						<td align="center" nowrap>

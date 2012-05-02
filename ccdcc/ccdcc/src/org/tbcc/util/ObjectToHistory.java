@@ -202,12 +202,11 @@ public class ObjectToHistory {
 				}
 				
 				if (obj[16].getClass().toString().contains("Integer")) {
-					hisStart.setTuplimit(((Integer)obj[16]).doubleValue()) ;
+					hisStart.setTdwlimit(((Integer)obj[16]).doubleValue()) ;
 				} else {
-					hisStart.setTuplimit((Double)obj[16]) ;
+					hisStart.setTdwlimit((Double)obj[16]) ;
 				}
-				
-				
+
 				startUpList.add(hisStart);
 			}
 			return startUpList ;

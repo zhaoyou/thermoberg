@@ -129,6 +129,28 @@ public class TbccBaseHisBox  implements java.io.Serializable{
 		return targeStr;
 	}
 	
+	public String getLatitudeDirStr() {
+		if(this.latitude == -300 ){
+			return "----";
+		}
+		if(this.getLatitude_dir().intValue() == 0) {
+			return "南纬";
+		} else {
+			return "北纬";
+		}
+	}
+	
+	public String getLongitudeDirStr() {
+		if(this.longitude==-300 ){
+			return "----";
+		}
+		if(this.getLongitude_dir().intValue() == 0) {
+			return "东经";
+		} else {
+			return "西经";
+		}
+	}
+	
 	
 	public void setLatitudeStr(String latitudeStr) {
 		this.latitudeStr = latitudeStr;
