@@ -182,7 +182,7 @@
 					<td>${startup.receiver }</td>
 					<td>${startup.updateStatus==2?"上传完成":"未完成上传" }</td>
 					<td>
-						<img  src="img/menu/bt_plan.gif"  title="车载历史数据" style="cursor:pointer" onclick="javascript:godetail('hisbox.do','toHisBoxByStart','${startup.id}',true);"/> 
+						<img  src="img/menu/bt_plan.gif"  title="小批零历史数据" style="cursor:pointer" onclick="javascript:godetail('hisbox.do','toHisBoxByStart','${startup.id}',true);"/> 
         			</td>
 					</tr>
 	  </c:forEach>
