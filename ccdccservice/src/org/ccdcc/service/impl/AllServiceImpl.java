@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ccdcc.biz.CarHisBiz;
 import org.ccdcc.biz.CarRealBiz;
+import org.ccdcc.biz.RefHisBiz;
 import org.ccdcc.biz.RefRealBiz;
 import org.ccdcc.biz.StartUpBiz;
 import org.ccdcc.entity.CarHisView;
@@ -11,6 +12,7 @@ import org.ccdcc.entity.CarHisView_new;
 import org.ccdcc.entity.CarRealData;
 import org.ccdcc.entity.CarRealView;
 import org.ccdcc.entity.CarRealView_new;
+import org.ccdcc.entity.RefHisData;
 import org.ccdcc.entity.StartUpView;
 import org.ccdcc.service.AllService;
 
@@ -28,6 +30,12 @@ public class AllServiceImpl implements AllService {
 	private StartUpBiz startupbiz = null ;
 	
 	private RefRealBiz	refrealbiz = null ;
+	
+	private RefHisBiz	refhisbiz = null;
+
+	public void setRefhisbiz(RefHisBiz refhisbiz) {
+		this.refhisbiz = refhisbiz;
+	}
 
 	public void setRefrealbiz(RefRealBiz refrealbiz) {
 		this.refrealbiz = refrealbiz;
@@ -116,6 +124,12 @@ public class AllServiceImpl implements AllService {
 	@Override
 	public CarRealView_new getCarRealData_sy(String key, String projectId) {
 		return carrealbiz.getRealData_sy(key, projectId);
+	}
+
+	@Override
+	public void uploadRefHisData(String projectId, String devId,
+			String devType, List<RefHisData> list) {
+		refhisbiz.upload(projectId, devId, devType, list);
 	}
 	
 }

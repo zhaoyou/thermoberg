@@ -35,6 +35,9 @@
 		<bean id="startup" class="org.ccdcc.dao.jdbc.impl.StartUpDaoImpl">
 			<property name="connectionfaotory" ref="connectionfactory"></property>
 		</bean>
+		<bean id="refhisDao" class="org.ccdcc.dao.jdbc.impl.RefHisDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
 		
 		
 		
@@ -79,6 +82,10 @@
 			<property name="projectAuthDao" ref="projectAuth"></property>
 			<property name="refRealDao" ref="refRealDao"></property>
 			<property name="util" ref="dateUtil"></property>
+		</bean>
+		
+		<bean id="refhisBiz" class="org.ccdcc.biz.impl.RefHisBizImpl">
+			<property name="refHisDao" ref="refhisDao"></property>
 		</bean>
 		
 		<!-- 更新为一个Service类 -->

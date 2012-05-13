@@ -7,6 +7,7 @@ import org.ccdcc.entity.CarHisView_new;
 import org.ccdcc.entity.CarRealData;
 import org.ccdcc.entity.CarRealView;
 import org.ccdcc.entity.CarRealView_new;
+import org.ccdcc.entity.RefHisData;
 import org.ccdcc.entity.StartUpView;
 
 public interface AllService {
@@ -139,4 +140,12 @@ public interface AllService {
 	 */
 	public List<CarHisView_new>	getCarHis_sy 	(String key ,String projectId ,Integer parentId, String  afterTime);
 	
+	/**
+	 * 上传冷库历史数据。
+	 * @param projectId 冷库工程编号
+	 * @param devId		冷库设备编号
+	 * @param devType	冷库的设备类型 
+	 * @param list		冷库的历史数据集合
+	 */
+	public void uploadRefHisData(String projectId, String devId, String devType, List<RefHisData> list);
 }

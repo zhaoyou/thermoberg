@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jgroups-2.2.8.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mssqlserver"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/XmlSchema-1.1.jar"/>
@@ -56,6 +55,7 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jboss-system.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jdbc2_0-stdext.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jdom-1.0.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jgroups-2.2.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jsf-api.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jsf-impl.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jsr173_api-1.0.jar"/>

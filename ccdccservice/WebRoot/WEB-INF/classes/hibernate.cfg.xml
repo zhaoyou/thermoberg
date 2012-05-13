@@ -11,7 +11,7 @@
 <session-factory>
 	<property name="myeclipse.connection.profile">ccdcc</property>
 
-	<property name="connection.url">jdbc:sqlserver://192.168.1.134;databaseName=ccdcc_db</property>
+	<property name="connection.url">jdbc:sqlserver://127.0.0.1;databaseName=ccdcc_db</property>
 
 	<property name="connection.username">sa</property>
 	<property name="connection.password">1q2w3e</property>
