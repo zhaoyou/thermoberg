@@ -94,6 +94,7 @@
 			<property name="carrealbiz" ref="carrealbiz"></property>
 			<property name="startupbiz" ref="startupbiz"></property>
 			<property name="refrealbiz" ref="refrealbiz"></property>
+			<property name="refhisbiz" ref="refhisBiz"></property>
 		</bean>
 		
 		<bean id="address" class="org.codehaus.xfire.addressing.AddressingInHandler"></bean>

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ccdcc.biz.RefHisBiz;
 import org.ccdcc.entity.RefHisData;
+import org.ccdcc.service.AllService;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -19,11 +20,13 @@ public class RefHisTest extends TestCase {
 	
 	private RefHisBiz refHisBiz = null;
 	
+	private AllService allService = null;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		//System.out.println("setup...");
-		refHisBiz = (RefHisBiz)context.getBean("refhisBiz");
+		allService = (AllService)context.getBean("allservice");
 	}
 	
 	@Test
@@ -59,7 +62,7 @@ public class RefHisTest extends TestCase {
 
 		list.add(his);
 
-		refHisBiz.upload(projectId, devId, devType, list);
+		System.out.println(allService.uploadRefHisData(projectId, devId, devType, list));
 	}
 	
 	@Test
@@ -126,6 +129,6 @@ public class RefHisTest extends TestCase {
 
 		list.add(his);
 
-		refHisBiz.upload(projectId, devId, devType, list);
+		System.out.println(allService.uploadRefHisData(projectId, devId, devType, list));
 	}
 }

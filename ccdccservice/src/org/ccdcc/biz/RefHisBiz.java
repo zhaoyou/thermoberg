@@ -10,5 +10,5 @@ import org.ccdcc.entity.RefHisData;
  *
  */
 public interface RefHisBiz {
-	void upload(String projectId, String devId, String devType, List<RefHisData> list);
+	int upload(String projectId, String devId, String devType, List<RefHisData> list);
 }

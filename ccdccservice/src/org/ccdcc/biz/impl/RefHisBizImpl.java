@@ -21,9 +21,14 @@ public class RefHisBizImpl implements RefHisBiz {
 
 
 	@Override
-	public void upload(String projectId, String devId, String devType,
+	public int upload(String projectId, String devId, String devType,
 			List<RefHisData> list) {
-		refHisDao.insertData(devType, BuildTable.buildRefHisTable(projectId, devId, devType), list);
+		try {
+			return refHisDao.insertData(devType, BuildTable.buildRefHisTable(projectId, devId, devType), list);
+		} catch(Exception e) {
+			System.err.print("update refhis data error: " + e.getMessage());
+			e.printStackTrace();
+			return 0;
+		}
 	}
-
 }

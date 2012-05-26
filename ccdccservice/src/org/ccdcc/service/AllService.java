@@ -146,6 +146,7 @@ public interface AllService {
 	 * @param devId		冷库设备编号
 	 * @param devType	冷库的设备类型 
 	 * @param list		冷库的历史数据集合
+	 * @return	flag 1 成功 0 失败
 	 */
-	public void uploadRefHisData(String projectId, String devId, String devType, List<RefHisData> list);
+	public int uploadRefHisData(String projectId, String devId, String devType, List<RefHisData> list);
 }

@@ -127,9 +127,9 @@ public class AllServiceImpl implements AllService {
 	}
 
 	@Override
-	public void uploadRefHisData(String projectId, String devId,
+	public int uploadRefHisData(String projectId, String devId,
 			String devType, List<RefHisData> list) {
-		refhisbiz.upload(projectId, devId, devType, list);
+		return refhisbiz.upload(projectId, devId, devType, list);
 	}
 	
 }

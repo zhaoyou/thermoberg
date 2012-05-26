@@ -9,5 +9,5 @@ import java.util.List;
  *
  */
 public interface RefHisDao {
-	void insertData(String type, String tableName, List<RefHisData> list);
+	int insertData(String type, String tableName, List<RefHisData> list);
 }

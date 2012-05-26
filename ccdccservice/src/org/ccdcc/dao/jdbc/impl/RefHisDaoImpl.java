@@ -44,15 +44,15 @@ private static Logger logger = Logger.getRootLogger() ;
 
 	
 	@Override
-	public void insertData(String type, String tableName, List<RefHisData> list) {
+	public int insertData(String type, String tableName, List<RefHisData> list) {
 		if (type.equalsIgnoreCase(DevType.dev_standard.toString())) {
-			forStandardData(tableName, list);
+			return forStandardData(tableName, list);
 		} else {
-			forExData(tableName, list);
+			return forExData(tableName, list);
 		}
 	}
 	
-	private void forExData(String tableName, List<RefHisData> list) {
+	private int forExData(String tableName, List<RefHisData> list) {
 		Connection conn=null;
 		try {
 			QueryRunner queryRun = new QueryRunner();
@@ -62,71 +62,73 @@ private static Logger logger = Logger.getRootLogger() ;
 			for(int i = 0; i < list.size(); i++) {
 				params[i][0] = sf.format(list.get(i).getHDate());
 				params[i][1] = sf.format(list.get(i).getUpdateTime());
-				params[i][2] = list.get(i).getAi1();
-				params[i][3] = list.get(i).getAi2();
-				params[i][4] = list.get(i).getAi3();
-				params[i][5] = list.get(i).getAi4();
-				params[i][6] = list.get(i).getAi5();
-				params[i][7] = list.get(i).getAi6();
-				params[i][8] = list.get(i).getAi7();
-				params[i][9] = list.get(i).getAi8();
-				params[i][10] = list.get(i).getAi9();
-				params[i][11] = list.get(i).getAi10();
-				params[i][12] = list.get(i).getAi11();
-				params[i][13] = list.get(i).getAi12();
-				params[i][14] = list.get(i).getAi13();
-				params[i][15] = list.get(i).getAi14();
-				params[i][16] = list.get(i).getAi15();
-				params[i][17] = list.get(i).getAi16();
-				params[i][18] = list.get(i).getAi17();
-				params[i][19] = list.get(i).getAi18();
-				params[i][20] = list.get(i).getAi19();
-				params[i][21] = list.get(i).getAi20();
-				params[i][22] = list.get(i).getAi21();
-				params[i][23] = list.get(i).getAi22();
-				params[i][24] = list.get(i).getAi23();
-				params[i][25] = list.get(i).getAi24();
-				params[i][26] = list.get(i).getAi25();
-				params[i][27] = list.get(i).getAi26();
-				params[i][28] = list.get(i).getAi27();
-				params[i][29] = list.get(i).getAi28();
-				params[i][30] = list.get(i).getAi29();
-				params[i][31] = list.get(i).getAi30();
-				params[i][32] = list.get(i).getAi31();
-				params[i][33] = list.get(i).getAi32();
+				params[i][2] = list.get(i).getAi1() != null ? list.get(i).getAi1() : -300;
+				params[i][3] = list.get(i).getAi2() != null ? list.get(i).getAi2() : -300;
+				params[i][4] = list.get(i).getAi3() != null ? list.get(i).getAi3() : -300;
+				params[i][5] = list.get(i).getAi4() != null ? list.get(i).getAi4() : -300;
+				params[i][6] = list.get(i).getAi5() != null ? list.get(i).getAi5() : -300;
+				params[i][7] = list.get(i).getAi6() != null ? list.get(i).getAi6() : -300;
+				params[i][8] = list.get(i).getAi7() != null ? list.get(i).getAi7() : -300;
+				params[i][9] = list.get(i).getAi8() != null ? list.get(i).getAi8() : -300;
+				params[i][10] = list.get(i).getAi9() != null ? list.get(i).getAi9() : -300;
+				params[i][11] = list.get(i).getAi10() != null ? list.get(i).getAi10() : -300;
+				params[i][12] = list.get(i).getAi11() != null ? list.get(i).getAi11() : -300;
+				params[i][13] = list.get(i).getAi12() != null ? list.get(i).getAi12() : -300;
+				params[i][14] = list.get(i).getAi13() != null ? list.get(i).getAi13() : -300;
+				params[i][15] = list.get(i).getAi14() != null ? list.get(i).getAi14() : -300;
+				params[i][16] = list.get(i).getAi15() != null ? list.get(i).getAi15() : -300;
+				params[i][17] = list.get(i).getAi16() != null ? list.get(i).getAi16() : -300;
+				params[i][18] = list.get(i).getAi17() != null ? list.get(i).getAi17() : -300;
+				params[i][19] = list.get(i).getAi18() != null ? list.get(i).getAi18() : -300;
+				params[i][20] = list.get(i).getAi19() != null ? list.get(i).getAi19() : -300;
+				params[i][21] = list.get(i).getAi20() != null ? list.get(i).getAi20() : -300;
+				params[i][22] = list.get(i).getAi21() != null ? list.get(i).getAi21() : -300;
+				params[i][23] = list.get(i).getAi22() != null ? list.get(i).getAi22() : -300;
+				params[i][24] = list.get(i).getAi23() != null ? list.get(i).getAi23() : -300;
+				params[i][25] = list.get(i).getAi24() != null ? list.get(i).getAi24() : -300;
+				params[i][26] = list.get(i).getAi25() != null ? list.get(i).getAi25() : -300;
+				params[i][27] = list.get(i).getAi26() != null ? list.get(i).getAi26() : -300;
+				params[i][28] = list.get(i).getAi27() != null ? list.get(i).getAi27() : -300;
+				params[i][29] = list.get(i).getAi28() != null ? list.get(i).getAi28() : -300;
+				params[i][30] = list.get(i).getAi29() != null ? list.get(i).getAi29() : -300;
+				params[i][31] = list.get(i).getAi30() != null ? list.get(i).getAi30() : -300;
+				params[i][32] = list.get(i).getAi31() != null ? list.get(i).getAi31() : -300;
+				params[i][33] = list.get(i).getAi32() != null ? list.get(i).getAi32() : -300;
 
 				
-				params[i][34] = list.get(i).getRef1AlarmStatus();
-				params[i][35] = list.get(i).getRef2AlarmStatus();
-				params[i][36] = list.get(i).getRef3AlarmStatus();
-				params[i][37] = list.get(i).getRef4AlarmStatus();
+				params[i][34] = list.get(i).getRef1AlarmStatus() != null ? list.get(i).getRef1AlarmStatus() : -1;
+				params[i][35] = list.get(i).getRef2AlarmStatus() != null ? list.get(i).getRef2AlarmStatus() : -1;
+				params[i][36] = list.get(i).getRef3AlarmStatus() != null ? list.get(i).getRef3AlarmStatus() : -1;
+				params[i][37] = list.get(i).getRef4AlarmStatus() != null ? list.get(i).getRef4AlarmStatus() : -1;
 				
-				params[i][38] = list.get(i).getRef5AlarmStatus();
-				params[i][39] = list.get(i).getRef6AlarmStatus();
-				params[i][40] = list.get(i).getRef7AlarmStatus();
-				params[i][41] = list.get(i).getRef8AlarmStatus();
+				params[i][38] = list.get(i).getRef5AlarmStatus() != null ? list.get(i).getRef5AlarmStatus() : -1;
+				params[i][39] = list.get(i).getRef6AlarmStatus() != null ? list.get(i).getRef6AlarmStatus() : -1;
+				params[i][40] = list.get(i).getRef7AlarmStatus() != null ? list.get(i).getRef7AlarmStatus() : -1;
+				params[i][41] = list.get(i).getRef8AlarmStatus() != null ? list.get(i).getRef8AlarmStatus() : -1;
 				
-				params[i][42] = list.get(i).getRef9AlarmStatus();
-				params[i][43] = list.get(i).getRef10AlarmStatus();
-				params[i][44] = list.get(i).getRef11AlarmStatus();
-				params[i][45] = list.get(i).getRef12AlarmStatus();
+				params[i][42] = list.get(i).getRef9AlarmStatus() != null ? list.get(i).getRef9AlarmStatus() : -1;
+				params[i][43] = list.get(i).getRef10AlarmStatus() != null ? list.get(i).getRef10AlarmStatus() : -1;
+				params[i][44] = list.get(i).getRef11AlarmStatus() != null ? list.get(i).getRef11AlarmStatus() : -1;
+				params[i][45] = list.get(i).getRef12AlarmStatus() != null ? list.get(i).getRef12AlarmStatus() : -1;
 				
-				params[i][46] = list.get(i).getRef13AlarmStatus();
-				params[i][47] = list.get(i).getRef14AlarmStatus();
-				params[i][48] = list.get(i).getRef15AlarmStatus();
-				params[i][49] = list.get(i).getRef16AlarmStatus();
+				params[i][46] = list.get(i).getRef13AlarmStatus() != null ? list.get(i).getRef13AlarmStatus() : -1;
+				params[i][47] = list.get(i).getRef14AlarmStatus() != null ? list.get(i).getRef14AlarmStatus() : -1;
+				params[i][48] = list.get(i).getRef15AlarmStatus() != null ? list.get(i).getRef15AlarmStatus() : -1;
+				params[i][49] = list.get(i).getRef16AlarmStatus() != null ? list.get(i).getRef16AlarmStatus() : -1;
 			}
-			queryRun.batch(conn,sql, params);
+		    queryRun.batch(conn,sql, params);
+			return 1;
 		}
 		catch (Exception e) {
 			logger.error("批量上传兼容模块冷库历史数据失败: "+e.getMessage());
+			return 0;
 		}
 		finally{
 			connectionfaotory.closeConn(conn);
 		}
 	}
 	
-	private void forStandardData(String tableName, List<RefHisData> list) {
+	private int forStandardData(String tableName, List<RefHisData> list) {
 		Connection conn=null;
 		try {
 			QueryRunner queryRun = new QueryRunner();
@@ -136,27 +138,29 @@ private static Logger logger = Logger.getRootLogger() ;
 			for(int i = 0; i < list.size(); i++) {
 				params[i][0] = sf.format(list.get(i).getHDate());
 				params[i][1] = sf.format(list.get(i).getUpdateTime());
-				params[i][2] = list.get(i).getAi1();
-				params[i][3] = list.get(i).getAi2();
-				params[i][4] = list.get(i).getAi3();
-				params[i][5] = list.get(i).getAi4();
-				params[i][6] = list.get(i).getAi5();
-				params[i][7] = list.get(i).getAi6();
-				params[i][8] = list.get(i).getAi7();
-				params[i][9] = list.get(i).getAi8();
-				params[i][10] = list.get(i).getAi9();
-				params[i][11] = list.get(i).getAi10();
-				params[i][12] = list.get(i).getAi11();
-				params[i][13] = list.get(i).getAi12();
-				params[i][14] = list.get(i).getRef1AlarmStatus();
-				params[i][15] = list.get(i).getRef2AlarmStatus();
-				params[i][16] = list.get(i).getRef3AlarmStatus();
-				params[i][17] = list.get(i).getRef4AlarmStatus();
+				params[i][2] = list.get(i).getAi1() != null ? list.get(i).getAi1() : -300;
+				params[i][3] = list.get(i).getAi2()!= null ? list.get(i).getAi2() : -300;
+				params[i][4] = list.get(i).getAi3()!= null ? list.get(i).getAi3() : -300;
+				params[i][5] = list.get(i).getAi4()!= null ? list.get(i).getAi4() : -300;
+				params[i][6] = list.get(i).getAi5()!= null ? list.get(i).getAi5() : -300;
+				params[i][7] = list.get(i).getAi6()!= null ? list.get(i).getAi6() : -300;
+				params[i][8] = list.get(i).getAi7()!= null ? list.get(i).getAi7() : -300;
+				params[i][9] = list.get(i).getAi8()!= null ? list.get(i).getAi8() : -300;
+				params[i][10] = list.get(i).getAi9()!= null ? list.get(i).getAi9() : -300;
+				params[i][11] = list.get(i).getAi10()!= null ? list.get(i).getAi10() : -300;
+				params[i][12] = list.get(i).getAi11()!= null ? list.get(i).getAi11() : -300;
+				params[i][13] = list.get(i).getAi12()!= null ? list.get(i).getAi12() : -300;
+				params[i][14] = list.get(i).getRef1AlarmStatus() != null ? list.get(i).getRef1AlarmStatus() : -1;
+				params[i][15] = list.get(i).getRef2AlarmStatus() != null ? list.get(i).getRef2AlarmStatus() : -1;;
+				params[i][16] = list.get(i).getRef3AlarmStatus() != null ? list.get(i).getRef3AlarmStatus() : -1;;
+				params[i][17] = list.get(i).getRef4AlarmStatus() != null ? list.get(i).getRef4AlarmStatus() : -1;;
 			}
 			queryRun.batch(conn, sql, params);
+			return 1;
 		}
 		catch (Exception e) {
 			logger.error("批量上传冷库历史数据失败: "+e.getMessage());
+			return 0;
 		}
 		finally{
 			connectionfaotory.closeConn(conn);
