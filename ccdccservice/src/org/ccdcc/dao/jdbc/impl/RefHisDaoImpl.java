@@ -60,8 +60,8 @@ private static Logger logger = Logger.getRootLogger() ;
 			String sql = exSQL.replace("@table", tableName);
 			Object[][] params = new Object[list.size()][50];
 			for(int i = 0; i < list.size(); i++) {
-				params[i][0] = sf.format(list.get(i).getHDate());
-				params[i][1] = sf.format(list.get(i).getUpdateTime());
+				params[i][0] =  list.get(i).getHDate();
+				params[i][1] = list.get(i).getUpdateTime();
 				params[i][2] = list.get(i).getAi1() != null ? list.get(i).getAi1() : -300;
 				params[i][3] = list.get(i).getAi2() != null ? list.get(i).getAi2() : -300;
 				params[i][4] = list.get(i).getAi3() != null ? list.get(i).getAi3() : -300;
@@ -136,8 +136,8 @@ private static Logger logger = Logger.getRootLogger() ;
 			String sql = standardSQL.replace("@table", tableName);
 			Object[][] params = new Object[list.size()][18];
 			for(int i = 0; i < list.size(); i++) {
-				params[i][0] = sf.format(list.get(i).getHDate());
-				params[i][1] = sf.format(list.get(i).getUpdateTime());
+				params[i][0] = list.get(i).getHDate();
+				params[i][1] = list.get(i).getUpdateTime();
 				params[i][2] = list.get(i).getAi1() != null ? list.get(i).getAi1() : -300;
 				params[i][3] = list.get(i).getAi2()!= null ? list.get(i).getAi2() : -300;
 				params[i][4] = list.get(i).getAi3()!= null ? list.get(i).getAi3() : -300;

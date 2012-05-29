@@ -14,8 +14,8 @@ public class RefHisData implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Date hDate;
-	private Date updateTime;
+	private String hDate;
+	private String updateTime;
 	private Double ai1;
 	private Double ai2;
 	private Double ai3;
@@ -66,16 +66,16 @@ public class RefHisData implements Serializable {
 	private Integer ref14AlarmStatus;
 	private Integer ref15AlarmStatus;
 	private Integer ref16AlarmStatus;
-	public Date getHDate() {
+	public String getHDate() {
 		return hDate;
 	}
-	public void setHDate(Date date) {
+	public void setHDate(String date) {
 		hDate = date;
 	}
-	public Date getUpdateTime() {
+	public String getUpdateTime() {
 		return updateTime;
 	}
-	public void setUpdateTime(Date updateTime) {
+	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
 	public Double getAi1() {

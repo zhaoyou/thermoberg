@@ -36,8 +36,8 @@ public class RefHisTest extends TestCase {
 		String devType = "dev_standard";
 		List<RefHisData> list = new ArrayList<RefHisData>();
 		RefHisData his = new RefHisData();
-		his.setHDate(new Date());
-		his.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2012-05-13 12:00:00"));
+		his.setHDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		his.setUpdateTime("2012-05-13 12:00:00");
 		his.setAi1(12.12);
 		his.setAi2(22.12);
 		his.setAi3(32.12);
@@ -72,8 +72,8 @@ public class RefHisTest extends TestCase {
 		String devType = "dev_ex";
 		List<RefHisData> list = new ArrayList<RefHisData>();
 		RefHisData his = new RefHisData();
-		his.setHDate(new Date());
-		his.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2012-05-13 13:00:00"));
+		his.setHDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		his.setUpdateTime("2012-05-13 13:00:00");
 		his.setAi1(12.12);
 		his.setAi2(22.12);
 		his.setAi3(32.12);
