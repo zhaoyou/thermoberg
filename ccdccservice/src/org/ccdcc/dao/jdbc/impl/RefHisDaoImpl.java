@@ -120,7 +120,7 @@ private static Logger logger = Logger.getRootLogger() ;
 			return 1;
 		}
 		catch (Exception e) {
-			logger.error("批量上传兼容模块冷库历史数据失败: "+e.getMessage());
+			logger.error("批量上传兼容模块冷库历史数据失败: " +e.getMessage(), e);
 			return 0;
 		}
 		finally{
@@ -159,7 +159,7 @@ private static Logger logger = Logger.getRootLogger() ;
 			return 1;
 		}
 		catch (Exception e) {
-			logger.error("批量上传冷库历史数据失败: "+e.getMessage());
+			logger.error("批量上传冷库历史数据失败: " + e.getMessage(), e);
 			return 0;
 		}
 		finally{
