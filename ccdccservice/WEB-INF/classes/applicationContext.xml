@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation"
+			value="classpath:hibernate.cfg.xml">
+		</property>
+	</bean>
+	
+	
+	
+	<!-- 数据访问层 -->
+		<!-- 数据访问使用HibernateTemplate -->
+		 <!-- <bean id="carreal" class="org.ccdcc.dao.impl.CarRealDaoImpl">
+			<property name="sessionFactory" ref="sessionFactory"></property>
+		</bean>
+		<bean id="carhis" class="org.ccdcc.dao.impl.CarHisDaoImpl">
+			<property name="sessionFactory" ref="sessionFactory"></property>
+		</bean>
+		<bean id="startup" class="org.ccdcc.dao.impl.StartUpDaoImpl">
+			<property name="sessionFactory" ref="sessionFactory"></property>
+		</bean> -->
+		<!-- 数据访问使用QueryRunner -->
+		<bean id="carreal" class="org.ccdcc.dao.jdbc.impl.CarRealDaoImpl">
+			<property name="connectionfactory" ref="connectionfactory"></property>
+		</bean>
+		<bean id="carhis" class="org.ccdcc.dao.jdbc.impl.CarHisDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		<bean id="startup" class="org.ccdcc.dao.jdbc.impl.StartUpDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		<bean id="refhisDao" class="org.ccdcc.dao.jdbc.impl.RefHisDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		
+		
+		
+		<bean id="projectAuth" class="org.ccdcc.dao.jdbc.impl.ProjectAuthDaoImpl">
+			<property name="connectionfactory" ref="connectionfactory"></property>
+		</bean>
+		
+		<bean id="refRealDao" class="org.ccdcc.dao.jdbc.impl.RefRealDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		
+		
+		<!-- 定义connectionfactory，通过sessionfactory获取连接 -->
+		<bean id="connectionfactory" class="org.ccdcc.util.ConnectionProxyFactory" >
+			<property name="sessionfactory" ref="sessionFactory"></property>  
+		</bean>
+		
+		
+		
+	<!-- 业务逻辑层 -->
+		
+		<bean id="carhisbiz" class="org.ccdcc.biz.impl.CarHisBizImpl">
+			<property name="carhisdao" ref="carhis"></property>
+			<property name="startupdao" ref="startup"></property>
+			<property name="util" ref="dateUtil"></property>
+			<property name="projectAuthDao" ref="projectAuth"></property>
+		</bean>
+		
+		<bean id="carrealbiz" class="org.ccdcc.biz.impl.CarRealBizImpl">
+			<property name="carrealdao" ref="carreal"></property>
+			<property name="projectAuthDao" ref="projectAuth"></property>
+			<property name="util" ref="dateUtil"></property>
+		</bean>
+		
+		<bean id="startupbiz" class="org.ccdcc.biz.impl.StartUpBizImpl">
+			<property name="startupdao" ref="startup"></property>
+			<property name="util" ref="dateUtil"></property>
+			<property name="projectAuthDao" ref="projectAuth"></property>
+		</bean>
+		
+		<bean id="refrealbiz" class="org.ccdcc.biz.impl.RefRealBizImpl">
+			<property name="projectAuthDao" ref="projectAuth"></property>
+			<property name="refRealDao" ref="refRealDao"></property>
+			<property name="util" ref="dateUtil"></property>
+		</bean>
+		
+		<bean id="refhisBiz" class="org.ccdcc.biz.impl.RefHisBizImpl">
+			<property name="refHisDao" ref="refhisDao"></property>
+		</bean>
+		
+		<!-- 更新为一个Service类 -->
+		<bean id="allservice" class="org.ccdcc.service.impl.AllServiceImpl">
+			<property name="carhisbiz"  ref="carhisbiz"/>
+			<property name="carrealbiz" ref="carrealbiz"></property>
+			<property name="startupbiz" ref="startupbiz"></property>
+			<property name="refrealbiz" ref="refrealbiz"></property>
+			<property name="refhisbiz" ref="refhisBiz"></property>
+		</bean>
+		
+		<bean id="address" class="org.codehaus.xfire.addressing.AddressingInHandler"></bean>
+		
+		
+		<!-- 更新为一个统一的引用 -->
+		<bean id="allWs" class="org.codehaus.xfire.spring.ServiceBean">
+			<property name="serviceBean" ref="allservice"></property>
+			<property name="serviceClass" value="org.ccdcc.service.AllService"></property>
+			<property name="inHandlers">
+				<list>
+					<ref bean="address"/>
+				</list>
+			</property>
+		</bean>
+	
+		<bean id="dateUtil" class="org.ccdcc.util.Util"></bean>
+	
+	
+	</beans>

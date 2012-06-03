@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/util
+END
+Test.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/util/Test.java
+END
+db.properties
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/util/db.properties
+END
+projects.properties
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ccdccservice/!svn/ver/11/branches/dev/ccdccservice/src/org/ccdcc/util/projects.properties
+END
+ProjectOperate.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/ccdccservice/!svn/ver/6/branches/dev/ccdccservice/src/org/ccdcc/util/ProjectOperate.java
+END
+BuildTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/util/BuildTable.java
+END
+ConnectionFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ccdccservice/!svn/ver/8/branches/dev/ccdccservice/src/org/ccdcc/util/ConnectionFactory.java
+END
+ConnectionProxyFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/util/ConnectionProxyFactory.java
+END
+HibernateSessionFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/util/HibernateSessionFactory.java
+END
+Util.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ccdccservice/!svn/ver/5/branches/dev/ccdccservice/src/org/ccdcc/util/Util.java
+END

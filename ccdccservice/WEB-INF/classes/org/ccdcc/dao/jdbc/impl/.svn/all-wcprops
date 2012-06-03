@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl
+END
+CarHisDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ccdccservice/!svn/ver/9/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl/CarHisDaoImpl.java
+END
+CarRealDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ccdccservice/!svn/ver/9/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl/CarRealDaoImpl.java
+END
+RefRealDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ccdccservice/!svn/ver/9/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl/RefRealDaoImpl.java
+END
+StartUpDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl/StartUpDaoImpl.java
+END
+ProjectAuthDaoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/ccdccservice/!svn/ver/12/branches/dev/ccdccservice/src/org/ccdcc/dao/jdbc/impl/ProjectAuthDaoImpl.java
+END

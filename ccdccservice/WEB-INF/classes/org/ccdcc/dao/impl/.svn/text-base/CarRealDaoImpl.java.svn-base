@@ -1,0 +1,31 @@
+package org.ccdcc.dao.impl;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.ccdcc.dao.CarRealDao;
+import org.ccdcc.entity.CarRealView;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+/**
+ * 车载实时数据访问实现类
+ * @author Administrator
+ *
+ */
+public class CarRealDaoImpl extends HibernateDaoSupport implements CarRealDao{
+
+	@SuppressWarnings("unchecked")
+	public List<CarRealView> getByProject(final String projectId) {		
+		return this.getHibernateTemplate().executeFind(new HibernateCallback(){public Object doInHibernate(Session session)
+				throws HibernateException, SQLException {
+			String hql = "from CarRealView r where r.projectId = ?  " ;
+			Query query = session.createQuery(hql) ;
+			query.setString(0, projectId);
+			return query.list();
+		}}) ;	
+	}
+}
