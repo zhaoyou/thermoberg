@@ -162,16 +162,7 @@ font-family:"宋体";
 </a>
 <![endif]-->
       </li>
-       <li><a class="hide" href="#"><strong>医院配置</strong></a>
-       <ul>
-        <li><a href="hospital.do?ope=toList" >医院列表</a></li>
-        <li><a href="hospital.do?ope=toAdd" >新增医院</a></li>
-      </ul>
-      <!--[if lte IE 6]>
-</td></tr></table>
-</a>
-<![endif]-->
-</li>
+       
       <li style="float:right; height:28px; line-height:28px; margin-right:14px;color: #3a434a;"><span id="time"></span></li>
     </ul>
   <!-- clear the floats if required -->

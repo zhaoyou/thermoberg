@@ -27,12 +27,14 @@
 	 
 	 <property name="connection.username">sa</property>
 
-	<property name="connection.url">jdbc:sqlserver://116.231.101.235:1433;databaseName=tbcc_fdap</property>
+	<!--<property name="connection.url">jdbc:sqlserver://116.231.101.235:1433;databaseName=tbcc_fdap</property>
+	--><property name="connection.url">jdbc:sqlserver://127.0.0.1:1433;databaseName=tbcc_fdap</property>
 	
 	<property name="dialect">org.hibernate.dialect.SQLServerDialect</property>
 	<!-- org.tbcc.util.MySQLServerDialect -->
 	<!--  org.hibernate.dialect.SQLServerDialect-->
-	<property name="myeclipse.connection.profile">webuser</property>
+	<!--  <property name="myeclipse.connection.profile">webuser</property>-->
+	<property name="myeclipse.connection.profile">sa</property>
 	<property name="connection.password">1q2w3e</property>
 	<property name="connection.driver_class">
 		com.microsoft.sqlserver.jdbc.SQLServerDriver
