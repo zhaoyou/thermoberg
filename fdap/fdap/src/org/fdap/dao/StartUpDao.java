@@ -2,6 +2,7 @@ package org.fdap.dao;
 
 import java.util.List;
 
+import org.fdap.entity.FdapBoxStartUp;
 import org.fdap.entity.FdapStartUp;
 
 /**
@@ -41,4 +42,20 @@ public interface StartUpDao {
 	 * @return
 	 */
 	public abstract FdapStartUp queryBySid(String tableName,long sid);
+	
+	
+	// =====================      for box startup.
+	
+	public abstract List<FdapBoxStartUp> queryBoxStartUp(String tableName, String refid, String startTime, String endTime, Integer startRow,Integer pagesize); 
+
+	public abstract Integer getBoxStartupCounts(String tableName,String refid,String startTime,String endTime);
+	
+
+	/**
+	 * 根据车载历史启停数据表名和车载历史启停记录标识ID，获取车载历史启停记录详细信息
+	 * @param tableName         车载历史启停数据表名
+	 * @param sid				车载历史启停标识ID
+	 * @return
+	 */
+	public abstract FdapBoxStartUp queryBoxStartUpBySid(String tableName,long sid);
 }

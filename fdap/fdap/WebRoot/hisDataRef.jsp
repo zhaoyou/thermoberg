@@ -161,12 +161,16 @@
                 <td height="23" colspan="8" style="border:none;">
                 <table width="100%" style="height:32px; border-bottom-width: 1px;border-bottom-style: solid;border-bottom-color: #b6d6e6; background-color:#FFF;">
             <tr>
-              <td width="110" height="24" style="border:none;"><%-- <a href="hisDataRef.jsp">--%><a href="#"><img src="images/index/alarm_e.gif" width="100" height="24" /></a></td>
+              <td width="110" height="24" style="border:none;"><%-- <a href="hisDataRef.jsp">--%>
+              <a href="#"><img src="images/index/alarm_e.gif" width="100" height="24" /></a></td>
               <td width="110" style="border:none;">
               <%-- <a href="hisDataStartUp.jsp"><img src="images/index/alarm_d.gif" width="100" height="24" /></a>--%>
-              <a href="javascript:goData('carHis.do','toHisStartUp');"><img src="images/index/alarm_d.gif" width="100" height="24" /></a>
+              <a href="javascript:goData('carHis.do','toHisStartUp');">
+              <img src="images/index/alarm_d.gif" width="100" height="24" /></a>
               </td>
-              <td width="110" style="border:none;">&nbsp;</td>
+              <td width="110" style="border:none;">
+				 <a href="javascript:goData('boxHis.do', 'toHisStartUp');">小批零起停记录</a>
+			  </td>
               <td width="608" style="border:none;">&nbsp;</td>
             </tr>
           </table>

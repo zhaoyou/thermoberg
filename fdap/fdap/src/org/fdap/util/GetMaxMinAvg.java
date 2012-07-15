@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.fdap.entity.FdapBoxHisData;
 import org.fdap.entity.FdapCarHisData;
 import org.fdap.entity.FdapRefHisData;
 import org.fdap.entity.Fdapaiinfo;
@@ -48,6 +49,72 @@ public class GetMaxMinAvg {
 				avg[i]=Math.round((avg[i]/count[i])*100)/100.0;
 			}
 		}
+		List<Object> dlist=new ArrayList<Object>();
+		dlist.add(max);
+		dlist.add(min);
+		dlist.add(avg);
+		return dlist;
+	}
+	
+	/**
+	 * 计算小批零历史数据中相应探头的最大、最小和平均值
+	 * @param list		小批零历史数据
+	 * @return
+	 */
+	public List<Object> getBoxMaxMinAvg(List<FdapBoxHisData> list)
+	{
+//		double[] tr;
+//		Double[] max=new Double[]{-300.0,-300.0,-300.0};
+//		Double[] min=new Double[]{300.0,300.0,300.0};
+//		Double[] avg=new Double[]{0.0,0.0,0.0};
+//		int[] count=new int[]{0,0,0};
+//		for (FdapCarHisData chv : list) {
+//			tr=new double[]{chv.getT1(),chv.getT2(),chv.getT3()};
+//			for(int i=0;i<3;i++){
+//				if(tr[i]!=-300){
+//					if(tr[i]>max[i])	max[i]=tr[i];
+//					if(tr[i]<min[i])	min[i]=tr[i];
+//					avg[i]+=tr[i];
+//					count[i]++;
+//				}
+//			}
+//		}
+//		for(int i=0;i<3;i++){
+//			if(count[i]==0){
+//				max[i]=-300.0;
+//				min[i]=-300.0;
+//				avg[i]=-300.0;
+//			}else{
+//				//保留两位小数
+//				avg[i]=Math.round((avg[i]/count[i])*100)/100.0;
+//			}
+//		}
+		
+		double max = -100000d;
+		double min = 100000d;
+		double avg = -300d;
+		double all = 0;
+		int count = 0;
+		
+		for (FdapBoxHisData data: list) {
+			if (data.getT1() != -300) {
+				count += 1;
+				all += data.getT1();
+				if (data.getT1() > max) {
+					max = data.getT1();
+				} 
+				if (data.getT1() < min) {
+					min = data.getT1();
+				}
+			}
+		}
+		if (count == 0) {
+			max = -300d;
+			min = -300d;
+		} else {
+			avg = Math.round((all/count)*100)/100.0; 
+		}
+		
 		List<Object> dlist=new ArrayList<Object>();
 		dlist.add(max);
 		dlist.add(min);

@@ -83,6 +83,8 @@
 	<mapping resource="org/fdap/entity/FdapHisAlarm.hbm.xml" />
 	<mapping resource="org/fdap/entity/FdapRefHisData.hbm.xml" />
 	<mapping resource="org/fdap/entity/FdapStartUp.hbm.xml" />
+	<mapping resource="org/fdap/entity/FdapBoxStartUp.hbm.xml"/>
+	<mapping resource="org/fdap/entity/FdapBoxHisData.hbm.xml"/>
 	
 	
 	<!-- 自定义菜单菜单 -->

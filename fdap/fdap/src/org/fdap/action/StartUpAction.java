@@ -10,10 +10,12 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import org.fdap.biz.BoxHisBiz;
 import org.fdap.biz.CarHisBiz;
 import org.fdap.biz.OrgBiz;
 import org.fdap.biz.RefConfigBiz;
 import org.fdap.biz.StartUpBiz;
+import org.fdap.entity.FdapBoxStartUp;
 import org.fdap.entity.FdapStartUp;
 import org.fdap.entity.Fdaporg;
 import org.fdap.entity.Fdapref;
@@ -30,6 +32,8 @@ public class StartUpAction  extends BaseAction{
 	private StartUpBiz startupbiz;
 	private OrgBiz orgbiz;
 	private CarHisBiz carhisbiz;
+	
+	private BoxHisBiz boxhisBiz;
 	
 	private RefConfigBiz refconfigbiz;
 	
@@ -199,6 +203,155 @@ public class StartUpAction  extends BaseAction{
 		request.setAttribute("msg", "<font color='blue'>查询条件已被更改，请重新查询</font>");
 		return mapping.findForward("StartUpList");
 	}
+
+	public BoxHisBiz getBoxhisBiz() {
+		return boxhisBiz;
+	}
+
+	public void setBoxhisBiz(BoxHisBiz boxhisBiz) {
+		this.boxhisBiz = boxhisBiz;
+	}
+	
+	// for box -------------------------------------
+	
+	/**
+	 * 根据车载refId和时间，来查询车载历史启停记录(第一次查询，即按下查询按钮)
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ActionForward doBoxStartUpByRefAndtime(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		String oid=request.getParameter("oid");
+		String carrefid=request.getParameter("carrefId");
+		String startTime=request.getParameter("startTime");
+		String endTime=request.getParameter("endTime");
+		
+		if(oid==null||oid.equals("")||carrefid==null||carrefid.equals("")||startTime==null||
+				startTime.equals("")||endTime==null||endTime.equals("")){
+			logger.warn("传递了非法的oid参数");
+		}
+		
+		String tableName="fdapboxstartup_"+oid;
+		Integer suppage=1,suppagecount=1;
+		//根据车载冷库Id和时间，查询启停记录的条数，并计算总页数
+		Integer counts=startupbiz.getBoxStartupCounts(tableName, carrefid, startTime, endTime);
+		if(counts!=null&&counts>=1){
+			suppagecount=counts/PAGESIZE+(counts%PAGESIZE==0?0:1);
+		}
+		else{
+			logger.warn("获取小批零启停记录总页数失败");
+		}
+		
+		logger.info("oid: " + oid + " carredid: " + carrefid + "startTime: " + startTime + " endTime: " + endTime);
+		//根据车载冷库Id和时间，查新历史启停记录，从 0 条开始查，查 PAGESIZE 条
+		List<FdapBoxStartUp> list=startupbiz.getBoxStartup(tableName,carrefid,startTime, endTime,0,PAGESIZE);
+		Fdaporg fdaporg=orgbiz.getByOid(Long.parseLong(oid));
+		//根据企业oid查询车载冷库列表
+		List<Fdapref> carreflist=boxhisBiz.getBoxRefByOid(oid);
+		
+		//request.setAttribute("oid", oid);
+		request.setAttribute("orgname", fdaporg.getName());
+		request.setAttribute("carreflist", carreflist);
+		request.setAttribute("pagesize", PAGESIZE);
+		
+		/*request.setAttribute("carrefId", carrefid);
+		request.setAttribute("startTime", startTime);
+		request.setAttribute("endTime", endTime);*/
+		
+		//记录下首次查询时的车载冷库Id、查询开始时间和结束时间
+		request.setAttribute("checkedrefId", carrefid);
+		request.setAttribute("checkedstartTime", startTime);
+		request.setAttribute("checkedendTime", endTime);
+		
+		// TODO (zhaoyou) i don't know Pno how to work.
+		//保存与CCDCC数据库对应的工程编号
+		//request.setAttribute("pNO", this.getRefconfigbiz().getById(Long.parseLong(carrefid)).getFdapproject().getProjectNO());
+		
+		
+		if(list!=null&&list.size()!=0&&fdaporg!=null&&carreflist!=null&&carreflist.size()!=0){
+			request.setAttribute("startList", list);
+			request.setAttribute("suppage", suppage);
+			request.setAttribute("suppagecount", suppagecount);
+			return mapping.findForward("boxStartUp");
+		}
+		request.setAttribute("msg", "<font color='blue'>没有满足条件的启停记录</font>");
+		return mapping.findForward("boxStartUp");
+	}
+	
+	/**
+	 * 根据车载refId和时间，来查询车载历史启停记录(分页查询)
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ActionForward doBoxStartUpPage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		String oid=request.getParameter("oid");
+		//获取首次查询时的车载冷库Id，并用这个Id查询
+		String checkedrefId=request.getParameter("checkedrefId");
+		String carrefid=checkedrefId;
+		//获取首次查询时的开始和结束时间，并用这个时间来查询
+		String checkedstartTime=request.getParameter("checkedstartTime");
+		String checkedendTime=request.getParameter("checkedendTime");
+		String startTime=checkedstartTime;
+		String endTime=checkedendTime;
+		
+		if(oid==null||oid.equals("")||carrefid==null||carrefid.equals("")||startTime==null||
+				startTime.equals("")||endTime==null||endTime.equals("")){
+			logger.warn("传递了非法的oid参数");
+		}
+		
+		String tableName="fdapboxstartup_"+oid;
+		//获取当前页和总页数
+		Integer suppage=Integer.parseInt(request.getParameter("suppage"));
+		Integer suppagecount=Integer.parseInt(request.getParameter("suppagecount"));
+		
+		Integer startRow=(suppage-1)*PAGESIZE;
+		//根据车载冷库Id和时间，查新历史启停记录，从 startRow 条开始查，查 PAGESIZE 条
+		List<FdapBoxStartUp> list=startupbiz.getBoxStartup(tableName,carrefid,startTime, endTime,startRow,PAGESIZE);
+		Fdaporg fdaporg=orgbiz.getByOid(Long.parseLong(oid));
+		//根据企业oid查询车载冷库列表
+		List<Fdapref> carreflist=boxhisBiz.getBoxRefByOid(oid);
+		
+		//request.setAttribute("oid", oid);
+		request.setAttribute("orgname", fdaporg.getName());
+		request.setAttribute("carreflist", carreflist);
+		request.setAttribute("pagesize", PAGESIZE);
+		
+		/*request.setAttribute("carrefId", carrefid);
+		request.setAttribute("startTime", startTime);
+		request.setAttribute("endTime", endTime);*/
+		
+		request.setAttribute("checkedrefId", checkedrefId);
+		request.setAttribute("checkedstartTime", checkedstartTime);
+		request.setAttribute("checkedendTime", checkedendTime);
+		
+		
+		// TODO (zhaoyou) i don't know Pno how to work.
+		request.setAttribute("pNO", request.getParameter("pNO"));
+		
+		
+		if(list!=null&&list.size()!=0&&fdaporg!=null&&carreflist!=null&&carreflist.size()!=0){
+			request.setAttribute("suppage", suppage);
+			request.setAttribute("suppagecount", suppagecount);
+			request.setAttribute("startList", list);
+			return mapping.findForward("boxStartUp");
+		}
+		request.setAttribute("msg", "<font color='blue'>查询条件已被更改，请重新查询</font>");
+		return mapping.findForward("boxStartUp");
+	}
+
 	
 	
 }

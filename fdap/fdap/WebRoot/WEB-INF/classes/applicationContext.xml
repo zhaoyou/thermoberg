@@ -89,6 +89,10 @@
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 	
+	<bean id="hisBoxDao" class="org.fdap.dao.impl.BoxHisDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
 	<!-- 后台定义的dao -->
 	<bean id="userConfigDao" class="org.fdap.dao.impl.UserConfigDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
@@ -195,6 +199,12 @@
 		<property name="projectDao" ref="projectDao"></property>
 		<property name="realAlarmDao" ref="realAlarmDao"></property>
 		<property name="orgDao" ref="orgDao"></property>
+	</bean>
+	
+	<bean id="boxHisBizImpl" class="org.fdap.biz.impl.BoxHisBizImpl">
+		<property name="getmaxminavg" ref="getmaxminavg"></property>
+		<property name="refdao" ref="refDao"></property>
+		<property name="boxHisDao" ref="hisBoxDao"></property>
 	</bean>
 	
 	<!-- 后台定义的业务类 -->
@@ -316,6 +326,12 @@
 		<property name="orgbiz" ref="orgBiz"></property>
 		<property name="carhisbiz" ref="carhisBiz"></property>
 		<property name="refconfigbiz" ref="refConfigBiz"></property>
+		<property name="boxhisBiz" ref="boxHisBizImpl"></property>
+	</bean>
+	
+	<bean name="/boxHis" class="org.fdap.action.BoxHisAction">
+		<property name="boxHisBiz" ref="boxHisBizImpl"></property>
+		<property name="orgbiz" ref="orgBiz"></property>
 	</bean>
 	
 	<!-- 该类用来计算数据的最大值、最小值和平均值 -->
