@@ -334,6 +334,9 @@
 		<property name="orgbiz" ref="orgBiz"></property>
 	</bean>
 	
+	<bean name="/order" class="org.fdap.action.OrderTrackAction">
+	</bean>
+	
 	<!-- 该类用来计算数据的最大值、最小值和平均值 -->
 		<bean id="getmaxminavg" class="org.fdap.util.GetMaxMinAvg"></bean>
 		
