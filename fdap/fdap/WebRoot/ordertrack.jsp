@@ -104,6 +104,9 @@
           <%-- 
           <!-- 暂时不用机构企业地图 -->
           <span style="display: ${isshowmap==0?'none':'inline' }"><a href="org.do?ope=toChangeDisplay&oid=${oid }&showmap=2" style="text-decoration: none;">地图显示</a></span>--%>
+        	<a href="javascript:window.location.href='org.do?ope=toOrg&oid=${param.oid }'">
+          <img src="images/index/back.gif" width="58" height="21" 
+        class="pho"/></a>
         </td>
         </tr>
       </table>
@@ -155,12 +158,13 @@
 	    			</select>
     			</td>
     			<td>
-    				<input type="button" value="查 询" />
+    				<input type="button" value="查 询" onclick="alert('根据条件查询相应的订单信息！');" />
     			</td>
     		</tr>
     	</table>
     </div>
     <div id="left_tree">
+    	<div id="left_tree_display">
     	上海东方医院
     	<ul class="a">
     		
@@ -173,9 +177,10 @@
     				<li><a href="#">20120715123</a></li>
     				<li><a href="#">20120716591</a></li>
     	</ul>
+    	</div>
     </div>
-    <div id="right_content">
-        <table id="r_table">
+    <div id="right_content" >
+        <table id="r_table" >
         	<tr id="r_table_tr">
 	        	<td>品名</td>
 	        	<td>总数量</td>
@@ -191,8 +196,9 @@
 	        	<td>单位</td>
 	        	<td>剂型</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>狂犬育苗#22</td>
+        	<tbody id="t_table_display">
+        	<tr >
+	        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -206,8 +212,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr >
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素A1</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -221,8 +227,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素A2</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -236,8 +242,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr >
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素ccc</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -251,8 +257,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素bbb</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -266,8 +272,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr  onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr >
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素abc</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -281,8 +287,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素123</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -296,8 +302,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素4</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -311,8 +317,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素6</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -326,8 +332,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素777</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -341,8 +347,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素888</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -356,8 +362,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素aaa</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -371,8 +377,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素999</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -386,8 +392,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素aaa</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -401,8 +407,8 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
-        	<tr onclick="javascript:window.location.href='order.do?ope=toOrdertbcc'">
-	        	<td>胰岛素aaa</td>
+        	<tr>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">胰岛素aaa</a></td>
 	        	<td>120</td>
 	        	<td>2</td>
 	        	<td>20/件</td>
@@ -416,6 +422,7 @@
 	        	<td>盒</td>
 	        	<td>200</td>
         	</tr>
+        	</tbody>
         </table>
     </div>
   </div>

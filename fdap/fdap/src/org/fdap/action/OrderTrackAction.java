@@ -21,5 +21,11 @@ public class OrderTrackAction extends BaseAction {
 		return mapping.findForward("ordertbcc");
 	}
 	
+	public ActionForward toOrdertbccRef(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward("ordertbccref");
+	}
+	
 	
 }

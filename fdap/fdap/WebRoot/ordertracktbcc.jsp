@@ -36,6 +36,10 @@
 		width: 960px;
 	}
 	
+	#r_table tr {
+		cursor: pointer;
+	}
+	
 	#r_table #r_table_tr {
 		background-color: #3087DD;
 		height: 20px;
@@ -73,7 +77,7 @@
           	<span id="errorTip" style="color: red;display: none;" >(获取报警数据失败 ...)</span>
           </span>
           
-          <a href="javascript:window.location.href='order.do?ope=toOrder'">
+          <a href="javascript:window.location.href='order.do?ope=toOrder&oid=${param.oid }'">
           <img src="images/index/back.gif" width="58" height="21" 
         class="pho"/></a>
         </td>
@@ -102,7 +106,147 @@
 	        	<td>2012-07-11 12:00:00</td>
 	        	<td>2012-07-18 18:10:00</td>
 	        	<td>2-8</td>
-	        	<td>冷藏间</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#23</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#23</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#24</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#25</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#26</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#27</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#28</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#29</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#32</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
+	        	<td>正常</td>
+	        	<td>7.9</td>
+	        	<td>3.6</td>
+	        	<td>5.7</td>
+	        	<td>75%</td>
+	        	<td>60%</td>
+	        	<td>66%</td>
+        	</tr>
+        	<tr>
+	        	<td>狂犬育苗#33</td>
+	        	<td>2012-07-11 12:00:00</td>
+	        	<td>2012-07-18 18:10:00</td>
+	        	<td>2-8</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
 	        	<td>正常</td>
 	        	<td>7.9</td>
 	        	<td>3.6</td>
@@ -116,7 +260,7 @@
 	        	<td>2012-07-11 12:00:00</td>
 	        	<td>2012-07-18 18:10:00</td>
 	        	<td>2-8</td>
-	        	<td>冷藏间</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
 	        	<td>正常</td>
 	        	<td>7.9</td>
 	        	<td>3.6</td>
@@ -130,147 +274,7 @@
 	        	<td>2012-07-11 12:00:00</td>
 	        	<td>2012-07-18 18:10:00</td>
 	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td>冷藏间</td>
+	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
 	        	<td>正常</td>
 	        	<td>7.9</td>
 	        	<td>3.6</td>

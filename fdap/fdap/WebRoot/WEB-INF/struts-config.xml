@@ -70,6 +70,7 @@
   		<action path="/order" parameter="ope" type="org.springframework.web.struts.DelegatingActionProxy">
   			<forward name="order" path="/ordertrack.jsp"></forward>
   			<forward name="ordertbcc" path="/ordertracktbcc.jsp"></forward>
+  			<forward name="ordertbccref" path="/ordertracktbcc_ref.jsp"></forward>
   		</action>
   	</action-mappings>
 </struts-config>
