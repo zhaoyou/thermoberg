@@ -1,7 +1,0 @@
-driverClass=com.microsoft.sqlserver.jdbc.SQLServerDriver
-url=jdbc\:sqlserver\://192.168.1.119\:1433;databaseName\=ccdcc_db_test
-user=sa
-password=1q2w3e
-minPoolSize=3
-maxPoolSize=30
-initialPoolSize=5

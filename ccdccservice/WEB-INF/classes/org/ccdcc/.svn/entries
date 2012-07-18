@@ -1,43 +1,0 @@
-10
-
-dir
-12
-https://192.168.1.119/svn/ccdccservice/branches/dev/ccdccservice/src/org/ccdcc
-https://192.168.1.119/svn/ccdccservice
-
-
-
-2011-02-25T04:02:00.069600Z
-12
-zhaoyou
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-c07e307e-bcf5-a747-8ce3-45847b5ae260
-
-service
-dir
-
-dao
-dir
-
-biz
-dir
-
-entity
-dir
-
-util
-dir
-
