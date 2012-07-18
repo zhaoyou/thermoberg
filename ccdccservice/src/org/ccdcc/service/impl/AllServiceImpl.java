@@ -1,12 +1,16 @@
 package org.ccdcc.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.ccdcc.biz.BoxStartUpBiz;
 import org.ccdcc.biz.CarHisBiz;
 import org.ccdcc.biz.CarRealBiz;
 import org.ccdcc.biz.RefHisBiz;
 import org.ccdcc.biz.RefRealBiz;
 import org.ccdcc.biz.StartUpBiz;
+import org.ccdcc.entity.BoxHisView;
+import org.ccdcc.entity.BoxStartUpView;
 import org.ccdcc.entity.CarHisView;
 import org.ccdcc.entity.CarHisView_new;
 import org.ccdcc.entity.CarRealData;
@@ -28,6 +32,8 @@ public class AllServiceImpl implements AllService {
 	private CarRealBiz carrealbiz = null ;
 
 	private StartUpBiz startupbiz = null ;
+	
+	private BoxStartUpBiz boxStartupbiz = null;
 	
 	private RefRealBiz	refrealbiz = null ;
 	
@@ -130,6 +136,23 @@ public class AllServiceImpl implements AllService {
 	public int uploadRefHisData(String projectId, String devId,
 			String devType, List<RefHisData> list) {
 		return refhisbiz.upload(projectId, devId, devType, list);
+	}
+
+	public void setBoxStartupbiz(BoxStartUpBiz boxStartupbiz) {
+		this.boxStartupbiz = boxStartupbiz;
+	}
+
+	@Override
+	public List<BoxStartUpView> getBoxStartUpList(String key, String projectId,
+			Integer id) {
+		return boxStartupbiz.getBoxListByAfterId(key, projectId, id);
+	}
+
+	@Override
+	public List<BoxHisView> getBoxHis(String key, String projected,
+			Integer parentId, String afterTime) {
+		List<BoxHisView> list = new ArrayList<BoxHisView>();
+		return list;
 	}
 	
 }

@@ -2,6 +2,8 @@ package org.ccdcc.service;
 
 import java.util.List;
 
+import org.ccdcc.entity.BoxHisView;
+import org.ccdcc.entity.BoxStartUpView;
 import org.ccdcc.entity.CarHisView;
 import org.ccdcc.entity.CarHisView_new;
 import org.ccdcc.entity.CarRealData;
@@ -149,4 +151,23 @@ public interface AllService {
 	 * @return	flag 1 成功 0 失败
 	 */
 	public int uploadRefHisData(String projectId, String devId, String devType, List<RefHisData> list);
+
+	/**
+	 * 获取小批零历史起停记录
+	 * @param key
+	 * @param projectId
+	 * @param id
+	 * @return
+	 */
+	public List<BoxStartUpView> getBoxStartUpList(String key, String projectId, Integer id);
+	
+	/**
+	 * 获取小批零历史数据
+	 * @param key
+	 * @param projected
+	 * @param parentId
+	 * @param afterTime
+	 * @return
+	 */
+	public List<BoxHisView>	getBoxHis(String key ,String projected ,Integer parentId, String  afterTime) ;
 }
