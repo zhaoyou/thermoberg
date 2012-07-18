@@ -121,7 +121,7 @@
 				<a href="javascript:${fn:contains(power,"冷库历史曲线")==true?"golist('hisref.do','toCurve');":"alert('您未开通冷库历史曲线功能');"}"><img src="images/canku/bt_orders.gif" style="display:inline; " /></a>
 				<a href="javascript:${fn:contains(power,"冷库实时图层")==true?"golist('realref.do','toRealFloorfuck');":"alert('您未开通冷库实时图层功能');"}"><img src="images/canku/bt_acti.gif" style="display:inline; " /></a>
 				<a href="javascript:${fn:contains(power,"冷库制冷实时")==true?"golist('realcool.do','toRealCoolSys');":"alert('您未开通冷库制冷实时功能');"}"><img src="images/canku/bt_confirm.gif"  style="display:inline;" /></a>
-				
+				<a href="ordertrack.jsp">药品订单信息</a>
 			</div>
 	      <div id="bottom">
 	        <table id="tb" width="80%" border="0" cellspacing="0" cellpadding="0">
