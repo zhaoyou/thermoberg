@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="melibrary.com.genuitec.eclipse.j2eedt.core.MYECLIPSE_JAVAEE_5_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/proxool-0.8.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/activation.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.6rc1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr.jar"/>
@@ -71,7 +72,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/persistence.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-2.5.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/portlet-api.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/proxool-0.8.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-agent.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-aop.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-beans.jar"/>

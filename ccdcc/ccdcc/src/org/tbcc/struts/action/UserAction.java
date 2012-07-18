@@ -328,6 +328,13 @@ public class UserAction extends BaseAction {
 		
 	}
 	
+	public ActionForward toIndex(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		TbccBaseUser user = (TbccBaseUser)request.getSession().getAttribute("LoginUser");
+	    return new ActionForward("/branch.do?ope=toMain&branchId="+user.getClient().getTransactionId());
+	}
+	
 	/**
 	 * 注销分支用户、返回到登陆页面
 	 * @param mapping
