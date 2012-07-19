@@ -1,0 +1,114 @@
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	width:990px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+}
+img, h1, div {
+	border:0;
+}
+#right_content {
+	position: relative;
+	height: auto;
+	text-align: center;
+	margin: 0px;
+}
+#r_table {
+}
+#r_table #r_table_tr {
+	background-color: #3087DD;
+	height: 20px;
+}
+ul {
+	margin-left: 40px;
+	margin-top: 3px;
+}
+ul li {
+	line-height: 20px
+}
+ul.a {
+	list-style-type:circle;
+	list-style-image: url(../../images/chezai/table--pencil.png);
+}
+#content #center .top {
+	border:1px solid #d3e0e8;
+	background-image: url(../../images/chezai/menu_bga.gif);
+	background-repeat: repeat-x;
+	padding-left: 10px;
+	text-align: left;
+	background-position: 0px 0px;
+	height: 24px;
+	line-height: 24px;
+	display: block;
+	padding-top: 2px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	position: relative;
+}
+#content #center .top a {
+	line-height:22px;
+	margin-left:5px;
+	text-decoration:none;
+	color:#3a6486;
+}
+#con {
+	float: left;
+	height: auto;
+	width: 984px;
+	padding-top: 5px;
+	padding-left: 4px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-right-color: #acb4be;
+	border-left-color: #acb4be;
+}
+#right .top_a {
+	height: 8px;
+	border-right-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-left-style: solid;
+	border-right-color: #c6e4f8;
+	border-left-color: #c6e4f8;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #c6e4f8;
+}
+效果 td {
+	line-height:23px;
+	text-align:center;
+	border:1px solid #c6e4f8;
+}
+#right_content #tb2 {
+	border:1px solid #c6e4f8;
+	border-collapse:collapse;
+}
+#right_content #tb2 {
+	background-image: url(../../images/chezai/bg_cc.gif);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+}
+#content #center #right_content #tb3 #tb3 td {
+	background-image: url(../../images/chezai/bg_cc.gif);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+}
+#content #center #right_content #tb3 td {
+	border:1px solid #c6e4f8;
+	border-collapse:collapse;
+}
+#right_content #tb3 tr td a {
+	color: #06C;
+	text-decoration: underline;
+}
+#right_content #tb3 tr td a:hover {
+	color: #903;
+	text-decoration: none;
+}

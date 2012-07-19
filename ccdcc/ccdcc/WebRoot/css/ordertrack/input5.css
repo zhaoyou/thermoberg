@@ -1,0 +1,104 @@
+#right #center #bd3 tr td h3 {
+	text-align: right;
+	width: 70px;
+}
+#right #center table tr td select {
+	height: 20px;
+	width: 130px;
+	border: 1px solid #54a5d5;
+	font-size:9pt;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#333333;
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+	background-color: #F4F4F4;
+	text-align: left;
+	margin-right: 22px;
+}
+#right #center #bd3 tr td select {
+	text-align: left;
+}
+#right #center #bd3 td {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#right #center #bd4 {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#right #center #bd4 td {
+	border-collapse:collapse;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#right #center #bd {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#content #center #center2 #bd4 tr td {
+	text-align: right;
+}
+#content #center #center3 #bd tr td {
+	text-align: right;
+}
+#content #center #center4 #bd2 tr td .q_td {
+	text-align: right;
+}
+#content #center #center4 #bd2 tr td .q_td {
+	text-align: right;
+}
+#content #center #center4 #bd2 tr td {
+	text-align: right;
+}
+#content #center #top {
+	border:1px solid #d3e0e8;
+	background-image: url(../../images/chezai/menu_bga.gif);
+	background-repeat: repeat-x;
+	padding-left: 10px;
+	text-align: left;
+	background-position: 0px 0px;
+	height: 24px;
+	line-height: 24px;
+	display: block;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	position: relative;
+}
+#center #top a {
+	line-height:22px;
+	margin-left:5px;
+	text-decoration:none;
+	color:#3a6486;
+}
+.select01 {
+	height: 20px;
+	width: 130px;
+	border: 1px solid #54a5d5;
+	font-size:9pt;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#333333;
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+	background-color: #F4F4F4;
+	text-align: left;
+}
+.input01 {
+	width: 130px;
+	height: 18px;
+	border: 1px solid #54a5d5;
+	font-size:9pt;
+	font-family:Arial, Helvetica, sans-serif;
+	color:#333333;
+	margin-right: 5px;
+	background-color: #F4F4F4;
+	float: left;
+}
