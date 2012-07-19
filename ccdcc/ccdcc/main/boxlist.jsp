@@ -31,6 +31,10 @@
     <li class="tab_b"><a href="javascript:golist('pro.do','toRefList');"><img src="images/piling/icon_a.gif" width="22" height="17" />仓库工程</a></li>
     <li class="tab_b"><a href="javascript:golist('pro.do','toCarList')"><img src="images/piling/icon_b.gif" width="18" height="20" />车载工程</a></li>
     <li class="tab_b"><a href="javascript:golist('pro.do', 'toBoxList')"><img src="images/piling/icon.gif" width="19" height="20" />小批零工程</a></li>
+    <li class="tab_b">
+					<a href="ordertrack.jsp"><img
+							src="images/canku/icon_b.gif" width="18" height="20" />订单信息</a>
+				</li>
     <li class="tab_c"><a href="#">&nbsp;</a></li>
 
   </ul>
