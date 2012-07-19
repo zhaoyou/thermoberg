@@ -49,6 +49,14 @@
 			<property name="connectionfaotory" ref="connectionfactory"></property>
 		</bean>
 		
+		<bean id="boxStartUpDao" class="org.ccdcc.dao.jdbc.impl.BoxStartUpDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		
+		<bean id="boxHisDao" class="org.ccdcc.dao.jdbc.impl.BoxHisDaoImpl">
+			<property name="connectionfaotory" ref="connectionfactory"></property>
+		</bean>
+		
 		
 		<!-- 定义connectionfactory，通过sessionfactory获取连接 -->
 		<bean id="connectionfactory" class="org.ccdcc.util.ConnectionProxyFactory" >
@@ -88,6 +96,19 @@
 			<property name="refHisDao" ref="refhisDao"></property>
 		</bean>
 		
+		<bean id="boxStartUpBiz" class="org.ccdcc.biz.impl.BoxStartUpBizImpl">
+			<property name="projectAuthDao" ref="projectAuth"></property>
+			<property name="startupdao" ref="boxStartUpDao"></property>
+			<property name="util" ref="dateUtil"></property>
+		</bean>
+		
+		<bean id="boxHisBiz" class="org.ccdcc.biz.impl.BoxHisBizImpl">
+			<property name="boxhisdao" ref="boxHisDao"></property>
+			<property name="projectAuthDao" ref="projectAuth"></property>
+			<property name="boxstartupdao" ref="boxStartUpDao"></property>
+			<property name="util" ref="dateUtil"></property>
+		</bean>
+		
 		<!-- 更新为一个Service类 -->
 		<bean id="allservice" class="org.ccdcc.service.impl.AllServiceImpl">
 			<property name="carhisbiz"  ref="carhisbiz"/>
@@ -95,6 +116,8 @@
 			<property name="startupbiz" ref="startupbiz"></property>
 			<property name="refrealbiz" ref="refrealbiz"></property>
 			<property name="refhisbiz" ref="refhisBiz"></property>
+			<property name="boxStartupbiz" ref="boxStartUpBiz"></property>
+			<property name="boxHisBiz" ref="boxHisBiz"></property>
 		</bean>
 		
 		<bean id="address" class="org.codehaus.xfire.addressing.AddressingInHandler"></bean>
