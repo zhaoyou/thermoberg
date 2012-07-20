@@ -8,6 +8,32 @@
 <link href="css/ordertrack/tcd.css" rel="stylesheet" type="text/css" />
 <link href="css/ordertrack/input5.css" rel="stylesheet" type="text/css" />
 <link href="css/ordertrack/con_ri.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+	#display_height {
+		height: 350px;
+	}
+</style>
+<script type="text/javascript">
+	function show(id) {
+		//var s = document.getElementsByName("first_content");
+		for(var i = 0 ; i < 4; i++) {
+			var divId = "first_content" + i;
+			if (id === i) {
+				document.getElementById(divId).style.display = "inline";
+			} else {
+				document.getElementById(divId).style.display = "none";
+			}
+		}
+		//document.getElementById(id).style.display = "inline";
+	}
+	
+	function showTree(id) {
+		document.getElementById(id).style.display = "inline";
+	}
+	function hide(id) {
+		document.getElementById(id).style.display = "none";
+	}
+</script>
 </head>
 <body>
 <div>
@@ -89,8 +115,8 @@
               <option>400ml/瓶</option>
             </select>
             </span></td>
-          <td width="118" align="right">生产批号：</td>
-          <td width="126" align="left" class="q_td"><input type="button" value="查 询" onclick="alert('根据条件查询相应的订单信息！');" />
+          <td width="118" align="right"></td>
+          <td width="126" align="left" class="q_td"><input type="button" value="查 询" onclick="javascript: showTree('left_tree_display')" />
             <input type="button" value="返 回" onclick="window.location.href='user.do?ope=toIndex'"/></td>
           <td width="118" class="q_td">&nbsp;</td>
         </tr>
@@ -100,24 +126,9 @@
   </div>
 </div>
 <div id="con">
-  <div id="right_content" >
+  <div id="first_content0" class="right_content" style="display: none">
     <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tb" >
       <tr id="tb1">
-        <td width="74" height="26">编号</td>
-        <td width="69">开启时间</td>
-        <td width="67">结束时间 </td>
-        <td width="64">出发地 </td>
-        <td width="57">目的地 </td>
-        <td width="54">发货人</td>
-        <td width="58">承运人 </td>
-        <td width="67">收货人</td>
-        <td width="46">&nbsp;</td>
-        <td width="43">有效期</td>
-        <td width="80">&nbsp;</td>
-        <td width="52">有效期</td>
-        <td width="67">有效期</td>
-      </tr>
-      <tr>
         <td width="74">品名</td>
         <td width="69">总数量</td>
         <td width="67">整件数</td>
@@ -298,8 +309,44 @@
           <td>盒</td>
           <td>200</td>
         </tr>
-        <tr>
-          <td><a href="ordertracktbcc.jsp">胰岛素aaa</a></td>
+      </tbody>
+    </table>
+  </div>
+  <div id="first_content1" class="right_content" style="display: none">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tb" >
+      <tr id="tb1">
+        <td width="74">品名</td>
+        <td width="69">总数量</td>
+        <td width="67">整件数</td>
+        <td width="64">整件单位</td>
+        <td width="57">散件数</td>
+        <td width="54">散件单位</td>
+        <td width="58">运单状态</td>
+        <td width="67">批号</td>
+        <td width="46">产地</td>
+        <td width="43">规格</td>
+        <td width="80">有效期</td>
+        <td width="52">单位</td>
+        <td width="67">剂型</td>
+      </tr>
+      <tbody id="t_table_display">
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">狂犬育苗#22</a></td>
+          <td>120000</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素A1</a></td>
           <td>120</td>
           <td>2</td>
           <td>20/件</td>
@@ -314,7 +361,7 @@
           <td>200</td>
         </tr>
         <tr class="altrow">
-          <td><a href="ordertracktbcc.jsp">胰岛素999</a></td>
+          <td><a href="ordertracktbcc.jsp">胰岛素A2</a></td>
           <td>120</td>
           <td>2</td>
           <td>20/件</td>
@@ -328,38 +375,8 @@
           <td>盒</td>
           <td>200</td>
         </tr>
-        <tr>
-          <td><a href="ordertracktbcc.jsp">胰岛素aaa</a></td>
-          <td>120</td>
-          <td>2</td>
-          <td>20/件</td>
-          <td>0</td>
-          <td>0</td>
-          <td>已装车</td>
-          <td>201207001</td>
-          <td>西安</td>
-          <td>200/盒</td>
-          <td>2016-12-30</td>
-          <td>盒</td>
-          <td>200</td>
-        </tr>
-        <tr class="altrow">
-          <td><a href="ordertracktbcc.jsp">胰岛素aaa</a></td>
-          <td>120</td>
-          <td>2</td>
-          <td>20/件</td>
-          <td>0</td>
-          <td>0</td>
-          <td>已装车</td>
-          <td>201207001</td>
-          <td>西安</td>
-          <td>200/盒</td>
-          <td>2016-12-30</td>
-          <td>盒</td>
-          <td>200</td>
-        </tr>
-        <tr>
-          <td><a href="ordertracktbcc.jsp">胰岛素aaa</a></td>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素ccc</a></td>
           <td>120</td>
           <td>2</td>
           <td>20/件</td>
@@ -374,7 +391,259 @@
           <td>200</td>
         </tr>
         <tr class="altrow">
-          <td><a href="ordertracktbcc.jsp">胰岛素aaa</a></td>
+          <td><a href="ordertracktbcc.jsp">胰岛素bbb</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素abc</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素123</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><a href="ordertracktbcc.jsp">胰岛素4</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素6</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="first_content2" class="right_content" style="display: none">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tb" >
+      <tr id="tb1">
+        <td width="74">品名</td>
+        <td width="69">总数量</td>
+        <td width="67">整件数</td>
+        <td width="64">整件单位</td>
+        <td width="57">散件数</td>
+        <td width="54">散件单位</td>
+        <td width="58">运单状态</td>
+        <td width="67">批号</td>
+        <td width="46">产地</td>
+        <td width="43">规格</td>
+        <td width="80">有效期</td>
+        <td width="52">单位</td>
+        <td width="67">剂型</td>
+      </tr>
+      <tbody id="t_table_display">
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">狂犬育苗#22</a></td>
+          <td>120000</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素bbb</a></td>
+          <td>99990</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素abc</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素123</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td><a href="ordertracktbcc.jsp">胰岛素4</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素6</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="first_content3" class="right_content" style="display: none">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tb" >
+      <tr id="tb1">
+        <td width="74">品名</td>
+        <td width="69">总数量</td>
+        <td width="67">整件数</td>
+        <td width="64">整件单位</td>
+        <td width="57">散件数</td>
+        <td width="54">散件单位</td>
+        <td width="58">运单状态</td>
+        <td width="67">批号</td>
+        <td width="46">产地</td>
+        <td width="43">规格</td>
+        <td width="80">有效期</td>
+        <td width="52">单位</td>
+        <td width="67">剂型</td>
+      </tr>
+      <tbody id="t_table_display">
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">狂犬育苗#22</a></td>
+          <td>444444</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素A1</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr class="altrow">
+          <td><a href="ordertracktbcc.jsp">胰岛素A2</a></td>
+          <td>120</td>
+          <td>2</td>
+          <td>20/件</td>
+          <td>0</td>
+          <td>0</td>
+          <td>已装车</td>
+          <td>201207001</td>
+          <td>西安</td>
+          <td>200/盒</td>
+          <td>2016-12-30</td>
+          <td>盒</td>
+          <td>200</td>
+        </tr>
+        <tr >
+          <td><a href="ordertracktbcc.jsp">胰岛素ccc</a></td>
           <td>120</td>
           <td>2</td>
           <td>20/件</td>
@@ -392,18 +661,19 @@
     </table>
   </div>
   <div id="left_tree">
-    <div id="left_tree_display"> 上海东方医院
+    <div id="left_tree_display" style="display: none"> 上海东方医院
       <ul class="a">
-        <li><a href="#">20120711382</a></li>
-        <li><a href="#">20120713990</a></li>
+        <li><a href="javascript: show(0);">20120711382</a></li>
+        <li><a href="javascript: show(1);">20120713990</a></li>
       </ul>
       上海儿童医学中心
       <ul class="a">
-        <li><a href="#">20120715123</a></li>
-        <li><a href="#">20120716591</a></li>
+        <li><a href="javascript: show(2);">20120715123</a></li>
+        <li><a href="javascript: show(3);">20120716591</a></li>
       </ul>
     </div>
   </div>
+  <div id="display_height"></div>
   <iframe scrolling="no" src="common/footer2.jsp" width=100% height=26 frameborder=0></iframe >
 </div>
 </body>

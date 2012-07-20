@@ -50,7 +50,7 @@ table td {
 	vertical-align: top;
 	float: left;
 }
-#right_content {
+.right_content {
 	position: relative;
 	height: auto;
 	text-align: center;
@@ -125,7 +125,7 @@ ul.a {
 	border-bottom-style: solid;
 	border-bottom-color: #c6e4f8;
 }
-#con #right_content #r_table {
+#con .right_content #r_table {
 	line-height:23px;
 	text-align:center;
 	border:1px solid #c6e4f8;

@@ -5,16 +5,16 @@
  border-left-style: none;
  text-align: left;
 }
-#con #right_content #tb {
+#con .right_content #tb {
 	border:1px solid #c6e4f8;
 	border-collapse:collapse;
 }
-#con #right_content #tb #tb1 {
+#con .right_content #tb #tb1 {
 	background-image: url(../../images/chezai/bg_cc.gif);
 	background-repeat: repeat-x;
 	background-position: 0px 0px;
 }
-#con #right_content #tb td {
+#con .right_content #tb td {
 	border: 1px solid #c6e4f8;
 }
 效果 #bottom #tb1, .tb2, td {
