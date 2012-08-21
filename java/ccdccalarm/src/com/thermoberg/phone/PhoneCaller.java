@@ -23,7 +23,7 @@ import javax.xml.ws.WebServiceClient;
  * </p>
  * 
  */
-@WebServiceClient(name = "PhoneCaller", targetNamespace = "http://www.thermoberg.com/Services/TelephoneService", wsdlLocation = "http://192.168.0.50/Services/TelephoneService?wsdl")
+@WebServiceClient(name = "PhoneCaller", targetNamespace = "http://www.thermoberg.com/Services/TelephoneService", wsdlLocation = "http://192.168.0.3:8091/Services/TelephoneService?wsdl")
 public class PhoneCaller extends Service {
 
 	private final static URL PHONECALLER_WSDL_LOCATION;
