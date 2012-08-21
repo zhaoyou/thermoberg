@@ -1,0 +1,102 @@
+package com.thermoberg.dao;
+
+import java.util.List;
+
+import com.thermoberg.entity.AlarmInfo;
+import com.thermoberg.entity.AlarmSerious;
+import com.thermoberg.entity.CarAlarmInfo;
+
+/**
+ * 这是一个报警的数据访问接口
+ * @author Administrator
+ *
+ */
+public interface AlarmDao {
+	
+		public final static String ALARM = "SELECT  b.branchId, b.branchName,r.updatetime ,r.netid ,r.AlarmStatus_Sound1"+
+			"FROM    dbo.TbccBranchPrjRelation rel INNER JOIN "+
+			"dbo.TbccBranchType b ON rel.BranchID = b.BranchID INNER JOIN "+
+			"dbo.TbccRealData_Ref r ON rel.projectId = r.projectId where b.branchId !=29 and b.branchId !=36 and  "+
+			"(r.AlarmStatus_Ref1=1 or  r.AlarmStatus_Ref2=1  or  r.AlarmStatus_Ref3=1 "+ 
+					"or r.AlarmStatus_Ref4=1 or r.AlarmStatus_Ref5=1 or r.AlarmStatus_Ref6=1 or r.AlarmStatus_Ref7=1 or r.AlarmStatus_Ref8=1 " +
+					"or r.AlarmStatus_Ref9=1 or r.AlarmStatus_Ref10=1 or r.AlarmStatus_Ref11=1 or r.AlarmStatus_Ref12=1 or r.AlarmStatus_Ref13=1 " +
+					"or r.AlarmStatus_Ref14=1 or r.AlarmStatus_Ref15=1 or r.AlarmStatus_Ref16=1) and r.ConnectStatus = 2 order by b.branchName,r.updatetime " ;
+	
+		
+		public final static String ALARM_SOUND = "SELECT  b.branchId , b.branchName,r.updatetime "+
+			" FROM    dbo.TbccBranchPrjRelation rel INNER JOIN "+
+			" dbo.TbccBranchType b ON rel.BranchID = b.BranchID INNER JOIN " + 
+			" dbo.TbccRealData_Ref r ON rel.projectId = r.projectId where b.branchId !=29 and b.branchId !=36 and " +  
+			" (r.AlarmStatus_Sound1 = 0 or r.AlarmStatus_Sound1=1) and r.ConnectStatus = 2   ;" ;
+		
+		
+		
+		public final static String ALARM_IMPORTTANT =" SELECT  b.branchId, b.branchName,r.updatetime "+
+		" FROM    dbo.TbccBranchPrjRelation rel INNER JOIN "+
+		" dbo.TbccBranchType b ON rel.BranchID = b.BranchID INNER JOIN " + 
+		" dbo.TbccRealData_Ref r ON rel.projectId = r.projectId where b.branchId !=29 and b.branchId !=36 and " +  
+		 "(r.ai1 between 35 and 126  or  r.ai2 between 35 and 126  or  r.ai3 between 35 and 126 "+
+		"	or r.ai4 between 35 and	126 or r.ai5 between 35 and 126 or r.ai6 between 35 and 126  " + 
+		"	or r.ai7 between 35 and 126  or r.ai8 between 35 and 126  " + 
+		"	or r.ai9 between 35 and 126 or r.ai10 between 35 and 126 or r.ai11 between 35 and 126 "+
+		"	 or r.ai12 between 35 and 126  or r.ai13 between 35 and 126 " +
+		"	or r.ai14 between 35 and 126  or r.ai15 between 35 and 126  or r.ai16 between 35 and 126 ) and r.ConnectStatus = 2 and r.netid>=100 order by b.branchName,r.updatetime " ;
+
+
+		public final static String ALARM_IMPORTTANT2 = "SELECT  b.branchId, b.branchName,r.updatetime "+
+			" FROM    dbo.TbccBranchPrjRelation rel INNER JOIN  " +
+			" dbo.TbccBranchType b ON rel.BranchID = b.BranchID INNER JOIN "+  
+			" dbo.TbccRealData_Ref r ON rel.projectId = r.projectId where b.branchId !=29 and b.branchId !=36 and "+   
+			" (r.ai1 between 35 and 126  or  r.ai2 between 35 and 126  or  r.ai3 between 35 and 126" +
+			"	or r.ai4 between 35 and	126 or r.ai5 between 35 and 126 or r.ai6 between 35 and 126  "+
+			"	or r.ai7 between 35 and 126  or r.ai8 between 35 and 126  "+
+			"	or r.ai9 between 35 and 126 ) and r.ConnectStatus = 2 and r.netid<100 order by b.branchName,r.updatetime  ;" ;
+		
+		
+		public final static String CONNECTION = "SELECT   b.branchId, b.branchName , r.updatetime "+
+			"FROM    dbo.TbccBranchPrjRelation rel INNER JOIN "+
+			"dbo.TbccBranchType b ON rel.BranchID = b.BranchID INNER JOIN " +
+			"dbo.TbccRealData_Ref r ON rel.projectId = r.projectId where b.branchId !=29 and b.branchId !=36 and  "+
+			"r.ConnectStatus !=2 order by b.branchName,r.updatetime" ;
+		
+		
+		public final static String CARALARM = "SELECT  prjtype.projectId AS 'projectId', branch.BranchName AS 'branchName',prjtype.projectName as 'projectName', realdata.UpdateTime AS 'updateTime'"+ 
+					" FROM     TbccBranchPrjRelation relation INNER JOIN"+
+                    " TbccBranchType branch ON relation.BranchID = branch.BranchID INNER JOIN"+
+                    " TbccPrjType prjtype ON relation.ProjectID = prjtype.ProjectID INNER JOIN"+
+                    " TbccRealData_Car realdata ON prjtype.ProjectID = realdata.ProjectID where (realdata.alarmStatus=0 or realdata.alarmStatus=1) and "+
+					" realdata.runStatus = 2 and realdata.connectStatus = 2 and branch.branchId !=29 and branch.branchId !=36 ;" ;
+		
+		
+		
+		public final static String CARALARM_IMPORTTANT = "select branch.branchid*200 AS 'branchId', branch.branchname+prjtype.projectName as 'branchName', realdata.UpdateTime AS 'updatetime' "+
+					" FROM     TbccBranchPrjRelation relation INNER JOIN"+
+                    " TbccBranchType branch ON relation.BranchID = branch.BranchID INNER JOIN"+
+                    " TbccPrjType prjtype ON relation.ProjectID = prjtype.ProjectID INNER JOIN"+
+                    " TbccRealData_Car realdata ON prjtype.ProjectID = realdata.ProjectID where (realdata.ai1>=35 or realdata.ai2>=35 or realdata.ai3>=35) and "+
+					" realdata.runStatus = 2 and realdata.connectStatus = 2 and branch.branchId !=29 and branch.branchId !=36 " ;
+		/**
+		 * 获取所有的已经发生报警的信息列表
+		 * @return
+		 */
+		public List<AlarmInfo> getAlarmList() ;
+		
+		/**
+		 * 获取所有的已经与中心断开连接的信息列表
+		 * @return
+		 */
+		public List<AlarmInfo> getLostConnection() ;
+		
+		/**
+		 * 获取车载报警的信息列表
+		 * @return
+		 */
+		public List<CarAlarmInfo> getCarAlarmList();
+		
+		/**
+		 *  获取仓库、车载严重报警列表
+		 * @param 需要执行的sql语句
+		 * @return
+		 */
+		public List<AlarmSerious> getAlarmSeriousList(String sql) ;
+}

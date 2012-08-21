@@ -1,0 +1,54 @@
+package com.thermoberg.util;
+
+import java.util.List;
+
+import com.thermoberg.entity.AlarmInfo;
+import com.thermoberg.entity.CarAlarmInfo;
+import com.thermoberg.flex.DataService;
+
+public class Test {
+	
+		private static DataService d = new DataService();
+	
+		public static void main(String[] args) {
+			testAlarm();
+			testConnection();
+			testCarAlarm() ;
+		}
+		
+		public static void testAlarm(){
+			List<AlarmInfo> list =  d.getAlarm() ;
+			System.out.println("\t\t以下机构发生了报警");
+			System.out.println("BranchId\tBranchName\tUpdateTime");
+			for (AlarmInfo alarmInfo : list) {
+				System.out.print(""+alarmInfo.getBranchId());
+				System.out.print("\t\t"+alarmInfo.getBranchName());
+				System.out.println("\t"+alarmInfo.getUpdatetime());
+			}
+		}
+		
+		public static void testConnection(){
+			
+			List<AlarmInfo> list =  d.getConnection();
+			System.out.println("\t\t以下机构断开了连接");
+			System.out.println("BranchId\tBranchName\tUpdateTime");
+			for (AlarmInfo alarmInfo : list) {
+				System.out.print(""+alarmInfo.getBranchId());
+				System.out.print("\t\t"+alarmInfo.getBranchName());
+				System.out.println("\t"+alarmInfo.getUpdatetime());
+			}
+		}
+		
+		public static void testCarAlarm(){
+			List<CarAlarmInfo> list = d.getCarAlarm() ;
+			System.out.println("\t\t车载发生报警");
+			System.out.println("");
+			for (CarAlarmInfo carAlarmInfo : list) {
+				System.out.print(""+carAlarmInfo.getProjectId());
+				System.out.print("\t\t"+carAlarmInfo.getBranchName());
+				System.out.println(carAlarmInfo.getUpdateTime());
+			}
+		}
+		
+		
+}

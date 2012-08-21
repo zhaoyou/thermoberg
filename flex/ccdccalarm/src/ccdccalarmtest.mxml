@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init();">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.Alert;
+			[Bindable]
+			public var hostname:String = "" ;		//绑定主机域名
+			
+			public var myTimer:Timer  = null ;		//定义定时器
+			/**
+			 * 	页面加载时处理函数
+			 * */
+			public function init():void{
+				getdomain() ;
+				//setCurrentTime();
+				startTime();
+				myremoteObject.Hello("dafds");
+				//myremoteObject.getAlarm();
+				//myremoteObject.getConnection() ;
+			}
+			/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		public function getdomain():void{ 			 
+	 			this.hostname =  ExternalInterface.call("window.location.host.toString"); 
+	 		}
+	 		
+	 		 /**
+	 		 * 		启动定时器
+	 		 * */
+	 		 
+	 		 public function startTime():void{
+	 		 	myTimer =new Timer(10000,int.MAX_VALUE);
+
+				myTimer.addEventListener("timer", timerhandler);//注意，事件timer必须全部小写
+
+				myTimer.start();
+	 		 }
+	 		 
+	 		 /**
+	 		 *		定时刷新数据
+	 		 * */
+
+			public	function timerhandler(event:TimerEvent):void{
+				myremoteObject.Hello("dafds");
+				//myremoteObject.getAlarm();
+				//myremoteObject.getConnection() ;
+				
+			}
+			/**
+	 		 * 		错误处理函数
+	 		 * */
+	 		 public function errorhandler(event:FaultEvent):void{
+	 		 	//Alert.show("错误信息"+event.toString(),"提示");
+	 		 	Alert.show(hostname+"错误："+event,"提示");
+	 		 	//this.lblRefTipMsg.visible = true ;
+	 		 }
+			 public	function alarmHandler(event:ResultEvent):void{
+			 	Alert.show("调用成功","提示");
+			 }
+		]]>
+	</mx:Script>
+	
+	<mx:RemoteObject id="myremoteObject"
+    	destination="hello"  endpoint="http://{hostname}/ccdccalarm2/messagebroker/amf">
+		<mx:method name="Hello" fault="errorhandler(event)" result="alarmHandler(event)"/>
+    	
+    </mx:RemoteObject>
+	
+	
+</mx:Application>

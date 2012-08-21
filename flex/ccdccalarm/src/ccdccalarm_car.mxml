@@ -1,0 +1,2307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"    creationComplete="init()"
+	 backgroundColor="white" fontSize="12">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import mx.containers.Form;
+			import mx.messaging.config.ConfigMap;
+			import flash.sampler.NewObjectSample;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.core.SoundAsset;
+			import mx.controls.List;
+			import mx.messaging.AbstractConsumer;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+		
+			[Bindable]
+			public var hostname:String = "" ;		//绑定主机域名
+			
+			public var cm:ContextMenu =new ContextMenu(); 	//右键菜单
+			
+			public var myTimer:Timer  = null ;		//定义定时器
+			
+			public var Flag_alarm :Boolean = false ;	//是否报警的标识
+			
+			public var Flag_connection:Boolean = false ;	//是否断开连接的标识
+		
+		
+			public var alarmList:ArrayCollection = new ArrayCollection(); 			//集合用来保存上一次报警集合
+			
+			public var alarmHisList:ArrayCollection = new ArrayCollection() ;		//集合用来保存历史报警记录
+			
+			
+			public var connectionList:ArrayCollection = new ArrayCollection() ;	//集合用来保存上一次断开连接集合
+							
+			public var connectionHisList :ArrayCollection = new ArrayCollection() ; //集合用来保存历史断开连接记录
+			
+			public var qxObj:Object;		//暂时保存的取消监控的对象
+			
+			public var qdObj:Object;		//暂时保存的启动监控的对象
+			
+			public var qxAlarmList:ArrayCollection = new ArrayCollection();			//保存取消监控仓库普通报警的数据
+			
+			public var qxConnectionList:ArrayCollection = new ArrayCollection() ;	//保存取消监控仓库连接报警的数据
+			
+			public var qxCarAlarmList:ArrayCollection = new ArrayCollection() ;	//保存取消监控车载普通报警的数据
+
+            [Embed(source="alarm.mp3")]
+            [Bindable]
+           
+            public var Song:Class;
+
+            public var mySong:SoundAsset = new Song() as SoundAsset;
+            
+            public var channel:SoundChannel;
+            
+            
+            private var ALARMVALUE :int = 300 ; 		//定义报警的延时时间
+            
+            
+            private var CALLVALUE :int = 1200;				//定义电话的延时时间
+            
+                    
+            /***************************短信配置相关的设置*****************************************/
+            
+            [Bindable]
+            private var phoneNumber :String = "13918389593" ;
+            
+            private var messageNumber :String = "13918389593" ;
+            
+            [Bindable]
+            private var phoneCount :Number = 1 ;
+            
+           
+           	private var validURL :String = "192.168.0.50:8888" ;
+            
+            
+            private var ALARM_MODEL :String= "5" ;									//拨打电话和发送短信的模式
+            
+            
+            
+            
+            /**********************************************************************/
+            
+            public function playSound():void
+            {
+                
+                stopSound();   // 先停止音乐，避免播放多次
+                     
+                channel = mySong.play(0,int.MAX_VALUE);// 开始播放音乐
+                
+                //图片显示
+                this.imgRef.visible = true ;
+            }
+            
+            public function stopSound():void
+            {
+                if ( channel != null ) channel.stop();	//停止播放音乐
+                //隐藏图片
+                this.imgRef.visible = false ;
+            }
+			
+			
+			
+			
+			/**
+			 * 	页面加载时处理函数
+			 * */
+			public function init():void{
+				getdomain() ;
+				setCurrentTime();
+				startTime();
+				myremoteObject.getAlarm();
+				myremoteObject.getConnection() ;
+				createMenu();
+			}
+			
+			
+			
+			
+			
+			//创建右键菜单
+			private function createMenu():void {
+                var cmi:ContextMenuItem = new ContextMenuItem("取消监控", true); 
+                cmi.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, contextMenuItem_menuItemSelect_qx);
+                var cmi1:ContextMenuItem = new ContextMenuItem("启动监控", true); 
+                cmi1.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, contextMenuItem_menuItemSelect_qd);
+                //cm = new ContextMenu(); 
+                cm.hideBuiltInItems(); 
+                cm.customItems = [cmi,cmi1]; 
+                cm.addEventListener(ContextMenuEvent.MENU_SELECT, contextMenu_menuSelect); 
+            } 
+
+            private function contextMenu_menuSelect(evt:ContextMenuEvent):void { 
+            	if(refAlarmLastIndex!=-1){
+	                gridHisAlarm.selectedIndex = refAlarmLastIndex; 
+	             }
+	            else if(connectLastIndex!=-1){
+	                gridHisConnection.selectedIndex = connectLastIndex; 
+	             }
+	            else if(carAlarmLastIndex!=-1){
+	                grdCarHisAlarm.selectedIndex = carAlarmLastIndex; 
+	             }
+            } 
+
+            private function contextMenuItem_menuItemSelect_qx(evt:ContextMenuEvent):void {
+				if(refAlarmLastIndex!=-1){
+	                qxObj = gridHisAlarm.selectedItem; 
+	                Alert.show("你确定要取消监控'"+qxObj.branchName+"'吗?","确认取消监控",Alert.YES|Alert.NO,null,doqx);
+	    		}
+	    		else if(connectLastIndex!=-1)
+	    		{
+	    			qxObj = gridHisConnection.selectedItem; 
+	                Alert.show("你确定要取消监控'"+qxObj.branchName+"'吗?","确认取消监控",Alert.YES|Alert.NO,null,doqx);
+	    		}
+	    		else if(carAlarmLastIndex!=-1)
+	    		{
+	    			qxObj = grdCarHisAlarm.selectedItem; 
+	                Alert.show("你确定要取消监控'"+qxObj.branchName+"'吗?","确认取消监控",Alert.YES|Alert.NO,null,doqx);
+	    		}
+            } 
+			
+			private function contextMenuItem_menuItemSelect_qd(evt:ContextMenuEvent):void {
+				if(refAlarmLastIndex!=-1){
+	                qdObj = gridHisAlarm.selectedItem; 
+	                Alert.show("你确定要启动监控'"+qdObj.branchName+"'吗?","确认启动监控",Alert.YES|Alert.NO,null,doqd);
+	    		}
+	    		else if(connectLastIndex!=-1)
+	    		{
+	    			qdObj = gridHisConnection.selectedItem;
+	                Alert.show("你确定要启动监控'"+qdObj.branchName+"'吗?","确认启动监控",Alert.YES|Alert.NO,null,doqd);
+	    		}
+	    		else if(carAlarmLastIndex!=-1)
+	    		{
+	    			qdObj = grdCarHisAlarm.selectedItem;
+	                Alert.show("你确定要启动监控'"+qdObj.branchName+"'吗?","确认启动监控",Alert.YES|Alert.NO,null,doqd);
+	    		}
+            } 
+			
+			
+			private function doqx(event:CloseEvent):void{
+				//判断是否已经过滤掉了
+				var b:Boolean = false;
+				if(event.detail == Alert.YES){
+					if(refAlarmLastIndex!=-1){
+						for(var i:int=0;i<qxAlarmList.length;i++){
+							var obj:Object = qxAlarmList.getItemAt(i);
+							if(obj.branchId==qxObj.branchId){
+								b=true;
+							}
+						}
+						if(!b){
+							qxAlarmList.addItem(qxObj);
+						}
+						this.qxjkList.dataProvider = qxAlarmList;		//显示取消监控普通报警的列表
+		    		}
+		    		else if(connectLastIndex!=-1)
+		    		{
+		    			for(var i:int=0;i<qxConnectionList.length;i++){
+							var obj:Object = qxConnectionList.getItemAt(i);
+							if(obj.branchId==qxObj.branchId){
+								b=true;
+							}
+						}
+						if(!b){
+							qxConnectionList.addItem(qxObj);
+						}
+						this.qxjkconList.dataProvider = qxConnectionList;		//显示取消监控连接报警的列表
+		    		}
+		    		else if(carAlarmLastIndex!=-1)
+		    		{
+		    			for(var i:int=0;i<qxCarAlarmList.length;i++){
+							var obj:Object = qxCarAlarmList.getItemAt(i);
+							if(obj.projectId==qxObj.projectId){
+								b=true;
+							}
+						}
+						if(!b){
+							qxCarAlarmList.addItem(qxObj);
+						}
+						this.qxjkcarList.dataProvider = qxCarAlarmList;			//显示取消监控车载报警的列表
+		    		}
+				}
+			}
+			
+			
+			private function doqd(event:CloseEvent):void{
+				//判断是否已经被过滤掉了
+				var b:Boolean = false;
+				if(event.detail == Alert.YES){
+					if(refAlarmLastIndex!=-1){
+						for(var i:int=0;i<qxAlarmList.length;i++){
+							var obj:Object = qxAlarmList.getItemAt(i);
+							if(obj.branchId==qdObj.branchId){
+								b=true;
+								qxAlarmList.removeItemAt(i);
+							}
+						}
+						if(b){
+							Alert.show('已启动监控 '+qdObj.branchName+' 普通报警','提示');
+						}
+						else{
+							Alert.show(qdObj.branchName+'没有被取消监控普通报警','提示');
+						}
+						this.qxjkList.dataProvider = qxAlarmList;		//显示取消监控普通报警的列表
+		    		}
+		    		else if(connectLastIndex!=-1)
+		    		{
+		    			for(var i:int=0;i<qxConnectionList.length;i++){
+							var obj:Object = qxConnectionList.getItemAt(i);
+							if(obj.branchId==qdObj.branchId){
+								b=true;
+								qxConnectionList.removeItemAt(i);
+							}
+						}
+						if(b){
+							Alert.show('已启动监控 '+qdObj.branchName+' 连接报警','提示');
+						}
+						else{
+							Alert.show(qdObj.branchName+'没有被取消监控连接报警','提示');
+						}
+						this.qxjkconList.dataProvider = qxConnectionList;		//显示取消监控连接报警的列表
+		    		}
+		    		else if(carAlarmLastIndex!=-1)
+		    		{
+		    			for(var i:int=0;i<qxCarAlarmList.length;i++){
+							var obj:Object = qxCarAlarmList.getItemAt(i);
+							if(obj.projectId==qdObj.projectId){
+								b=true;
+								qxCarAlarmList.removeItemAt(i);
+							}
+						}
+						if(b){
+							Alert.show('已启动监控 '+qdObj.branchName+' 车载报警','提示');
+						}
+						else{
+							Alert.show(qdObj.branchName+'没有被取消监控车载报警','提示');
+						}
+						this.qxjkcarList.dataProvider = qxCarAlarmList;			//显示取消监控车载报警的列表
+		    		}
+				}
+			}
+			
+			
+			private function guolvList(sourceList:ArrayCollection,qxList:ArrayCollection):void{
+				for(var i:int=0;i<qxList.length;i++){
+			 		for(var j:int=0;j<sourceList.length;j++){
+			 			if(qxList.getItemAt(i).branchId==sourceList.getItemAt(j).branchId){
+			 				sourceList.removeItemAt(j);
+			 			}
+			 		}
+			 	}
+			}
+			
+			
+			private function guolvCarList(sourceList:ArrayCollection,qxList:ArrayCollection):void{
+				for(var i:int=0;i<qxList.length;i++){
+			 		for(var j:int=0;j<sourceList.length;j++){
+			 			if(qxList.getItemAt(i).projectId==sourceList.getItemAt(j).projectId){
+			 				sourceList.removeItemAt(j);
+			 			}
+			 		}
+			 	}
+			}
+			
+			
+			
+			/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		public function getdomain():void{ 			 
+	 			this.hostname =  ExternalInterface.call("window.location.host.toString"); 
+	 		}
+	 		
+	 		/**	
+	 		 * 	设置打开页面的时间
+	 		 * */
+	 		 public function setCurrentTime():void{
+	 		 	var d :Date= new Date() ;
+	 		 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+	 		 	this.lblLoginTime.text = s ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		启动定时器
+	 		 * */
+	 		 
+	 		 public function startTime():void{
+	 		 	myTimer =new Timer(10000,int.MAX_VALUE);
+
+				myTimer.addEventListener("timer", timerhandler);//注意，事件timer必须全部小写
+
+				myTimer.start();
+				
+				
+				//拨号，发短信程序
+				var callmyTimer:Timer = new Timer(20000,int.MAX_VALUE) ;
+				callmyTimer.addEventListener("timer",callTimerHandler) ;
+				callmyTimer.start() ;
+	 		 }
+	 		 
+	 		 /**
+	 		 *		定时刷新数据
+	 		 * */
+
+			public	function timerhandler(event:TimerEvent):void{
+				myremoteObject.getAlarm();
+				myremoteObject.getConnection() ;
+				
+				//调用监控南京医药仓库实时数据并保存数据
+				myremoteObject.getHistRefData();
+				
+				//当本项目的主机是在50机器上时才监测0.3机器的情况
+				if(this.hostname== this.validURL_test){
+					testTomcat();
+					//仅当0.3上tomcat正常时，才去判断外网是否正常
+					if(this.lbl_tomcat.visible == false){
+						testOutNet();
+					}
+				}
+			}
+			
+			
+			/**
+			 * 		定时检测是否需要拨号和发送短信
+			 * */
+			public function callTimerHandler(event:TimerEvent):void{
+				if(this.ALARM_MODEL=="20"){
+					//判断是否需要拨号
+					isCallPhone_Task() ;
+					//检测是否需要发短信
+					ifSendMessage() ;
+					
+				}
+			}
+	 		 
+	 		 
+	 		 
+	 		 /**
+	 		 * 		判断是否需要加入历史报警记录列表
+	 		 * */
+	 		 
+	 		 public function isEndAlarm(source:ArrayCollection,current:ArrayCollection):void{ 	
+	 		 	
+	 		 	for(var i:int=0;i<source.length;i++){		//循环遍历原报警数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认报警已经结束
+	 		 			
+	 		 			//这里需要判断新报警数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的报警数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.branchId==curobj.branchId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果该报警，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		alarmHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	设置需要更新的报警
+	 		 * */
+	 		 public function isUpdateAlarm(source:ArrayCollection,current:ArrayCollection):void{
+	 		 		for(var i:int=0;i<current.length;i++){		//循环当前报警的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次报警信息，把报警延时时间，加入到当前报警时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.branchId==obj2.branchId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的报警的持续时间
+		 		 						obj.timestr = obj2.timestr ;							//设置开始时间为第一次报警时间
+		 		 						obj.isConfirm = obj2.isConfirm	 ;		
+		 		 						obj.isCall = obj2.isCall ;		
+		 		 						obj.isSend = obj2.isSend ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+	 		 }
+	 		 
+	 		 
+	 		 /**
+	 		 * 		判断报警的时间是否已经超过20分钟，只有超过20分钟才算真正报警、才播放声音
+	 		 * */
+	 		 public function isDelayAlarm(current:ArrayCollection):Boolean{
+	 		 	
+	 		 	
+	 		 //	Alert.show(current.length+" 连接个数","length");
+	 		 	
+	 		 	for(var i:int = 0 ;i<current.length;i++){
+	 		 		var obj :Object = current.getItemAt(i) ;
+	 		 		
+	 		 		//只有报警时间超过20分钟，并且尚未确认 obj.isConfirm = 0 ;
+	 		 		
+	 		 	
+	 		 		//Alert.show(obj.isConfirm+" isConfirm ","isDelayAlarm") ;
+	 		 		if(obj.delayValue >= ALARMVALUE && obj.isConfirm == 0)
+	 		 		{
+	 		 			return true ;
+	 		 		}
+	 		 	}
+	 		 	return false ;
+	 		 }
+	 		 
+	 		
+	 		/**
+	 		 * 		错误处理函数
+	 		 * */
+	 		 public function errorhandler(event:FaultEvent):void{
+	 		 	//如果数据库出错后，并会每隔10s查询一次并报错
+	 		 	this.sql_alarmTime += 10;
+	 		 	this.lblRefTipMsg.visible = true;
+	 		 }
+			
+			
+			
+			/**
+			 * 		获取报警数据列表
+			 * */
+			 
+			 public	function alarmHandler(event:ResultEvent):void{
+			 	
+			 	
+			 	var myalarm :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	//过滤掉已经取消了的仓库报警的报警数据
+			 	guolvList(myalarm,qxAlarmList);
+			 	
+			 	
+			 	//结束报警，加入历史报警记录
+			 	isEndAlarm(alarmList,myalarm) ;
+			 	//更新报警
+			 	isUpdateAlarm(alarmList,myalarm) ;
+			 	
+			 	
+			 	alarmList = myalarm ;				//把当前的报警信息保存起来
+			 		
+			 		
+			 	//检查仓库的报警状态，原先根据是否报警，现在必须是报警20分钟之后，并且尚未确认，才会播放声音
+			 	//Flag_alarm = myalarm.length>0?true:false ;
+			 	
+			 	Flag_alarm = isDelayAlarm(alarmList) ;
+			 	
+			 	isPlayerOK() ;
+			 	
+ 	
+			 	this.gridAlarm.dataProvider = alarmList ;		//设置实时报警表格数据
+			 	
+			 	this.gridHisAlarm.dataProvider = alarmHisList ; //设置历史报警表格数据
+			 	
+			 	
+			 	//错误提示信息隐藏掉
+			 	this.lblRefTipMsg.visible = false ;
+			 	this.sql_alarmTime = 0;
+			 	
+			 }
+			 
+			 /**
+			 * 		获取失去连接列表
+			 * */
+			 
+			 public function connectionHandler(event:ResultEvent):void{
+			 	var myconnection :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	
+			 	//过滤掉已经取消了的断开连接报警的报警数据
+			 	guolvList(myconnection,qxConnectionList);
+			 	
+			 	
+			 	isEndConnection(connectionList,myconnection) ;
+			 	
+			 	isUpdateConnection(connectionList,myconnection) ;
+			 	
+			 	connectionList = myconnection;
+			 	
+			 	
+			 	
+			 	//断开连接必须满足20分钟，并且尚未确认，才真正报警，播放声音
+			 
+			 	//Flag_connection = myconnection.length>0?true:false ;
+			 	
+			 	Flag_connection = isDelayAlarm(connectionList) ;
+			 	
+			 	
+			 	isPlayerOK() ;
+			 	
+			 	
+			 	
+			 	this.gridConnection.dataProvider = connectionList ;
+			 	
+			 	this.gridHisConnection.dataProvider = connectionHisList ;
+			 	
+			 	//错误提示信息隐藏掉
+			 	this.lblRefTipMsg.visible = false ;
+			 }
+			 
+			 /**
+			 * 		判断是否已经连接上了。插入连接的历史记录
+			 * */
+			 public function isEndConnection(source:ArrayCollection,current:ArrayCollection):void{
+			 		for(var i:int=0;i<source.length;i++){		//循环遍历原断开数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认已经连接
+	 		 			
+	 		 			//这里需要判断新的断开数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的断开数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.branchId==curobj.branchId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果已经连接，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		connectionHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+			 }
+			 
+			 /**
+			 * 		判断是否需要更新连接的记录
+			 * */
+			 
+			 public function isUpdateConnection(source:ArrayCollection,current:ArrayCollection):void{
+			 		for(var i:int=0;i<current.length;i++){		//循环当前断开连接的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次断开信息，把断开延时时间，加入到当前断开时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.branchId==obj2.branchId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的断开的持续时间
+		 		 						obj.timestr = obj2.timestr ;
+		 		 						obj.isConfirm = obj2.isConfirm	 ;
+		 		 						obj.isCall = obj2.isCall ;
+		 		 						obj.isSend = obj2.isSend ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+			 }
+	
+			
+			/**
+			 * 	这是为了显示持续时间后面的秒文字
+			 * */
+			public function delayTimeTextHandler(item:Object,columns:DataGridColumn):String{
+				return item.delayValue +" s" ;
+			}
+			
+			
+			/**
+			 * 		这是为了显示结束时间文本的处理函数
+			 * */
+			 public function endTimeTextHandler(item:Object,columns:DataGridColumn):String{
+			 	var str:String = item.timestr ;
+			 	var se:Number = item.delayValue ;
+			 	var all:Array = str.split(" ") ;
+			 	var dateall:Array = all[0].toString().split("-") ;
+			 	var timeall:Array = all[1].toString().split(":") ;
+			 	var d :Date = new Date(dateall[0],dateall[1]-1,dateall[2],timeall[0],timeall[1],timeall[2],0);
+			 	d.setTime(d.getTime()+se*1000);
+			 	var s:String = "";
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds());
+			 	return s ;
+			 }
+			 
+			 /**
+			 * 		判断是否需要报警
+			 * */
+			 
+			 public function isPlayerOK():void{
+			 	
+			 	//现在没有关闭声音的操作
+			 	
+//			 	if(this.cboxKnow.selected){
+//			 			stopSound() ;
+//			 			return ;
+//			 	}
+			 		
+			 		
+			 	//只要其中一个发生了报警，则播放音乐
+			 	if( Flag_alarm==false &&  Flag_connection==false
+			 	&&this.sql_alarmTime<=ALARMTIMES&&this.tomcat_alarmTime<=ALARMTIMES&&this.outNet_alarmTime<=ALARMTIMES ){
+			 			stopSound() ;
+			 	}else{		
+			 			playSound() ;
+			 	}
+			 		
+			 }
+			 
+			 
+			 /**
+			 * 		立即关闭声音  现在已经没有，立即关闭的选项
+			 * */
+			 public function isStopNow(event:Event):void{
+			 	
+			 	if(this.cboxKnow.selected){
+			 			stopSound() ;
+			 	}else{
+			 		isPlayerOK() ;
+			 	}
+			 }
+			 
+			 /**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			 public function saveAlarmToCopy():void{
+			 	 var mystring:String = "";
+  
+     
+  
+	    	 mystring += "项目名称" + "\t";
+	         mystring += "开始时间" + "\t";
+	   		 mystring += "结束时间" + "\t";
+	     	 mystring += "持续时间" + "\t\r\n";
+   
+     
+   		
+   
+	   for(var i:int =0 ;i<alarmHisList.length;i++){
+	   		var obj:Object = alarmHisList.getItemAt(i) ;
+	   		mystring +=obj.branchName+"\t";
+	   		mystring += obj.timestr + "\t";
+	   		mystring += getEndTimeToCopy(obj.timestr,obj.delayValue)+"\t";
+	   		mystring +=obj.delayValue+"\r\n" ;
+	   }
+   
+        
+    		 System.setClipboard(mystring);
+    		  Alert.show("仓库实时报警数据复制到剪切板！","提示");
+	}
+	
+	
+	public function saveConnnectionToCopy():void{
+		
+			 var mystring:String = "";
+ 
+	    	 mystring += "项目名称" + "\t";
+	         mystring += "开始时间" + "\t";
+	   		 mystring += "结束时间" + "\t";
+	     	 mystring += "持续时间" + "\t\r\n";
+   
+     
+   		 
+   
+	   for(var i:int =0 ;i<connectionHisList.length;i++){
+	   		var obj:Object = connectionHisList.getItemAt(i) ;
+	   		mystring +=obj.branchName+"\t" ;
+	   		mystring += obj.timestr + "\t" ;
+	   		mystring += getEndTimeToCopy(obj.timestr,obj.delayValue)+"\t" ;
+	   		mystring +=obj.delayValue+"\r\n"
+	   }
+   
+    		 System.setClipboard(mystring);
+    		 Alert.show("仓库断开连接数据复制到剪切板！","提示");
+	}
+	
+	
+	/**
+	 * 		为了处理导入到剪切板上转换结束时间用的
+	 * */
+	public function getEndTimeToCopy(str:String,se:Number):String {
+		
+			 	var all:Array = str.split(" ") ;
+			 	var dateall:Array = all[0].toString().split("-") ;
+			 	var timeall:Array = all[1].toString().split(":") ;
+			 	var d :Date = new Date(dateall[0],dateall[1]-1,dateall[2],timeall[0],timeall[1],timeall[2],0);
+			 	d.setTime(d.getTime()+se*1000) ;
+			 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+			 	return s ;
+	}
+	
+	
+			
+			/**
+			 *		确认已经报警超过20分钟的报警，使之不再播放报警声音
+			 * 		当报警超过20分钟，确认报警后，之后的声音不再播放 
+			 * */
+			 
+			 
+			public function  confirmAlarm():void{
+				
+				
+				//确认所有的仓库报警
+				for(var i:int = 0 ;i<alarmList.length;i++){
+					
+					var obj :Object = alarmList.getItemAt(i) ;
+					
+					if(obj.delayValue >=ALARMVALUE)
+					{
+						obj.isConfirm = 1 ;
+					}
+				}
+				
+				//确认所有的仓库断开连接
+				
+			
+				for(var i:int=0;i<connectionList.length;i++){
+					var obj2:Object = connectionList.getItemAt(i) ;
+					
+					if(obj2.delayValue >= ALARMVALUE){
+						obj2.isConfirm = 1 ;
+						
+					}
+				}
+				
+				
+				//确认报警，设置是否延时
+				
+			 	Flag_alarm  = 	isDelayAlarm(alarmList) ;
+				Flag_connection = isDelayAlarm(connectionList) ;
+				
+				this.sql_alarmTime = 0;
+				this.tomcat_alarmTime = 0;
+				this.outNet_alarmTime = 0;
+				
+				isPlayerOK() ;
+				
+			}
+	
+	
+	
+		
+		
+			/***
+			 * 			车载报警数据监控涉及到的方法
+			 * 
+			 * */
+		
+			import mx.controls.Alert;
+			
+			
+			[Bindable]
+			public var hostname2:String = "" ;		//绑定主机域名
+			
+			private var car_mytime:Timer = null ;		//车载报警定时器
+			
+			private var flag_carAlarm : Boolean = false  ;		//车载是否有报警
+			
+			private var car_AlarmList : ArrayCollection = new ArrayCollection();		//保存车载报警数据
+			
+			private var car_AlarmHisList:ArrayCollection = new ArrayCollection();	//保存车载历史报警数据
+			
+			
+			 [Embed(source="alarm.mp3")]
+            [Bindable]
+            public var car_Song:Class;
+
+            public var car_mySong:SoundAsset = new car_Song() as SoundAsset;
+            
+            public var car_channel:SoundChannel;
+            
+            
+            public function car_playSound():void
+            {
+                
+                car_stopSound();   // 先停止音乐，避免播放多次
+                     
+                car_channel = car_mySong.play(0,int.MAX_VALUE);// 开始播放音乐
+                
+                //显示图片
+                this.imgCar.visible = true ;
+            }
+            
+            public function car_stopSound():void
+            {
+                if ( car_channel != null ) car_channel.stop();	//停止播放音乐
+                
+                //隐藏图片
+                this.imgCar.visible = false ;
+            }
+			
+			
+			/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		public function getdomain2():void{ 			 
+	 			 this.hostname2 =  ExternalInterface.call("window.location.host.toString");  
+	 		}
+	 		
+	 		/**	
+	 		 * 	设置打开页面的时间
+	 		 * */
+	 		 public function setCurrentTime_car():void{
+	 		 	var d :Date= new Date() ;
+	 		 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+	 		 	this.txtCarLoginTime.text = s ;
+	 		 }
+	 		 
+	 		 
+	 		 
+	 		 public function start_timer():void{
+	 		 	car_mytime =new Timer(10000,int.MAX_VALUE);
+
+				car_mytime.addEventListener("timer", function():void{ myremoteObject.getCarAlarm();});//注意，事件timer必须全部小写
+
+				car_mytime.start();
+				
+				
+	 		 }
+	 		 
+	 		 /**
+			 * 	这是为了显示持续时间后面的秒文字
+			 * */
+			public function car_delayTimeTextHandler(item:Object,columns:DataGridColumn):String{
+				return item.delayValue +" s" ;
+			}
+			
+			/**
+			 * 		这是为了显示结束时间文本的处理函数
+			 * */
+			 public function car_endTimeTextHandler(item:Object,columns:DataGridColumn):String{
+			 	var str:String = item.timestr ;
+			 	var se:Number = item.delayValue ;
+			 	var all:Array = str.split(" ") ;
+			 	var dateall:Array = all[0].toString().split("-") ;
+			 	var timeall:Array = all[1].toString().split(":") ;
+			 	var d :Date = new Date(dateall[0],dateall[1]-1,dateall[2],timeall[0],timeall[1],timeall[2],0);
+			 	d.setTime(d.getTime()+se*1000) ;
+			 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+			 	return s ;
+			 }
+			 
+			 
+			  /**
+	 		 * 		判断是否需要加入历史报警记录列表
+	 		 * */
+	 		 
+	 		 public function car_isEndAlarm(source:ArrayCollection,current:ArrayCollection):void{ 	
+	 		 	
+	 		 	for(var i:int=0;i<source.length;i++){		//循环遍历原报警数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认报警已经结束
+	 		 			
+	 		 			//这里需要判断新报警数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的报警数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.projectId==curobj.projectId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果该报警，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		car_AlarmHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	设置需要更新的报警
+	 		 * */
+	 		 public function car_isUpdateAlarm(source:ArrayCollection,current:ArrayCollection):void{
+	 		 		for(var i:int=0;i<current.length;i++){		//循环当前报警的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次报警信息，把报警延时时间，加入到当前报警时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.projectId==obj2.projectId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的报警的持续时间
+		 		 						obj.timestr = obj2.timestr ;							//设置开始时间为第一次报警时间
+		 		 						obj.isConfirm = obj2.isConfirm	 ;
+		 		 						obj.isCall = obj2.isCall ;
+		 		 						obj.isSend = obj2.isSend ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+	 		 }
+	 		 
+	 		 
+	 		  /**
+			 * 		判断是否需要报警  现在已经没有关闭声音的操作
+			 * */
+			 
+			 public function car_isPlayerOK():void{
+			 	
+//			 	if(this.chkCloseCar.selected){
+//			 			car_stopSound() ;
+//			 			return ;
+//			 	}
+			 		
+			 		
+			 	//只要其中一个发生了报警，则播放音乐
+			 	if( flag_carAlarm==false){
+			 			car_stopSound() ;
+			 	}else{		
+			 			car_playSound();
+			 	}
+			 		
+			 }
+			 
+			 /**
+			 * 		立即关闭声音 ，已经没有立即关闭车载报警的选项
+			 * */
+			 public function car_isStopNow(event:Event):void{
+			 	if(this.chkCloseCar.selected){
+			 			car_stopSound() ;
+			 	}else{
+			 		car_isPlayerOK() ;
+			 	}
+			 }
+			 
+			 /**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			 public function car_saveAlarmToCopy():void{
+			 	
+			 	 var mystring:String = "";
+  
+     
+  
+		    	 mystring += "项目名称" + "\t";
+		         mystring += "开始时间" + "\t";
+		   		 mystring += "结束时间" + "\t";
+		     	 mystring += "持续时间" + "\t\r\n";
+	   
+     
+   		
+	   
+				   for(var i:int =0 ;i<car_AlarmHisList.length;i++){
+				   		var obj:Object = car_AlarmHisList.getItemAt(i) ;
+				   		mystring +=obj.displayName+"\t" ;
+				   		mystring += obj.timestr + "\t" ;
+				   		mystring += getEndTimeToCopy_car(obj.timestr,obj.delayValue)+"\t" ;
+				   		mystring +=obj.delayValue+"\r\n"
+				   }
+		   
+        
+	    		  System.setClipboard(mystring);
+	    		  Alert.show("车载历史报警数据复制到剪切板！","提示");
+				}
+				
+				
+				/**
+				 * 		为了处理导入到剪切板上转换结束时间用的
+				 * */
+				public function getEndTimeToCopy_car(str:String,se:Number):String {
+		
+				 	var all:Array = str.split(" ") ;
+				 	var dateall:Array = all[0].toString().split("-") ;
+				 	var timeall:Array = all[1].toString().split(":") ;
+				 	var d :Date = new Date(dateall[0],dateall[1]-1,dateall[2],timeall[0],timeall[1],timeall[2],0);
+				 	d.setTime(d.getTime()+se*1000) ;
+				 	var s:String = "" ;
+		 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+		 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+				 	return s ;
+				}
+		
+	 		 
+	 		 
+	 		 
+			
+			public function init_car():void{
+				getdomain2() ;		//获取hostname
+				setCurrentTime_car() ;	//设置时间文本
+				
+				start_timer() ;		//开启定时器
+				myremoteObject.getCarAlarm();
+			}
+			
+			
+			
+			public function    car_alarmHandler(event:ResultEvent):void{
+				
+				var car_myalarm :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	//过滤掉已经取消了的车载报警的报警数据
+			 	guolvCarList(car_myalarm,qxCarAlarmList);
+			 	
+			 	
+			 	//结束报警，加入历史报警记录
+			 	car_isEndAlarm(car_AlarmList,car_myalarm) ;
+			 	
+			 	//更新报警
+			 	car_isUpdateAlarm(car_AlarmList,car_myalarm) ;
+			 	
+			 	
+			 	car_AlarmList = car_myalarm ;				//把当前的报警信息保存起来
+			 	
+			 	
+			 	//之前车载报警是根据当前的报警条数，现在需要报警20分钟，且没有确认之后才可以。
+			 	//flag_carAlarm = car_myalarm.length>0?true:false ;
+			 	
+			 	flag_carAlarm = isDelayAlarm(car_AlarmList) ;
+			 	
+			 	if(this.ALARM_MODEL=="5"){
+			 		car_isPlayerOK();
+			 	}
+	
+	
+			 	this.grdCarAlarm.dataProvider = car_AlarmList ;		//设置实时报警表格数据
+			 	
+			 	this.grdCarHisAlarm.dataProvider = car_AlarmHisList ; //设置历史报警表格数据
+			 	
+			 	//错误提示信息隐藏
+			 	this.lblCarTipMsg.visible = false ;
+				
+			}
+			
+			public function 	car_alarmErrorHandler(event:Event):void{
+				this.lblCarTipMsg.visible = true ;
+			}
+			
+			
+			/**
+			 * 			确认车载的报警
+			 * */
+			public function confirmCarAlarm():void{
+				
+				
+				//设置所有大于20分钟的报警都已经报警
+				for(var i:int=0 ;i<car_AlarmList.length ;i++){
+					var obj :Object = car_AlarmList.getItemAt(i) ;
+					
+					if(obj.delayValue>=ALARMVALUE){
+						obj.isConfirm = 1 ;
+					}
+				}
+				
+				flag_carAlarm = isDelayAlarm(car_AlarmList) ;
+				
+				car_isPlayerOK() ;
+				
+			}
+			
+			/******************下面的部分是电话拨号以及短信通知的部分********************************************/
+			
+			
+			[Bindable]
+            public var timeout_newNum: int = 0;
+			
+			
+			/**
+			 * 	点击编辑，使元素可以编辑
+			 * */
+			private function doEditHandler(event:MouseEvent):void{			
+				this.txtCallCount.enabled = true ;
+				this.txtCallPhone.enabled = true ;
+				this.txtMessagePhone.enabled = true ;
+			}
+			
+			/**
+			 * 	点击保存，保存拨号的信息
+			 * */
+			private function doSaveHandler(event:MouseEvent):void{
+				this.txtCallCount.enabled = false ;
+				this.txtCallPhone.enabled = false ;
+				this.txtMessagePhone.enabled = false ;
+			}
+			
+			/**
+			 * 		拨号处理程序	
+			 * */
+			 public function callHandler(event:ResultEvent):void{
+			 	var i :Number = event.result as Number ;
+			 	if(i==0){	 		
+			 		this.lblCallResult_tip.text = "" ;
+			 	}else{
+			 		this.lblCallResult_tip.text = "调用拨号服务失败..." ;
+			 	}
+			 	
+			 }
+			 
+			 /**
+			 * 		拨号错误处理程序
+			 * */
+			 public function callErrorHandler(event:FaultEvent):void{
+			 	this.lblCallResult_tip.text = "拨号程序发生错误..."+event.fault.faultString ;
+			 }
+			 
+			 
+			 /**
+			 * 		发短信处理程序
+			 * */
+			 public function sendMessageHandler(event:ResultEvent):void{
+			 	var i:Number = event.result as Number ;
+			 	if(i==0){
+			 		this.lblSendMessageTip.text = "" ;
+			 	}else{
+			 		this.lblSendMessageTip.text = "调用短信服务失败..." ;
+			 	}
+			 }
+			 
+			 
+			 
+			 /**
+			 * 		短信错误处理程序
+			 * */
+			 public function sendMessageErrorHandler(event:FaultEvent):void {		
+			 	this.lblSendMessageTip.text = "短信发送失败..."+event.fault.faultString ;
+			 }
+			 
+			 /**
+			 * 
+			 * 			点击确认电话通知操作 
+			 * */
+			 public function confirmCallHandler(event:MouseEvent):void{
+			 	
+			 	confirmCall(alarmList) ;
+			 	confirmCall(connectionList) ;
+			 	confirmCall(car_AlarmList) ;
+			 	
+			 	confirmCall_AlarmSerious(AlarmSeriousList) ;				//确认严重报警
+			 	
+			 	
+			 	//停止拨号 
+			 	myremoteObject.stopCall(this.txtCallCheckCode.text,this.txtCallPhone.text) ;		 	
+			 		
+			 	Alert.show("已调用停止拨号服务!","提示") ;			 	
+			 }
+			 
+			 
+			 /**
+			 * 			确认集合中的标识状态为确认电话通知
+			 * */
+			 public function confirmCall(arrayConnection:ArrayCollection):void{
+			 	for(var i:int;i<arrayConnection.length;i++){
+			 		var obj:Object = arrayConnection.getItemAt(i) ;
+			 		
+			 		if(obj.delayValue >= ALARMVALUE){
+			 			obj.isCall = 1 ;
+			 		}
+			 	}
+			 }
+			 
+			 
+			 /**
+			 * 			确认集合中的标识状态为确认电话通知
+			 * */
+			 public function confirmCall_AlarmSerious(arrayConnection:ArrayCollection):void{
+			 	for(var i:int;i<arrayConnection.length;i++){
+			 		var obj:Object = arrayConnection.getItemAt(i) ;
+			 		//如果是白天模式，则所有严重报警和断电报警的延时为30秒。如果是夜间模式，则分为三种情况1：如果是仓库，则延时为30秒。2：如果是车载，则延时为20分钟。3：如果是仓库断电，则延时为5分钟
+			 		if((this.ALARM_MODEL=="5"&&obj.delayValue >= ALARMSERIOUSVALUE)||
+			 		(this.ALARM_MODEL=="20"&&((obj.alarmType==0&&obj.delayValue >= ALARMSERIOUSVALUE)
+			 		||(obj.alarmType==1&&obj.delayValue >= 1200)||(obj.alarmType==2&&obj.delayValue >= 300)))){
+			 			obj.isCall = 1 ;
+			 		}
+			 	}
+			 }
+			 
+			 
+			 /**
+			 * 			判断集合是否拨打电话，
+			 *			 
+			 * */
+			 public function isCallPhone(arrayConnection:ArrayCollection):Boolean{
+			 		for(var i:int;i<arrayConnection.length;i++){
+			 		var obj:Object = arrayConnection.getItemAt(i) ;
+			 		
+			 		if(obj.delayValue >= ALARMVALUE && obj.isCall==0){
+			 			return true ;
+			 		}
+			 	}
+			 	return false ;
+			 }
+			 
+			  /**
+			 * 			判断严重报警集合是否拨打电话，
+			 *			 
+			 * */
+			 public function isCallPhone_AlarmSerious(arrayConnection:ArrayCollection):Boolean{
+			 	for(var i:int;i<arrayConnection.length;i++){
+			 		var obj:Object = arrayConnection.getItemAt(i) ;
+			 		//如果是白天模式，则所有严重报警和断电报警的延时为30秒。如果是夜间模式，则分为三种情况1：如果是仓库，则延时为30秒。2：如果是车载，则延时为20分钟。3：如果是仓库断电，则延时为5分钟
+			 		if(obj.isCall==0&&((this.ALARM_MODEL=="5"&&obj.delayValue >= ALARMSERIOUSVALUE)||
+			 		(this.ALARM_MODEL=="20"&&((obj.alarmType==0&&obj.delayValue >= ALARMSERIOUSVALUE)
+			 		||(obj.alarmType==1&&obj.delayValue >= 1200)||(obj.alarmType==2&&obj.delayValue >= 300)))) ){
+			 			return true ;
+			 		}
+			 	}
+			 	return false ;
+			 }
+			 
+			 
+			 
+			 /**
+			 * 		每隔10s判断是否需要拨号
+			 * */
+			 public function isCallPhone_Task():void{
+			 	//离上次拨打电话是否已超过20分钟
+			 	if(this.CALLVALUE>=1200){
+				 	//只要其中一个需要拨号、则拨打电话
+					if(isCallPhone(alarmList) || (this.ALARM_MODEL=="5" && isCallPhone(car_AlarmList)) || isCallPhone(connectionList)
+				 	|| isCallPhone_AlarmSerious(AlarmSeriousList)||this.sql_alarmTime>ALARMTIMES||this.tomcat_alarmTime>ALARMTIMES
+				 	||this.outNet_alarmTime>ALARMTIMES){
+				 		//判断是否在相同的主机上，才拨打电话
+				 		if(this.hostname==this.validURL){
+				 			this.CALLVALUE = 0;
+				 			myremoteObject.callPhone(this.txtCallCheckCode.text,this.txtCallPhone.text,this.txtCallCount.value);		 		
+				 		}
+				 	}
+			 	}
+			 	this.CALLVALUE = this.CALLVALUE+20;
+			 }
+			 
+			 /**
+			 * 是否显示拨号面板
+			 * 
+			 * */
+			 public function isShowCallPanle():void{
+			 	if(this.hostname!=this.validURL){
+			 		this.callAccordion.visible = false ;
+			 	}
+			 }
+			 
+			 /**
+			 * 		停止拨号处理程序
+			 * */
+			 public function stopCallHandler(event:ResultEvent):void{
+			 	var i :Number = event.result as Number ;
+			 	if(i==0){	 		
+			 		this.lblCallResult_tip.text = "" ;
+			 	}else{
+			 		this.lblCallResult_tip.text = "调用停止拨号服务失败..." ;
+			 	}
+			 }
+			
+			/**
+			 * 	停止拨号错误处理程序	
+			 * */
+			public function stopCallErrorHandler(event:FaultEvent):void{
+				this.lblCallResult_tip.text = "停止拨号发生错误..."+event.fault.faultString ;	 	
+			}
+			
+			/**
+			 * 		判断是否发送短信
+			 * */
+			public function ifSendMessage():void{
+				
+				var ref_alarm :String= ifSend_task_ref(alarmList) ;
+				var ref_connection:String = ifSend_task_ref(connectionList) ;
+				var car_alarm:String = ifSend_task_car(car_AlarmList) ;
+				
+				//严重报警
+				var alarm_serious:String = ifSend_task_AlarmSerious(AlarmSeriousList) ;
+				
+				var alarm_timeout:String = ifSend_task_timeoutAlarm(TimeOutAlarmList);
+				
+				//只有在指定路径下才发送短信
+				if(this.hostname==this.validURL){			
+				
+					if(ref_alarm !=""){
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,ref_alarm+"仓库发生了报警") ;
+					}
+					
+					if(ref_connection !=""){
+							myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,ref_connection+"仓库断开连接") ;
+					}
+					
+					if(car_alarm !=""){
+						if(this.ALARM_MODEL=="5"){
+							myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,car_alarm+"车载发生了报警") ;
+						}
+					}
+					
+					if(alarm_serious!=""){
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,alarm_serious+" AI发生了严重报警") ;
+					}
+					//超过5个认为是非正常状态，可能是刚重启数据库主机且大部分的仓库实时数据还没有更新
+					if(alarm_timeout!=""&&timeout_newNum<=5){
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,alarm_timeout+" 发生了数据持续不变超时报警") ;
+					}
+					
+					if(this.sql_alarmTime>ALARMTIMES){
+						//Alert.show("sql故障","提示");
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,"无法连接数据库报警") ;
+					}
+					
+					if(this.tomcat_alarmTime>ALARMTIMES){
+						//Alert.show("tomcat故障","提示");
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,"0.3上tomcat故障报警") ;
+					}
+					
+					if(this.outNet_alarmTime>ALARMTIMES){
+						//Alert.show("outnet故障","提示");
+						myremoteObject.sendMessage(this.txtCallCheckCode.text,this.txtMessagePhone.text,"外网无法访问报警") ;
+					}
+					
+				}
+				
+			}
+			
+			
+			/**
+			 * 			循环遍历集合(仓库报警和仓库断开连接)，是否需要发短信
+			 * */
+			public function ifSend_task_ref(array:ArrayCollection):String{
+				var s :String = new String("") ;
+				for(var i:int;i<array.length;i++){
+					var obj:Object = array.getItemAt(i) ;
+					if(obj.delayValue >ALARMVALUE && obj.isSend ==0){
+						s += obj.branchName+" " ;
+						obj.isSend = 1 ;
+					}
+				}
+				
+					return s ;
+			}
+			
+			/**
+			 * 			循环遍历集合(车载报警和仓库断开连接)，是否需要发短信
+			 * */
+			public function ifSend_task_car(array:ArrayCollection):String{
+				var s :String = new String("") ;
+				for(var i:int;i<array.length;i++){
+					var obj:Object = array.getItemAt(i) ;
+					if(obj.delayValue > ALARMVALUE && obj.isSend ==0){
+						s += obj.displayName+" " ;
+						obj.isSend = 1 ;
+					}
+				}
+				
+					return s ;
+			}
+			
+			/**
+			 * 		循环遍历集合(严重报警),是否需要发送短信
+			 * */
+			public function ifSend_task_AlarmSerious(array:ArrayCollection):String{
+				var s :String = new String("") ;
+				for(var i:int;i<array.length;i++){
+					var obj:Object = array.getItemAt(i) ;
+					//如果是白天模式，则所有严重报警和断电报警的延时为30秒。如果是夜间模式，则分为三种情况1：如果是仓库，则延时为30秒。2：如果是车载，则延时为20分钟。3：如果是仓库断电，则延时为5分钟
+					if(obj.isSend ==0&&((this.ALARM_MODEL=="5"&&obj.delayValue >= ALARMSERIOUSVALUE)||
+			 		(this.ALARM_MODEL=="20"&&((obj.alarmType==0&&obj.delayValue >= ALARMSERIOUSVALUE)
+			 		||(obj.alarmType==1&&obj.delayValue >= 1200)||(obj.alarmType==2&&obj.delayValue >= 300)))) ){
+						s += obj.branchName+" " ;
+						obj.isSend = 1 ;
+					}
+				}
+				
+					return s ;
+			}
+			
+			
+			/**
+			 * 		循环遍历集合(仓库实时数据持续不变超时报警),是否需要发送短信
+			 * */
+			public function ifSend_task_timeoutAlarm(array:ArrayCollection):String{
+				var s :String = new String("") ;
+				timeout_newNum = 0 ;
+				for(var i:int;i<array.length;i++){
+					var obj:Object = array.getItemAt(i) ;
+					if(obj.isSend ==0){
+						timeout_newNum += 1;
+						s += obj.nameStr+" ";
+						obj.isSend = 1 ;
+					}
+				}
+					return s ;
+			}
+			
+			
+			/*************************是报警模式设置***********************/
+			
+			/**
+			 * 		报警模式改变时发生
+			 * */
+			public function modelChange(event:Event):void{
+				var r :RadioButton = event.currentTarget as RadioButton ;
+				this.ALARM_MODEL = r.value.toString() ;						//设置拨号和发送短信的模式
+				this.numAlarminterVal.value = r.value.toString() ;
+			}
+			
+			/**
+			 * 		报警间隔改变触发
+			 * */
+			public function ValueIntervalueChange(event:Event):void{
+				//保存一个报警间隔 saveValueInterval() ;		
+			}
+			
+			/**
+			 * 		保存报警间隔
+			 * */
+			public function saveValueInterval():void{
+				this.ALARMVALUE = this.numAlarminterVal.value * 60 ;
+				Alert.show("保存成功!","提示") ;
+			}
+			
+			
+			/*************************获取严重报警级别*********************************/
+			
+			
+			private var alarmSerious_mytime:Timer = null ;		//严重报警定时器
+			
+			private var flag_alarmSerious : Boolean = false  ;		//是否有严重报警
+			
+			private var flag_timeoutAlarm : Boolean = false  ;		//是否有实时数据持续不变超过10分钟的报警
+			
+			private var AlarmSeriousList : ArrayCollection = new ArrayCollection();		//保存严重报警数据
+			
+			private var AlarmSeriousHisList:ArrayCollection = new ArrayCollection();	//保存严重报警历史数据
+			
+			private var TimeOutAlarmList : ArrayCollection = new ArrayCollection();		//保存持续不变超过10分钟的报警数据
+			
+			private var TimeOutAlarmHisList:ArrayCollection = new ArrayCollection();	//保存持续不变超过10分钟的报警历史数据
+			
+			private var ALARMSERIOUSVALUE:int = 30  ;										//严重报警为30秒的延时时间
+			
+			 [Embed(source="alarm.mp3")]
+            [Bindable]
+            public var AlarmSerious_Song:Class;
+
+            public var AlarmSerious_mySong:SoundAsset = new AlarmSerious_Song() as SoundAsset;
+            
+            public var AlarmSerious_channel:SoundChannel;
+            
+            
+            public function AlarmSerious_playSound():void
+            {
+                
+                AlarmSerious_stopSound();   // 先停止音乐，避免播放多次
+                     
+                AlarmSerious_channel = AlarmSerious_mySong.play(0,int.MAX_VALUE);// 开始播放音乐
+                
+                //显示图片
+                this.imgAlarmSerious.visible = true ;
+            }
+            
+            public function AlarmSerious_stopSound():void
+            {
+                if ( AlarmSerious_channel != null ) AlarmSerious_channel.stop();	//停止播放音乐
+                
+                // 隐藏图片
+                this.imgAlarmSerious.visible = false ;
+            }
+			
+			
+			
+			/**
+			 * 	严重报警处理函数
+			 * */
+			public function alarmSeriousHandler(event:ResultEvent):void{
+				
+				var alarmSerious_myalarm :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	
+			 	
+			 	//结束报警，加入历史报警记录
+			 	addHisAlarmSerious(AlarmSeriousList,alarmSerious_myalarm) ;
+			 	
+			 	//更新报警
+			 	updateAlarmSerious(AlarmSeriousList,alarmSerious_myalarm) ;
+			 	
+			 	
+			 	AlarmSeriousList = alarmSerious_myalarm ;				//把当前的报警信息保存起来
+			 	
+			 	
+			 	//之前车载报警是根据当前的报警条数，现在需要报警20分钟，且没有确认之后才可以。
+			 	//flag_carAlarm = car_myalarm.length>0?true:false ;
+			 	
+			 	flag_alarmSerious = isDelayAlarmSerious(AlarmSeriousList) ;
+			 	
+			 	
+			 	
+			 	AlarmSerious_isPlayerOK();
+	
+	
+			 	this.grdAlarmSerious.dataProvider = AlarmSeriousList ;		//设置实时报警表格数据
+			 	
+			 	this.grdAlarmSeriousHis.dataProvider = AlarmSeriousHisList ; //设置历史报警表格数据
+			 	
+			 	//错误提示信息隐藏
+			 	this.lblAlarmSeriousResult.visible = false ;
+			}
+			
+			/**
+			 * 	仓库实时数据持续不变超过10分钟报警处理函数
+			 * */
+			public function timeoutAlarmHandler(event:ResultEvent):void{
+				var timeout_myalarm :ArrayCollection = event.result as ArrayCollection ;
+				
+				
+				//结束报警，加入历史报警记录
+			 	addHisTimeoutAlarm(TimeOutAlarmList,timeout_myalarm) ;
+			 	
+			 	//更新报警
+			 	updateTimeoutAlarm(TimeOutAlarmList,timeout_myalarm) ;
+			 	
+			 	TimeOutAlarmList = timeout_myalarm ;				//把当前的报警信息保存起来
+			 	
+			 	
+			 	flag_timeoutAlarm = isHasNewTimeoutAlarm(TimeOutAlarmList) ;
+			 	
+			 	AlarmSerious_isPlayerOK();
+				
+				this.grdTimeoutAlarm.dataProvider = TimeOutAlarmList ;		//设置仓库实时数据持续不变超时报警表格数据
+			 	
+			 	this.grdTimeoutAlarmHis.dataProvider = TimeOutAlarmHisList ; //设置仓库实时数据持续不变超时历史报警表格数据
+			 	
+			 	//错误提示信息隐藏
+			 	this.lblAlarmSeriousResult.visible = false ;
+			}
+			
+			
+			/**
+			 * 	严重报警错误处理函数
+			 * */
+			public function alarmSeriousHandler_error(event:FaultEvent):void{
+				this.lblAlarmSeriousResult.visible = true ;
+			}
+			
+			
+			/**
+			 * 		判断是否严重报警是否超过延时
+			 * */
+			 public function isDelayAlarmSerious(current:ArrayCollection):Boolean{
+			 	
+	 		 	
+	 		 	for(var i:int = 0 ;i<current.length;i++){
+	 		 		var obj :Object = current.getItemAt(i) ;
+	 		 		
+	 		 		//只有报警时间超过30秒，并且尚未确认 obj.isConfirm = 0 ;
+	 		 		
+					//如果是白天模式，则所有严重报警和断电报警的延时为30秒。如果是夜间模式，则分为三种情况1：如果是仓库，则延时为30秒。2：如果是车载，则延时为20分钟。3：如果是仓库断电，则延时为5分钟
+	 		 		if(obj.isConfirm == 0&&((this.ALARM_MODEL=="5"&&obj.delayValue >= ALARMSERIOUSVALUE)||
+			 		(this.ALARM_MODEL=="20"&&((obj.alarmType==0&&obj.delayValue >= ALARMSERIOUSVALUE)||(obj.alarmType==2&&obj.delayValue >= 300)
+			 		||(obj.alarmType==1&&obj.delayValue >= 1200)))) )
+	 		 		{
+	 		 			return true ;
+	 		 		}
+	 		 	}
+	 		 	return false ;
+			 }
+			 
+			 /**
+			 * 		判断是否有未确认的实时数据持续不变超过10分钟的报警
+			 * */
+			 public function isHasNewTimeoutAlarm(current:ArrayCollection):Boolean{
+	 		 	for(var i:int = 0 ;i<current.length;i++){
+	 		 		var obj :Object = current.getItemAt(i) ;
+	 		 		//查出来的数据都是已经报警了的，只需查看是否存在未被确认的报警
+	 		 		if(obj.isConfirm == 0)
+	 		 		{
+	 		 			return true ;
+	 		 		}
+	 		 	}
+	 		 	return false ;
+			 }
+			 
+			  /**
+			 * 		判断是否需要报警  现在已经没有关闭声音的操作
+			 * */
+			 
+			 public function AlarmSerious_isPlayerOK():void{
+			 	
+
+			 	//只要其中一个发生了报警，则播放音乐
+			 	if( flag_alarmSerious==false&&flag_timeoutAlarm==false){
+			 			AlarmSerious_stopSound() ;
+			 	}else{		
+			 			AlarmSerious_playSound();
+			 	}
+			 		
+			 }
+			 
+			
+			/**
+			 * 		判断是否结束严重报警
+			 * */
+			public function updateAlarmSerious(source:ArrayCollection,current:ArrayCollection):void{
+				for(var i:int=0;i<current.length;i++){		//循环当前报警的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次报警信息，把报警延时时间，加入到当前报警时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.branchId==obj2.branchId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的报警的持续时间
+		 		 						obj.timestr = obj2.timestr ;							//设置开始时间为第一次报警时间
+		 		 						obj.isConfirm = obj2.isConfirm	 ;
+		 		 						obj.isCall = obj2.isCall ;
+		 		 						obj.isSend = obj2.isSend ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+			}
+			
+			/**
+			 * 
+			 * 		是否加入严重报警历史记录
+			 * */
+			public function addHisAlarmSerious(source:ArrayCollection,current:ArrayCollection):void{
+				for(var i:int=0;i<source.length;i++){		//循环遍历原报警数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认报警已经结束
+	 		 			
+	 		 			//这里需要判断新报警数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的报警数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.branchId==curobj.branchId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果该报警，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		AlarmSeriousHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+			}
+			
+			/**
+			 * 		判断是否结束实时数据持续不变超过10分钟的报警
+			 * */
+			public function updateTimeoutAlarm(source:ArrayCollection,current:ArrayCollection):void{
+				for(var i:int=0;i<current.length;i++){		//循环当前报警的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次报警信息，把报警延时时间，加入到当前报警时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					//这里是工程编号和设备编号两个属性确定一条记录
+		 		 					if(obj.projectid==obj2.projectid&&obj.netid==obj2.netid){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的报警的持续时间
+		 		 						obj.timestr = obj2.timestr ;							//设置开始时间为第一次报警时间
+		 		 						obj.isConfirm = obj2.isConfirm	 ;
+		 		 						obj.isSend = obj2.isSend ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+			}
+			
+			
+			/**
+			 * 
+			 * 		是否加入实时数据持续不变超过10分钟的报警历史记录
+			 * */
+			public function addHisTimeoutAlarm(source:ArrayCollection,current:ArrayCollection):void{
+				for(var i:int=0;i<source.length;i++){		//循环遍历原报警数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认报警已经结束
+	 		 			
+	 		 			//这里需要判断新报警数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的报警数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				//这里是工程编号和设备编号两个属性确定一条记录
+		 		 				if(obj.projectid==curobj.projectid&&obj.netid==curobj.netid){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果该报警，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		TimeOutAlarmHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+			}
+			
+			
+			/**
+			 * 		严重报警初始化函数
+			 * */
+			public function initAlarmSerious():void{
+				setCurrentTimeAlarmSerious() ;
+				AlarmSeriousStartTime() ;
+				myremoteObject.getAlarmSerious();
+				myremoteObject.getTimeoutAlarm();
+				
+			}
+			
+			/**
+			 * 		设置页面显示的开始时间
+			 * */
+			 public function setCurrentTimeAlarmSerious():void{
+			 	var d :Date= new Date() ;
+	 		 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+	 		 	this.txtAlarmSeriousLoginTime.text = s ;
+			 }
+			 
+			 /**
+			 * 		设置定时器，调用严重报警的任务
+			 * */
+			 
+			 public function AlarmSeriousStartTime():void{
+			 	alarmSerious_mytime =new Timer(10000,int.MAX_VALUE);
+
+				alarmSerious_mytime.addEventListener("timer", function():void{ myremoteObject.getAlarmSerious(); myremoteObject.getTimeoutAlarm();});//注意，事件timer必须全部小写
+
+				alarmSerious_mytime.start();
+				
+			 }
+			 
+			 
+			 
+			 public function confirmAlarmSerious():void{
+				
+				
+				//设置所有大于20分钟的报警都已经报警
+				for(var i:int=0 ;i<AlarmSeriousList.length ;i++){
+					var obj :Object = AlarmSeriousList.getItemAt(i) ;
+					
+					//如果是白天模式，则所有严重报警和断电报警的延时为30秒。如果是夜间模式，则分为三种情况1：如果是仓库，则延时为30秒。2：如果是车载，则延时为20分钟。3：如果是仓库断电，则延时为5分钟
+	 		 		if((this.ALARM_MODEL=="5"&&obj.delayValue >= ALARMSERIOUSVALUE)||
+			 		(this.ALARM_MODEL=="20"&&((obj.alarmType==0&&obj.delayValue >= ALARMSERIOUSVALUE)
+			 		||(obj.alarmType==1&&obj.delayValue >= 1200)||(obj.alarmType==2&&obj.delayValue >= 300)))){
+						obj.isConfirm = 1 ;
+					}
+				}
+				
+				for(var j:int=0;j<TimeOutAlarmList.length;j++){
+					var obj:Object = TimeOutAlarmList.getItemAt(j);
+					if(obj.isConfirm == 0){
+						obj.isConfirm = 1;
+					}
+				}
+				
+				flag_timeoutAlarm = isHasNewTimeoutAlarm(TimeOutAlarmList);
+				flag_alarmSerious = isDelayAlarmSerious(AlarmSeriousList);
+				
+//				Alert.show("来处理确认属性了flag_timeoutAlarm="+flag_timeoutAlarm+" flag_alarmSerious="+flag_alarmSerious,"提示");
+				
+				AlarmSerious_isPlayerOK() ;
+				
+			}
+			
+			 /**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			 public function AlarmSerious_saveToCopy():void{
+			 	
+			 	 var mystring:String = "";
+  
+		    	 mystring += "项目名称" + "\t";
+		         mystring += "开始时间" + "\t";
+		   		 mystring += "结束时间" + "\t";
+		     	 mystring += "持续时间" + "\t\r\n";
+	   
+     
+				   for(var i:int =0 ;i<AlarmSeriousHisList.length;i++){
+				   		var obj:Object = AlarmSeriousHisList.getItemAt(i) ;
+				   		mystring +=obj.branchName+"\t" ;
+				   		mystring += obj.timestr + "\t" ;
+				   		mystring += getEndTimeToCopy_AlarmSerious(obj.timestr,obj.delayValue)+"\t" ;
+				   		mystring +=obj.delayValue+"\r\n"
+				   }
+		   
+        
+	    		  System.setClipboard(mystring);
+	    		  Alert.show("严重报警数据复制到剪切板！","提示");
+				}
+				
+				/**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			 public function timeoutAlarm_saveToCopy():void{
+			 	
+			 	 var mystring:String = "";
+  
+		    	 mystring += "项目名称" + "\t";
+		         mystring += "开始时间" + "\t";
+		   		 mystring += "结束时间" + "\t";
+		     	 mystring += "持续时间" + "\t\r\n";
+	   
+				   for(var i:int =0 ;i<TimeOutAlarmHisList.length;i++){
+				   		var obj:Object = TimeOutAlarmHisList.getItemAt(i) ;
+				   		mystring +=obj.nameStr+"\t" ;
+				   		mystring += obj.timestr + "\t" ;
+				   		mystring += getEndTimeToCopy_AlarmSerious(obj.timestr,obj.delayValue)+"\t" ;
+				   		mystring +=obj.delayValue+"\r\n"
+				   }
+		   
+	    		  System.setClipboard(mystring);
+	    		  Alert.show("实时数据持续不变超时报警数据复制到剪切板！","提示");
+				}
+				
+				
+				/**
+				 * 		为了处理导入到剪切板上转换结束时间用的
+				 * */
+				public function getEndTimeToCopy_AlarmSerious(str:String,se:Number):String {
+		
+				 	var all:Array = str.split(" ") ;
+				 	var dateall:Array = all[0].toString().split("-") ;
+				 	var timeall:Array = all[1].toString().split(":") ;
+				 	var d :Date = new Date(dateall[0],dateall[1]-1,dateall[2],timeall[0],timeall[1],timeall[2],0);
+				 	d.setTime(d.getTime()+se*1000) ;
+				 	var s:String = "" ;
+		 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+		 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+				 	return s ;
+				}
+		
+		
+		
+		/*************************监控0.3机器上tomcat服务器是否正常、外网访问是否正常等等*********************************/
+		[Bindable]
+		private var validURL_test :String = "192.168.0.50:8888" ;		//只有在0.50机器上才监测0.3的相关情况
+		//数据库出现故障后持续的时间,这个就在仓库普通报警相关操作时赋值
+		public var sql_alarmTime:int = 0;
+		//tomcat出现故障后的持续时间
+		public var tomcat_alarmTime:int = 0;
+		//外网无法访问后持续时间
+		public var outNet_alarmTime:int = 0;
+		
+		private var ALARMTIMES:int = 600;			//报警的延时，目前是超过这个延时则本地报警，且发送短信
+		
+		public function testOutNet():void{
+			myremoteObject.testOutNet();
+		}
+		
+		public function testTomcat():void{
+			myremoteObject.testTomcat();
+		}
+		
+		/**
+	 	 * 		判断0.3上tomcat是否正常处理函数
+	 	* */
+		public	function testTomcatHandler(event:ResultEvent):void{
+			var result :int = event.result as int ;
+//			Alert.show("sql_alarmTime="+this.sql_alarmTime+"tomcat_alarmTime="+this.tomcat_alarmTime+" outNet_alarmTime="+outNet_alarmTime,"提示");
+			//表示tomcat正常
+			if(result==1){
+				tomcat_alarmTime = 0;
+				this.lbl_tomcat.visible = false;
+			}else{//局域网内无法正常访问tomcat，则认为是tomcat出现故障了
+				tomcat_alarmTime += 10;
+				this.lbl_tomcat.visible = true;
+			}
+		}
+		
+		/**
+	 	 * 		判断外网访问是否正常处理函数
+	 	* */
+		public	function testOutNetHandler(event:ResultEvent):void{
+			var result :int = event.result as int ;
+			//表示外网访问正常
+			if(result==1){
+				outNet_alarmTime = 0;
+				this.lbl_outNet.visible = false;
+			}else{//外网无法正常访问0.3机器上的CCDCC网站服务
+				outNet_alarmTime += 10;
+				this.lbl_outNet.visible = true;
+			}
+		}
+		
+		/**
+	 	 * 		测试链接错误处理函数
+	 	* */
+	 	public function testUrl_error(event:FaultEvent):void{
+	 		this.lbl_tomcat.visible = true;
+	 		this.lbl_outNet.visible = true;
+	 	}
+		
+		
+		
+		/*************************暂时添加的监控南京医药20E0仓库的数据(暂时屏蔽)*********************************/
+		
+		[Bindable]
+		 public var refList:ArrayCollection = new ArrayCollection(); 			//集合用来保存上一次报警集合
+		 
+			 /**
+			 * 		获取南京医药20E0实时数据
+			 * */
+			 public	function histRefDataHandler(event:ResultEvent):void{
+			 	var hisRef:ArrayCollection = event.result as ArrayCollection ;
+				 	//更新数据
+				 	updateHisRef(hisRef);
+			 	
+			 	this.refhisGrid.dataProvider = refList ;		//设置实时报警表格数据
+			 }
+			 
+			 public function updateHisRef(current:ArrayCollection):void{
+			 	for(var i:int=0;i<current.length;i++){
+			 		refList.addItem(current.getItemAt(i));
+			 	}
+			 }
+			 
+			 /**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			public function HistRef_saveToCopy():void{
+			 	
+			 	 var mystring:String = "";
+		         mystring += "时间" + "\t";
+		   		 mystring += "设备编号" + "\t";
+		     	 mystring += "连接标识" + "\tai1\tai2\tai3\tai4\tai5\tai6\tai7\tai8\tai9" + 
+		     	 		"\tai10\tai11\tai12\tai13\tai14\tai15\tai16\tai17\tai18\tai19\tai20\tai21\tai22\t" + 
+		     	 		"ai23\tai24\tai25\tai26\tai27\tai28\tai29\tai30\tai31\tai32\t\r\n";
+	   
+				   for(var i:int =0 ;i<refList.length;i++){
+				   		var obj:Object = refList.getItemAt(i) ;
+				   		mystring += obj.timestr + "\t"+obj.neiId + "\t"+obj.connectStatus + "\t" ;
+				   		mystring += obj.ai1+"\t"+obj.ai2+"\t"+obj.ai3+"\t"+obj.ai4+"\t"+obj.ai5+"\t"+obj.ai6+"\t"+obj.ai7+"\t"
+				   		+obj.ai8+"\t"+obj.ai9+"\t"+obj.ai10+"\t"+obj.ai11+"\t"+obj.ai12+"\t"+obj.ai13+"\t"+obj.ai14+"\t"+obj.ai15+"\t"
+				   		+obj.ai16+"\t"+obj.ai17+"\t"+obj.ai18+"\t"+obj.ai19+"\t"+obj.ai20+"\t"+obj.ai21+"\t"+obj.ai22+"\t"+obj.ai23+"\t"
+				   		+obj.ai24+"\t"+obj.ai25+"\t"+obj.ai26+"\t"+obj.ai27+"\t"+obj.ai28+"\t"+obj.ai29+"\t"+obj.ai30+"\t"+obj.ai31+"\t"
+				   		+obj.ai32+"\t\r\n";
+				   }
+		   
+	    		  System.setClipboard(mystring);
+	    		  Alert.show("南京医药仓库数据复制到剪切板！","提示");
+				}
+				
+		/*************************故障监控*********************************/	
+		[Bindable]
+		 public var carNoChangeList:ArrayCollection = new ArrayCollection(); 			//集合用来保存上一次报警集合
+		 public var var_days:int = 0;
+		
+			/**
+			 * 		报警模式改变时发生
+			 * */
+			public function timeModelChange(event:Event):void{
+//				var r :RadioButton = event.currentTarget as RadioButton ;
+//				this.ALARM_MODEL = r.value.toString() ;						//设置拨号和发送短信的模式
+//				this.numAlarminterVal.value = r.value.toString() ;
+			}
+			
+			
+			/**
+			 * 		报警间隔改变触发
+			 * */
+			public function weekChange(event:Event):void{
+				//保存一个报警间隔 saveValueInterval() ;		
+			}
+			
+			/**
+			 * 		查询在指定时间段内不变的车载
+			 * */
+			public function queryCarNoChanges():void{
+				this.var_days = this.numTime.value*7;
+				myremoteObject.getCar_noChange(this.var_days);
+			}
+			
+			/**
+	 		 * 		错误处理函数
+	 		 * */
+	 		 public function errorCarNoChangehandler(event:FaultEvent):void{
+	 		 	this.lblCarNoChTipMsg.visible = true;
+	 		 }
+	 		 
+		 	/**
+		 	 * 		查询在指定时间段内不变的车载的处理函数
+		 	* */
+			public	function CarNoChangeHandler(event:ResultEvent):void{
+				carNoChangeList.removeAll();
+				carNoChangeList = event.result as ArrayCollection ;
+				this.grdCarNoChange.dataProvider = carNoChangeList;
+				this.lblCarNoChTipMsg.visible = false;
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:RemoteObject id="myremoteObject"
+    	destination="alarmservice"  endpoint="http://{hostname}/ccdccalarm/messagebroker/amf">
+		<mx:method name="getCarAlarm" fault="car_alarmErrorHandler(event)" result="car_alarmHandler(event)" />
+		<mx:method name="getAlarm" fault="errorhandler(event)" result="alarmHandler(event)"/>
+    	<mx:method name="getConnection" fault="errorhandler(event)" result="connectionHandler(event)"/>
+    	
+    	<mx:method name="callPhone" fault="callErrorHandler(event)" result="callHandler(event)" />
+    	<mx:method name="sendMessage" fault="sendMessageErrorHandler(event)" result="sendMessageHandler(event)"/>
+    	<mx:method name="stopCall" fault="stopCallErrorHandler(event)" result="stopCallHandler(event)"/>
+    	<mx:method name="getAlarmSerious" fault="alarmSeriousHandler_error(event)" result="alarmSeriousHandler(event)"/>
+    	<mx:method name="getTimeoutAlarm" fault="alarmSeriousHandler_error(event)" result="timeoutAlarmHandler(event)"/>
+    	
+    	<mx:method name="testTomcat" fault="testUrl_error(event)" result="testTomcatHandler(event)"/>
+    	<mx:method name="testOutNet" fault="testUrl_error(event)" result="testOutNetHandler(event)"/>
+    	<!-- 暂时屏蔽监控南京医药仓库实时数据 -->
+    	<mx:method name="getHistRefData" fault="errorhandler(event)" result="histRefDataHandler(event)"/>
+    	
+    	<mx:method name="getCar_noChange" fault="errorCarNoChangehandler(event)" result="CarNoChangeHandler(event)"/>
+    </mx:RemoteObject>
+    
+    
+    <mx:Number id="refAlarmLastIndex" /> 
+	<mx:Number id="connectLastIndex" /> 
+	<mx:Number id="carAlarmLastIndex" /> 
+    
+	<mx:TabNavigator width="100%" height="100%">
+		
+		<mx:Canvas label="仓库实时监控" width="100%" height="100%">
+			<mx:Label x="456" y="10" text="系统开始监控时间：" fontSize="13"/>
+			<mx:Label x="573" y="10" text="2010-01-19 11:20:00" fontSize="13" id="lblLoginTime"/>
+			<mx:Label x="222" y="42" text="报警监控" color="#F2152A" fontSize="15"/>
+			<mx:Label x="228" y="274" text="连接监控" color="#F50B31" fontSize="15"/>
+			<mx:DataGrid x="36" y="72" width="438" height="180" textAlign="center" id="gridAlarm" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="客户编号" dataField="branchId" visible="false"/>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+					<mx:DataGridColumn headerText="开始时间" dataField="timestr" />
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100"  labelFunction="delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid x="36" y="305" width="438" height="180" textAlign="center" id="gridConnection" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="客户编号" dataField="branchId" visible="false"/>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"  />
+					<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:Label x="700" y="45" text="冷库历史报警记录" color="#3E6ED0" fontSize="15"/>
+			<mx:Label x="700" y="275" text="连接断开历史记录" color="#566EB9" fontSize="15"/>
+			<mx:DataGrid x="505" y="72" width="510" height="180" textAlign="center" id="gridHisAlarm" contextMenu="{cm}" 
+             itemRollOver="refAlarmLastIndex = event.rowIndex,connectLastIndex=-1,carAlarmLastIndex=-1">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+					<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+					<mx:DataGridColumn headerText="结束时间" dataField="delayValue" labelFunction="endTimeTextHandler"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid x="505" y="303" width="510" height="180" textAlign="center" id="gridHisConnection" contextMenu="{cm}" 
+             itemRollOver="refAlarmLastIndex = -1,connectLastIndex=event.rowIndex,carAlarmLastIndex=-1">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+					<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+					<mx:DataGridColumn headerText="结束时间" dataField="delayValue" labelFunction="endTimeTextHandler"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:CheckBox x="936" y="8" label="关闭声音" id="cboxKnow"  change="isStopNow(event)" visible="false"/>
+			<mx:HRule x="49" y="36" width="90%"/>
+			<mx:LinkButton x="844" y="44" label="保存数据" fontSize="12" id="btnSavaAlarm" click="saveAlarmToCopy();"/>
+			<mx:LinkButton x="844" y="274" label="保存数据" id="btnSavaConnection" fontSize="12" click="saveConnnectionToCopy();"/>
+			
+			<mx:Button x="738" y="7" label="确认声音报警"
+				  click="confirmAlarm()"/>
+			<mx:Label x="121" y="6" text="无法连接服务器获取数据...." width="186" height="24" fontSize="14" color="#F50532" id="lblRefTipMsg"
+				visible="false"/>
+			<mx:Image x="10" y="6" height="20" width="20" source="30.gif" id="imgRef" visible="false"/>
+			
+			
+			<mx:Label x="1045" y="45" text="已取消监控普通报警列表" color="#566EB9" fontSize="15"/>
+			<mx:DataGrid x="1045" y="72" width="180" height="180" textAlign="center" id="qxjkList">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:Label x="1045" y="275" text="已取消监控连接报警列表" color="#566EB9" fontSize="15"/>
+			<mx:DataGrid x="1045" y="303" width="180" height="180" textAlign="center" id="qxjkconList">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				</mx:columns>
+			</mx:DataGrid>
+			
+			<mx:Label x="850" y="7" text="0.3机器上tomcat服务器暂停服务或出故障了" id="lbl_tomcat" color="#F50532" fontSize="14" visible="false" />
+			
+			<mx:Label x="850" y="7" text="外网无法访问0.3机器上的CCDCC网站等服务" id="lbl_outNet" color="#F50532" fontSize="14" visible="false" />
+			
+			
+			<!-- 监控南京医药仓库实时数据并保存，现在暂时屏蔽 -->
+			
+			<mx:DataGrid x="36" y="520" width="1800" height="180" textAlign="center" id="refhisGrid" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="工程编号" width="60" dataField="projectId"/>
+					<mx:DataGridColumn headerText="时间" width="140" dataField="timestr"/>
+					<mx:DataGridColumn headerText="设备编号" width="60" dataField="neiId" />
+					<mx:DataGridColumn headerText="连接标识" width="60" dataField="connectStatus" />
+					<mx:DataGridColumn headerText="ai1" dataField="ai1" />
+					<mx:DataGridColumn headerText="ai2" dataField="ai2" />
+					<mx:DataGridColumn headerText="ai3" dataField="ai3" />
+					<mx:DataGridColumn headerText="ai4" dataField="ai4" />
+					<mx:DataGridColumn headerText="ai5" dataField="ai5" />
+					<mx:DataGridColumn headerText="ai6" dataField="ai6" />
+					<mx:DataGridColumn headerText="ai7" dataField="ai7" />
+					<mx:DataGridColumn headerText="ai8" dataField="ai8" />
+					<mx:DataGridColumn headerText="ai9" dataField="ai9" />
+					<mx:DataGridColumn headerText="ai10" dataField="ai10" />
+					<mx:DataGridColumn headerText="ai11" dataField="ai11" />
+					<mx:DataGridColumn headerText="ai12" dataField="ai12" />
+					<mx:DataGridColumn headerText="ai13" dataField="ai13" />
+					<mx:DataGridColumn headerText="ai14" dataField="ai14" />
+					<mx:DataGridColumn headerText="ai15" dataField="ai15" />
+					<mx:DataGridColumn headerText="ai16" dataField="ai16" />
+					<mx:DataGridColumn headerText="ai17" dataField="ai17" />
+					<mx:DataGridColumn headerText="ai18" dataField="ai18" />
+					<mx:DataGridColumn headerText="ai19" dataField="ai19" />
+					<mx:DataGridColumn headerText="ai20" dataField="ai20" />
+					<mx:DataGridColumn headerText="ai21" dataField="ai21" />
+					<mx:DataGridColumn headerText="ai22" dataField="ai22" />
+					<mx:DataGridColumn headerText="ai23" dataField="ai23" />
+					<mx:DataGridColumn headerText="ai24" dataField="ai24" />
+					<mx:DataGridColumn headerText="ai25" dataField="ai25" />
+					<mx:DataGridColumn headerText="ai26" dataField="ai26" />
+					<mx:DataGridColumn headerText="ai27" dataField="ai27" />
+					<mx:DataGridColumn headerText="ai28" dataField="ai28" />
+					<mx:DataGridColumn headerText="ai29" dataField="ai29" />
+					<mx:DataGridColumn headerText="ai30" dataField="ai30" />
+					<mx:DataGridColumn headerText="ai31" dataField="ai31" />
+					<mx:DataGridColumn headerText="ai32" dataField="ai32" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:LinkButton x="844" y="490" label="保存数据" fontSize="12" id="btnSavaRefhis" click="HistRef_saveToCopy();"/>
+			<mx:Label x="180" y="490" text="南京医药仓库数据列表" color="#566EB9" fontSize="15"/>
+			
+		</mx:Canvas>
+		
+		
+		<!--车载实时报警数据--> 
+		
+		
+		<mx:Canvas label="车载实时监控" width="100%" height="100%" creationComplete="init_car();"  >
+			<mx:Label x="361" y="9" text="系统开始监控时间:" width="121" fontSize="13"/>
+			<mx:Label x="479" y="10" width="143" id="txtCarLoginTime" fontSize="12" text="2010-08-12 12:33:45"/>
+			<mx:CheckBox x="848" y="7" label=" 关闭声音" fontSize="12" id="chkCloseCar"   change="car_isStopNow(event)" visible="false"/>
+			
+			<mx:DataGrid x="37" y="78" width="449" height="298" id="grdCarAlarm" textAlign="center">
+				<mx:columns>
+					<mx:DataGridColumn headerText="客户编号" dataField="projectId" visible="false"/>
+				<mx:DataGridColumn headerText="项目名称" dataField="displayName"/>
+				<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr" />
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100"  labelFunction="car_delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			
+			
+			<mx:DataGrid x="513" y="79" width="509" height="297" id="grdCarHisAlarm" textAlign="center" contextMenu="{cm}" 
+             itemRollOver="refAlarmLastIndex = -1,connectLastIndex=-1,carAlarmLastIndex=event.rowIndex">
+				<mx:columns>
+				<mx:DataGridColumn headerText="项目名称" dataField="displayName"/>
+				<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr"/>
+				<mx:DataGridColumn headerText="结束时间" width="140" dataField="delayValue" labelFunction="car_endTimeTextHandler"/>
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="car_delayTimeTextHandler" />
+				
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:Label x="193" y="45" text="车载报警监控" fontSize="14" color="#F11A57"/>
+			<mx:Label x="671" y="45" text="车载历史报警记录" color="#4F79C6" fontSize="14"/>
+			<mx:LinkButton x="801" y="43" label="保存数据" fontSize="12"   click="car_saveAlarmToCopy();" id="lbtnCarAlarmSave"/>
+			<mx:HRule x="49" y="36" width="90%"/>
+			<mx:Button x="748" y="8" label="确认声音报警" click="confirmCarAlarm();"/>
+			<mx:Label x="121" y="6" text="无法连接服务器获取数据...." width="186" height="24" fontSize="14" color="#F50532" id="lblCarTipMsg"
+				visible="false"/>
+			<mx:Image x="10" y="6" height="20" width="20" source="30.gif" id="imgCar" visible="false"/>
+			
+			<mx:Label x="1050" y="45" text="已取消监控车载报警的列表" color="#4F79C6" fontSize="14"/>
+			
+			<mx:DataGrid x="1050" y="79" width="180" height="297" textAlign="center" id="qxjkcarList">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="displayName"/>
+				</mx:columns>
+			</mx:DataGrid>
+			
+		</mx:Canvas>
+		<mx:Canvas label="严重报警实时监控" width="100%" height="100%" creationComplete="initAlarmSerious()">
+			<mx:Label x="361" y="9" text="系统开始监控时间:" width="121" fontSize="13"/>
+			<mx:Label x="479" y="10" width="143" id="txtAlarmSeriousLoginTime" fontSize="12" text="2010-08-12 12:33:45"/>
+			<mx:DataGrid x="37" y="78" width="449" height="200" id="grdAlarmSerious" textAlign="center">
+				<mx:columns>
+				<mx:DataGridColumn headerText="客户编号" dataField="branchId" visible="false"/>
+				<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr" />
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100"  labelFunction="car_delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid x="513" y="79" width="509" height="200" id="grdAlarmSeriousHis" textAlign="center">
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+					<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr"/>
+					<mx:DataGridColumn headerText="结束时间" width="140" dataField="delayValue" labelFunction="car_endTimeTextHandler"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="car_delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			
+			<mx:DataGrid x="37" y="323" width="449" height="200" textAlign="center" id="grdTimeoutAlarm" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="nameStr"/>
+					<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid x="513" y="323" width="509" height="200" textAlign="center" id="grdTimeoutAlarmHis" >
+				<mx:columns>
+					<mx:DataGridColumn headerText="项目名称" dataField="nameStr"/>
+					<mx:DataGridColumn headerText="开始时间" width="140" dataField="timestr"/>
+					<mx:DataGridColumn headerText="结束时间" width="140" dataField="delayValue" labelFunction="endTimeTextHandler"/>
+					<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:LinkButton x="844" y="294" label="保存数据" id="btnSavaTimeout" fontSize="12" click="timeoutAlarm_saveToCopy();"/>
+			
+			
+			<mx:Label x="193" y="45" text="仓库、车载严重报警监控" fontSize="14" color="#F11A57"/>
+			<mx:Label x="611" y="45" text="仓库、车载历史严重报警记录" color="#4F79C6" fontSize="14"/>
+			
+			<mx:Label x="143" y="294" text="仓库实时数据持续不变超时报警监控" fontSize="14" color="#F11A57"/>
+			<mx:Label x="571" y="294" text="仓库实时数据持续不变超时历史报警记录" color="#4F79C6" fontSize="14"/>
+			
+			<mx:LinkButton x="801" y="43" label="保存数据" fontSize="12"   click="AlarmSerious_saveToCopy();" id="lbtnCarAlarmSave0"/>
+			<mx:HRule x="49" y="36" width="90%"/>
+			<mx:Button x="748" y="8" label="确认声音报警" click="confirmAlarmSerious();"/>
+			<mx:Label x="49" y="10" width="198" id="lblAlarmSeriousResult" color="#F81807" text="无法获取到严重报警数据..." enabled="true" visible="false"/>
+			<mx:Image x="10" y="6" height="20" width="20" source="30.gif" id="imgAlarmSerious" visible="false"/>
+		</mx:Canvas>
+		
+		<mx:Canvas label="报警电话短信设置" width="100%" height="100%" creationComplete="isShowCallPanle();" >
+			<mx:Accordion x="10" y="7" width="441" height="318" id="callAccordion"  >
+				<mx:Canvas label="电话设置" width="100%" height="100%">
+					<mx:Label x="68" y="62" text="验证码:"/>
+					<mx:TextInput x="134" y="60" text="Thermoberg" id="txtCallCheckCode" enabled="false"/>
+					<mx:Label x="68" y="94" text="电话号码:"/>
+					<mx:TextInput x="134" y="92"  id="txtCallPhone" enabled="false"  text="{phoneNumber}"/>
+					<mx:Label x="68" y="152" text="拨号次数:"/>
+					<mx:Button x="108" y="210" label="编 辑" id="btnEditCall" click="doEditHandler(event);"/>
+					<mx:Button x="215" y="210" label="保 存" id="btnSaveCall" click="doSaveHandler(event);"/>
+					<mx:Button x="96" y="10" label="确 定 电 话 通 知" width="185" height="31" fontSize="18" click="confirmCallHandler(event)"/>
+					<mx:NumericStepper x="134" y="150" minimum="1" maximum="10" stepSize="1" id="txtCallCount" value="{phoneCount}" enabled="false"/>
+					<mx:Label x="10" y="182" width="187" id="lblCallResult_tip" color="#F61605" text="" />
+					<mx:Label x="205" y="182" width="174" id="lblSendMessageTip" color="#F6310B"/>
+					<mx:Label x="68" y="124" text="短信号码:"/>
+					<mx:TextInput x="134" y="122"  id="txtMessagePhone" enabled="false"  text="{messageNumber}"/>
+				</mx:Canvas>
+				<mx:Canvas label="报警模式" width="100%" height="100%">
+					<mx:RadioButton x="66" y="41" label="白天模式" id="radDay" groupName="alarmModel" selected="true"
+						value="5" click="modelChange(event)"/>
+					<mx:RadioButton x="193.5" y="41" label="夜晚模式(值班)" id="radnight" groupName="alarmModel"
+						value="20" click="modelChange(event)"/>
+					<mx:NumericStepper x="133" y="87" id="numAlarminterVal" minimum="1" maximum="30" stepSize="1" value="5"
+						change="ValueIntervalueChange(event);" width="48"/>
+					<mx:Button x="69" y="147" label="保 存" click="saveValueInterval();"/>
+					<mx:Label x="64" y="94" text="报警间隔:"/>
+					<mx:Label x="183" y="89" text="分钟"/>
+					<mx:Label x="24" y="10" text="改变报警模式或间隔后需要保存喔!" color="#F60505"/>
+					<mx:HRule x="24" y="34" width="324" height="1"/>
+				</mx:Canvas>
+			</mx:Accordion>
+		</mx:Canvas>
+		
+		<mx:Canvas label="故障监控" width="100%" height="100%" >
+			<mx:Accordion x="10" y="7" width="100%" height="500" id="erroAccordion"  >
+				<mx:Canvas label="车载故障" width="100%" height="100%">
+					<!--<mx:RadioButton x="300" y="41" label="按周数查询" id="weeks" groupName="timeModel" selected="true"
+						value="1" click="timeModelChange(event)"/>
+					<mx:RadioButton x="400" y="41" label="按时间段查询" id="timescale" groupName="timeModel"
+						value="2" click="timeModelChange(event)"/>-->
+					
+					<mx:NumericStepper x="300" y="80" id="numTime" minimum="1" maximum="30" stepSize="1" value="3"
+						change="weekChange(event);" width="48"/>
+					<mx:Label x="350" y="82" id="weeklab1" text="周内" />
+					<mx:Label x="240" y="82" id="weeklab2" text="选择周数" />
+					<mx:Button x="600" y="80" label="查 询" click="queryCarNoChanges();" />
+					
+					<mx:Label x="300" y="6" text="无法连接服务器获取数据...." width="186" height="24" fontSize="14" color="#F50532" id="lblCarNoChTipMsg"
+					 visible="false"/>
+					 
+					 <mx:Label x="350" y="40" text="查询没有数据记录持续超过指定时间的车载" height="24" fontSize="14" color="#3E6ED0"/>
+					
+					<mx:DataGrid x="200" y="120" width="509" height="200" textAlign="center" id="grdCarNoChange" >
+						<mx:columns>
+							<mx:DataGridColumn headerText="车载工程" dataField="namestr"/>
+							<mx:DataGridColumn headerText="持续天数" width="140" dataField="timediff"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Canvas>
+				<mx:Canvas label="其他故障" width="100%" height="100%">
+					<mx:Label x="350" y="30" text="暂时没有内容" />
+				</mx:Canvas>
+			</mx:Accordion>
+		</mx:Canvas>
+	</mx:TabNavigator>
+</mx:Application>

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone
+END
+StopCallResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/StopCallResponse.java
+END
+StopCall.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/StopCall.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/package-info.java
+END
+CallResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/CallResponse.java
+END
+Call.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/Call.java
+END
+ITelephone.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/ITelephone.java
+END
+PhoneCaller.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/PhoneCaller.java
+END
+SendMessageResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/SendMessageResponse.java
+END
+ObjectFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/ObjectFactory.java
+END
+SendMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/phone/SendMessage.java
+END

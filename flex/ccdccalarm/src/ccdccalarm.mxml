@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init();">
+<mx:Script>
+	<![CDATA[
+		import mx.formatters.DateFormatter;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.core.SoundAsset;
+            import flash.media.*;
+            
+            
+			[Bindable]
+			public var hostname:String = "" ;		//绑定主机域名
+			
+			public var myTimer:Timer  = null ;		//定义定时器
+			
+			public var Flag_alarm :Boolean = false ;	//是否报警的标识
+			
+			public var Flag_connection:Boolean = false ;	//是否断开连接的标识
+		
+		
+			public var alarmList:ArrayCollection = new ArrayCollection(); //集合用来保存上一次报警集合
+			
+			public var alarmHisList:ArrayCollection = new ArrayCollection() ;		//集合用来保存历史报警记录
+			
+			
+			public var connectionList:ArrayCollection = new ArrayCollection() ;	//集合用来保存上一次断开连接集合
+							
+			public var connectionHisList :ArrayCollection = new ArrayCollection() ; //集合用来保存历史断开连接记录
+
+            [Embed(source="alarm.mp3")]
+            [Bindable]
+            public var Song:Class;
+
+            public var mySong:SoundAsset = new Song() as SoundAsset;
+            
+            public var channel:SoundChannel;
+            
+            
+            public function playSound():void
+            {
+                
+                stopSound();   // 先停止音乐，避免播放多次
+                     
+                channel = mySong.play(0,int.MAX_VALUE);// 开始播放音乐
+            }
+            
+            public function stopSound():void
+            {
+                if ( channel != null ) channel.stop();	//停止播放音乐
+            }
+			
+			
+			
+			
+			/**
+			 * 	页面加载时处理函数
+			 * */
+			public function init():void{
+				getdomain() ;
+				setCurrentTime();
+				startTime();
+				myremoteObject.getAlarm();
+				myremoteObject.getConnection() ;
+			}
+			
+			/**
+	 		 * 		获取请求的域名
+	 		 * */
+	 		public function getdomain():void{ 			 
+	 			 this.hostname =  ExternalInterface.call("window.location.host.toString");
+	 		}
+	 		
+	 		/**	
+	 		 * 	设置打开页面的时间
+	 		 * */
+	 		 public function setCurrentTime():void{
+	 		 	var d :Date= new Date() ;
+	 		 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+	 		 	this.lblLoginTime.text = s ;
+	 		 }
+	 		 
+	 		 /**
+	 		 * 		启动定时器
+	 		 * */
+	 		 
+	 		 public function startTime():void{
+	 		 	myTimer =new Timer(10000,int.MAX_VALUE);
+
+				myTimer.addEventListener("timer", timerhandler);//注意，事件timer必须全部小写
+
+				myTimer.start();
+	 		 }
+	 		 
+	 		 /**
+	 		 *		定时刷新数据
+	 		 * */
+
+			public	function timerhandler(event:TimerEvent):void{
+				myremoteObject.getAlarm();
+				myremoteObject.getConnection() ;
+			}
+	 		 
+	 		 
+	 		 
+	 		 /**
+	 		 * 		判断是否需要加入历史报警记录列表
+	 		 * */
+	 		 
+	 		 public function isEndAlarm(source:ArrayCollection,current:ArrayCollection):void{ 	
+	 		 	
+	 		 	for(var i:int=0;i<source.length;i++){		//循环遍历原报警数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认报警已经结束
+	 		 			
+	 		 			//这里需要判断新报警数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的报警数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.branchId==curobj.branchId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果该报警，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		alarmHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+	 		 }
+	 		 
+	 		 /**
+	 		 * 	设置需要更新的报警
+	 		 * */
+	 		 public function isUpdateAlarm(source:ArrayCollection,current:ArrayCollection):void{
+	 		 		for(var i:int=0;i<current.length;i++){		//循环当前报警的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次报警信息，把报警延时时间，加入到当前报警时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.branchId==obj2.branchId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的报警的持续时间
+		 		 						obj.timestr = obj2.timestr ;							//设置开始时间为第一次报警时间
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+	 		 }
+	 		 
+	 		
+	 		/**
+	 		 * 		错误处理函数
+	 		 * */
+	 		 public function errorhandler(event:FaultEvent):void{
+	 		 	Alert.show("获取数据发生错误","ERROR");
+	 		 }
+			
+			/**
+			 * 		获取报警数据列表
+			 * */
+			 
+			 public	function alarmHandler(event:ResultEvent):void{
+			 	var myalarm :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	
+			 	
+			 	//结束报警，加入历史报警记录
+			 	isEndAlarm(alarmList,myalarm) ;
+			 	//更新报警
+			 	isUpdateAlarm(alarmList,myalarm) ;
+			 	
+			 	Flag_alarm = myalarm.length>0?true:false ;
+			 	
+			 	isPlayerOK() ;
+			 	
+			 	
+			 	alarmList = myalarm ;				//把当前的报警信息保存起来
+			 	
+			 	this.gridAlarm.dataProvider = alarmList ;		//设置实时报警表格数据
+			 	
+			 	this.gridHisAlarm.dataProvider = alarmHisList ; //设置历史报警表格数据
+			 	
+			 }
+			 
+			 /**
+			 * 		获取失去连接列表
+			 * */
+			 
+			 public function connectionHandler(event:ResultEvent):void{
+			 	var myconnection :ArrayCollection = event.result as ArrayCollection ;
+			 	
+			 	isEndConnection(connectionList,myconnection) ;
+			 	
+			 	isUpdateConnection(connectionList,myconnection) ;
+			 	
+			 	Flag_connection = myconnection.length>0?true:false ;
+			 	
+			 	isPlayerOK() ;
+			 	
+			 	connectionList = myconnection ;
+			 	
+			 	this.gridConnection.dataProvider = connectionList ;
+			 	
+			 	this.gridHisConnection.dataProvider = connectionHisList ;
+			 }
+			 
+			 /**
+			 * 		判断是否已经连接上了。插入连接的历史记录
+			 * */
+			 public function isEndConnection(source:ArrayCollection,current:ArrayCollection):void{
+			 		for(var i:int=0;i<source.length;i++){		//循环遍历原断开数据
+	 		 		var obj:Object = source.getItemAt(i) ;
+	 		 		var isOver:Boolean = true ;				//默认已经连接
+	 		 			
+	 		 			//这里需要判断新的断开数据是否存在，不为空呀
+		 		 		for(var j:int=0;j<current.length;j++){	//循环遍历新的断开数据
+		 		 			var curobj :Object = current.getItemAt(j) ;
+		 		 				if(obj.branchId==curobj.branchId){
+		 		 					isOver = false ;
+		 		 					break ;
+		 		 				}
+		 		 		}
+		 		 	//如果已经连接，已经不存在了。则添加一个历史报警记录
+		 		 	if(isOver){
+		 		 		connectionHisList.addItem(obj) ;
+		 		 	}
+	 		 	}
+			 }
+			 
+			 /**
+			 * 		判断是否需要更新连接的记录
+			 * */
+			 
+			 public function isUpdateConnection(source:ArrayCollection,current:ArrayCollection):void{
+			 		for(var i:int=0;i<current.length;i++){		//循环当前断开连接的信息
+	 		 			var obj:Object = current.getItemAt(i) ;
+		 		 			for(var j:int =0 ;j<source.length;j++){	//循环前一次断开信息，把断开延时时间，加入到当前断开时间中去
+		 		 				var obj2:Object = source.getItemAt(j) ;
+		 		 					if(obj.branchId==obj2.branchId){
+		 		 						obj.delayValue = obj.delayValue + obj2.delayValue ;		//设置当前的断开的持续时间
+		 		 						obj.timestr = obj2.timestr ;
+		 		 						break ;
+		 		 					}
+		 		 			}
+	 		 		}
+			 }
+	
+			
+			/**
+			 * 	这是为了显示持续时间后面的秒文字
+			 * */
+			public function delayTimeTextHandler(item:Object,columns:DataGridColumn):String{
+				return item.delayValue +" s" ;
+			}
+			
+			
+			/**
+			 * 		这是为了显示结束时间文本的处理函数
+			 * */
+			 public function endTimeTextHandler(item:Object,columns:DataGridColumn):String{
+			 	var str:String = item.timestr ;
+			 	var se:Number = item.delayValue ;
+			 	var all:Array = str.split(" ") ;
+			 	var dateall:Array = all[0].toString().split("-") ;
+			 	var timeall:Array = all[1].toString().split(":") ;
+			 	var d :Date = new Date(dateall[0],dateall[1],dateall[2],timeall[0],timeall[1],timeall[2],0);
+			 	d.setTime(d.getTime()+se*1000) ;
+			 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+			 	return s ;
+			 }
+			 
+			 /**
+			 * 		判断是否需要报警
+			 * */
+			 
+			 public function isPlayerOK():void{
+			 	
+			 	if(this.cboxKnow.selected){
+			 			stopSound() ;
+			 			return ;
+			 	}
+			 		
+			 		
+			 	//只要其中一个发生了报警，则播放音乐
+			 	if( Flag_alarm==false &&  Flag_connection==false ){
+			 			stopSound() ;
+			 	}else{		
+			 			playSound() ;
+			 	}
+			 		
+			 }
+			 
+			 /**
+			 * 		立即关闭声音
+			 * */
+			 public function isStopNow(event:Event):void{
+			 	if(this.cboxKnow.selected){
+			 			stopSound() ;
+			 	}else{
+			 		isPlayerOK() ;
+			 	}
+			 }
+			 
+			 /**
+			 * 		把历史报警数据导入到剪切板上
+			 * */
+			 public function saveAlarmToCopy():void{
+			 	 var mystring:String = "";
+  
+     
+  
+	    	 mystring += "项目名称" + "\t";
+	         mystring += "开始时间" + "\t";
+	   		 mystring += "结束时间" + "\t";
+	     	 mystring += "持续时间" + "\t\r\n";
+   
+     
+   		
+   
+	   for(var i:int =0 ;i<alarmHisList.length;i++){
+	   		var obj:Object = alarmHisList.getItemAt(i) ;
+	   		mystring +=obj.branchName+"\t" ;
+	   		mystring += obj.timestr + "\t" ;
+	   		mystring += getEndTimeToCopy(obj.timestr,obj.delayValue)+"\t" ;
+	   		mystring +=obj.delayValue+"\r\n"
+	   }
+   
+        
+    		 System.setClipboard(mystring);
+    		  Alert.show("已将历史数据复制到剪切板！","提示");
+	}
+	
+	
+	public function saveConnnectionToCopy():void{
+		
+			 var mystring:String = "";
+ 
+	    	 mystring += "项目名称" + "\t";
+	         mystring += "开始时间" + "\t";
+	   		 mystring += "结束时间" + "\t";
+	     	 mystring += "持续时间" + "\t\r\n";
+   
+     
+   		 
+   
+	   for(var i:int =0 ;i<connectionHisList.length;i++){
+	   		var obj:Object = connectionHisList.getItemAt(i) ;
+	   		mystring +=obj.branchName+"\t" ;
+	   		mystring += obj.timestr + "\t" ;
+	   		mystring += getEndTimeToCopy(obj.timestr,obj.delayValue)+"\t" ;
+	   		mystring +=obj.delayValue+"\r\n"
+	   }
+   
+    		 System.setClipboard(mystring);
+    		 Alert.show("已将历史数据复制到剪切板！","提示");
+	}
+	
+	
+	/**
+	 * 		为了处理导入到剪切板上转换结束时间用的
+	 * */
+	public function getEndTimeToCopy(str:String,se:Number):String {
+		
+			 	var all:Array = str.split(" ") ;
+			 	var dateall:Array = all[0].toString().split("-") ;
+			 	var timeall:Array = all[1].toString().split(":") ;
+			 	var d :Date = new Date(dateall[0],dateall[1],dateall[2],timeall[0],timeall[1],timeall[2],0);
+			 	d.setTime(d.getTime()+se*1000) ;
+			 	var s:String = "" ;
+	 		 	s = s.concat(d.getFullYear().toString(),"-",d.getMonth()+1,"-",d.getDate().toString(),
+	 		 	" ",d.getHours(),":",d.getMinutes(),":",d.getSeconds()) ;
+			 	return s ;
+	}
+			 
+			 
+	]]>
+</mx:Script>
+    
+    <mx:RemoteObject id="myremoteObject"
+    	destination="alarmservice"  endpoint="http://{hostname}/ccdccalarm/messagebroker/amf">
+    		<mx:method name="getAlarm" fault="errorhandler(event)" result="alarmHandler(event)"/>
+    		<mx:method name="getConnection" fault="errorhandler(event)" result="connectionHandler(event)"/>
+    </mx:RemoteObject>
+    
+	<mx:Panel  width="100%" height="100%" layout="absolute"  title="CCDCC 冷库报警监控平台" fontSize="13" id="mainPanle" >
+		
+	
+		<mx:Label x="476" y="10" text="系统登录时间：" fontSize="13"/>
+		<mx:Label x="573" y="10" text="2010-01-19 11:20:00" fontSize="13" id="lblLoginTime"/>
+		<mx:Label x="242" y="42" text="报警监控" color="#F2152A" fontSize="15"/>
+		<mx:Label x="278" y="274" text="连接监控" color="#F50B31" fontSize="15"/>
+		<mx:DataGrid x="106" y="72" width="438" height="180" textAlign="center" id="gridAlarm" >
+			<mx:columns>
+				<mx:DataGridColumn headerText="客户编号" dataField="branchId" visible="false"/>
+				<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				<mx:DataGridColumn headerText="开始时间" dataField="timestr" />
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100"  labelFunction="delayTimeTextHandler" />
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:DataGrid x="106" y="303" width="438" height="180" textAlign="center" id="gridConnection" >
+			<mx:columns>
+				<mx:DataGridColumn headerText="客户编号" dataField="branchId" visible="false"/>
+				<mx:DataGridColumn headerText="项目名称" dataField="branchName"  />
+				<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:Label x="820" y="45" text="冷库历史报警记录" color="#3E6ED0" fontSize="15"/>
+		<mx:Label x="829" y="275" text="连接断开历史记录" color="#566EB9" fontSize="15"/>
+		
+		
+		<mx:DataGrid x="615" y="72" width="575" height="180" textAlign="center" id="gridHisAlarm" >
+			<mx:columns>
+				<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+				<mx:DataGridColumn headerText="结束时间" dataField="delayValue" labelFunction="endTimeTextHandler"/>
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+			</mx:columns>
+		</mx:DataGrid>
+		
+		
+		<mx:DataGrid x="615" y="303" width="575" height="180" textAlign="center" id="gridHisConnection">
+			<mx:columns>
+				<mx:DataGridColumn headerText="项目名称" dataField="branchName"/>
+				<mx:DataGridColumn headerText="开始时间" dataField="timestr"/>
+				<mx:DataGridColumn headerText="结束时间" dataField="delayValue" labelFunction="endTimeTextHandler"/>
+				<mx:DataGridColumn headerText="持续时间(秒)" dataField="delayValue" width="100" labelFunction="delayTimeTextHandler" />
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:CheckBox x="864" y="8" label="关闭声音提示" id="cboxKnow"  change="isStopNow(event)"/>
+		<mx:HRule x="49" y="36" width="90%"/>
+		<mx:LinkButton x="964" y="44" label="保存数据" fontSize="12" id="btnSavaAlarm" click="saveAlarmToCopy();"/>
+		<mx:LinkButton x="978" y="274" label="保存数据" id="btnSavaConnection" fontSize="12" click="saveConnnectionToCopy();"/>		
+	</mx:Panel>
+</mx:Application>

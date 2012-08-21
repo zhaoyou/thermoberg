@@ -1,0 +1,161 @@
+package com.thermoberg.dao.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.thermoberg.dao.AlarmDao;
+import com.thermoberg.entity.AlarmInfo;
+import com.thermoberg.entity.AlarmSerious;
+import com.thermoberg.entity.CarAlarmInfo;
+import com.thermoberg.util.DBUtil;
+import com.thermoberg.util.DateUtil;
+
+/**
+ * 这是报警数据访问的实现类
+ * @author Administrator
+ *
+ */
+public class AlarmDaoImpl implements AlarmDao {
+
+	public List<AlarmInfo> getAlarmList() {
+		Connection conn = null ;
+		Statement st = null ;
+		ResultSet rs = null ;
+		List<AlarmInfo> list = new ArrayList<AlarmInfo>() ;
+		AlarmInfo info = null ;
+		try {
+			conn = DBUtil.getConn() ;
+			st = conn.createStatement() ;
+			rs = st.executeQuery(ALARM_SOUND);		//现在都是直接查询声光报警，之前是查询冷库报警ALARM
+			if(rs!=null){
+				while(rs.next()){
+					info = new AlarmInfo();
+					info.setBranchId(rs.getLong("branchId"));
+					info.setBranchName(rs.getString("branchName"));
+					info.setUpdatetime(DateUtil.stringToDate(rs.getString("updatetime")));
+					list.add(info);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("获取报警信息发生错误:" +e.getMessage());
+			return list ;
+		}finally{
+			DBUtil.closeRs(rs);
+			DBUtil.closeStatement(st);
+			DBUtil.closeConn(conn);
+		}
+		return list;
+	}
+	
+	
+
+	public List<AlarmInfo> getLostConnection() {
+		Connection conn = null ;
+		Statement st = null ;
+		ResultSet rs = null ;
+		List<AlarmInfo> list = new ArrayList<AlarmInfo>() ;
+		AlarmInfo info = null ;
+		try {
+			conn = DBUtil.getConn() ;
+			st = conn.createStatement() ;
+			rs = st.executeQuery(CONNECTION);
+			if(rs!=null){
+				while(rs.next()){
+					info = new AlarmInfo();
+					info.setBranchId(rs.getLong("branchId"));
+					info.setBranchName(rs.getString("branchName"));
+					info.setUpdatetime(DateUtil.stringToDate(rs.getString("updatetime")));
+					list.add(info);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("获取断开连接发生错误:" +e.getMessage());
+			return list ;
+		}finally{
+			DBUtil.closeRs(rs);
+			DBUtil.closeStatement(st);
+			DBUtil.closeConn(conn);
+		}
+		return list;
+	}
+
+
+
+	public List<CarAlarmInfo> getCarAlarmList() {
+		Connection conn = null ;
+		Statement st = null ;
+		ResultSet rs = null ;
+		List<CarAlarmInfo> list = new ArrayList<CarAlarmInfo>();
+		CarAlarmInfo info = null ;
+		try {
+			conn = DBUtil.getConn() ;
+			st = conn.createStatement() ;
+			rs = st.executeQuery(CARALARM);
+			
+			if(rs!=null){
+				while(rs.next()){
+					info  = new CarAlarmInfo();
+					info.setProjectId(rs.getString("projectId"));
+					info.setBranchName(rs.getString("branchName"));
+					info.setProjectName(rs.getString("projectName"));
+					info.setUpdateTime(DateUtil.stringToDate(rs.getString("updateTime")));
+					
+					list.add(info);
+				}
+			}
+		}catch (Exception e) {
+			System.out.println("获取车载报警信息错误: "+e.getMessage());
+			return list ;
+		}finally{
+			DBUtil.closeRs(rs);
+			DBUtil.closeStatement(st);
+			DBUtil.closeConn(conn);
+		}
+		return list;
+	}
+
+
+
+	@Override
+	public List<AlarmSerious> getAlarmSeriousList(String sql) {
+		Connection conn = null ;
+		Statement st = null ;
+		ResultSet rs = null ;
+		List<AlarmSerious> list = new ArrayList<AlarmSerious>();
+		AlarmSerious info = null ;
+		try {
+			conn = DBUtil.getConn() ;
+			st = conn.createStatement() ;
+			rs = st.executeQuery(sql) ;
+			
+			
+			
+			if(rs!=null){
+				while(rs.next()){
+					info  = new AlarmSerious();
+					info.setBranchId(rs.getLong("branchId")) ;
+					info.setBranchName(rs.getString("branchName")) ;
+					info.setUpdateTime(DateUtil.stringToDate(rs.getString("updatetime"))) ;
+					list.add(info);
+				}
+			}
+			
+			
+		}catch (Exception e) {
+			System.out.println("获取严重报警信息错误: "+e.getMessage());
+			return list ;
+		}finally{
+			DBUtil.closeRs(rs);
+			DBUtil.closeStatement(st);
+			DBUtil.closeConn(conn);
+		}
+		return list;
+	}
+	
+	
+
+}

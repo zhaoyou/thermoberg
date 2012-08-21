@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib
+END
+commons-httpclient-3.0.1.jar
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/commons-httpclient-3.0.1.jar
+END
+commons-codec-1.3.jar
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/commons-codec-1.3.jar
+END
+c3p0-0.9.0.jar
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/c3p0-0.9.0.jar
+END
+flex-messaging-proxy.jar
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/flex-messaging-proxy.jar
+END
+flex-messaging-opt.jar
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/flex-messaging-opt.jar
+END
+cfgatewayadapter.jar
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/cfgatewayadapter.jar
+END
+flex-messaging-remoting.jar
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/flex-messaging-remoting.jar
+END
+commons-logging.jar
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/commons-logging.jar
+END
+flex-messaging-common.jar
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/flex-messaging-common.jar
+END
+flex-messaging-core.jar
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/flex-messaging-core.jar
+END
+backport-util-concurrent.jar
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/backport-util-concurrent.jar
+END
+concurrent.jar
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/concurrent.jar
+END
+sqljdbc.jar
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/sqljdbc.jar
+END
+xalan.jar
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/WebRoot/WEB-INF/lib/xalan.jar
+END

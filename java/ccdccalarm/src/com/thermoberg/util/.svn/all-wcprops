@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util
+END
+Test.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util/Test.java
+END
+db.properties
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util/db.properties
+END
+DBUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util/DBUtil.java
+END
+ConnnectionFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util/ConnnectionFactory.java
+END
+DateUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccdccalarm/!svn/ver/11/branches/dev/ccdccalarm/src/com/thermoberg/util/DateUtil.java
+END
+TestCall.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ccdccalarm/!svn/ver/13/branches/dev/ccdccalarm/src/com/thermoberg/util/TestCall.java
+END
