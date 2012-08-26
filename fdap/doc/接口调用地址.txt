@@ -1,0 +1,4 @@
+http://localhost:8888/fdapservice/services/loadOperate?wsdl
+
+
+将localhost改成服务器IP即可

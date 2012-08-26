@@ -1,0 +1,29 @@
+前台页面路径：
+tomcat存放路径\apache-tomcat-6.0.18\webapps\fdap下所有的jsp文件。(不包括子文件夹内的jsp文件)
+
+
+用到的jsp文件包括：404_1.jsp、404.jsp、500_1.jsp、500.jsp、company.jsp、footer.jsp、head.jsp、hisAlarm.jsp、hisDataCar.jsp、hisDataRef.jsp、hisDataStartup.jsp、index.jsp、mapHis.jsp、mapReal.jsp、orglistJ.jsp、orglistQ.jsp、realAlarm.jsp、realAlarmCar.jsp、realAlarmRef.jsp、realDataCar.jsp和realDataRef.jsp。
+
+下面对用到的页面进行简单的说明
+
+1、404_1.jsp    	没有找到错误页面跳转页面
+2、404.jsp		没有找到错误页面
+3、500_1.jsp		系统出错错误页面跳转页面
+4、500.jsp		系统出错错误页面
+5、company.jsp		企业列表页面
+6、footer.jsp		页面页尾
+7、head.jsp		页面页头
+8、hisAlarm.jsp		查看企业历史报警页面
+9、hisDataCar.jsp	查看车载某条启停记录的历史数据页面
+10、hisDataRef.jsp	查看仓库历史数据页面
+11、hisDataStartup.jsp	查看车载历史启停记录页面
+12、index.jsp		系统登录页面
+13、mapHis.jsp		车载历史轨迹回放页面
+14、mapReal.jsp		车载实时地图页面
+15、orglistJ.jsp	机构列表页面
+16、orglistQ.jsp	企业信息页面
+17、realAlarm.jsp	企业所有的实时报警查看页面
+18、realAlarmCar.jsp	企业所有的车载实时报警查看页面
+19、realAlarmRef.jsp	企业所有的仓库实时报警查看页面
+20、realDataCar.jsp	企业所有的车载实时数据查看页面
+21、realDataRef.jsp	企业所有的仓库实时数据查看页面

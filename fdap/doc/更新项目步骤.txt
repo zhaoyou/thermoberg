@@ -1,0 +1,10 @@
+		fdap的更新
+1、首先保存当前版本项目(将现有的项目备份到其他地方，以防需要恢复到上一版本)
+2、将项目fdap中hibernate配置文件中url的IP地址改成存储数据库的电脑的IP地址。Hibernate配置文件路径为：webapps文件夹\fdap\WEB-INF\classes\hibernate.cfg.xml。
+3、将项目fdap中hibernate配置文件中连接数据库的用户名(user属性)和密码(password属性)改成sqlserver 2005对应的用户名和密码。Hibernate配置文件路径同上。（即username和password）
+
+
+		fdapservice的更新
+
+1、首先备份当前版本的项目
+2、将项目fdapservice中的db.properties文件中的url的IP地址改为存储数据库电脑的IP地址。将user和password改成连接数据库的用户名和密码。db.properties文件路径：webapps文件夹\fdapservice\WEB-INF\classes\db.properties。

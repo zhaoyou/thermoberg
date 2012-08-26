@@ -1,0 +1,18 @@
+1、OrgConfigDao类的修改
+	因为mysql数据库和sqlserver数据库，创建表格索引以及主外键的sql语句有些相同
+	将几个sql变量的值改成数据库对应的sql语句，这几个变量分别是HISALARM、REFHIS,CARSTARTUP,CARHIS，DROP_HISALARM,DROP_REFHIS,DROP_CARHIS,DROP_CARSTARTUP
+
+2、涉及到动态表且需要进行count查询的sql语句的修改
+	如果是hibernate查询的话，只要把得到的结果直接强转成LONG即可
+	但是涉及到动态表查询，就只能使用sql查询了，就必须得修改过来了
+
+	因为mysql的sql语句中count返回的是BigInteger类型的值
+	而sqlserver的count返回的是Integer类型的值，不过count_big返回值是bigInteger类型的。所以只需就将sql语句中count改成count_big即可。
+	
+	项目中涉及到动态表且进行count查询的dao层实现类有如下(主要是历史查询)：
+	CarHisDaoImpl类，HisAlarmDaoImpl类，RefHisDaoImpl类，StartupDaoImpl类
+
+3、修改hibernate配置文件
+
+
+4、修改fdapservice中的db.properties文件;
