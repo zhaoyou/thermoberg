@@ -116,4 +116,8 @@
 		<property name="userregisterbiz" ref="userRegisterBiz"></property>
 	</bean>
 	
+	<!-- shyy gps log info -->
+	<bean name="/gpslog" class="org.tbcc.struts.action.ShyyGSPLogAction">
+		<property name="biz" ref="gpsLogBiz"></property>
+	</bean>
 </beans>

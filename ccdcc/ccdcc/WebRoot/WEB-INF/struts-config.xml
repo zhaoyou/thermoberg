@@ -175,6 +175,10 @@
   	 	<forward name="userregister" path="/userRegister.jsp"></forward>
   	 	<forward name="registerSucceed" path="/uRegisterSucceed.jsp"></forward>
  	</action>
+ 	
+ 	<action path="/gpslog" parameter="ope" type="org.springframework.web.struts.DelegatingActionProxy">
+ 		<forward name="tolist" path="/car/gpsLogList.jsp"></forward>
+ 	</action>
   	
   	
   </action-mappings>

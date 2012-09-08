@@ -19,6 +19,7 @@
   <StrutsActivity path="/configHqUser.do" location="1850,350" dimension="362,104" />
   <StrutsActivity path="/carparam.do" location="950,1450" dimension="362,104" />
   <StrutsActivity path="/userRegister.do" location="350,2050" dimension="358,84" />
+  <StrutsActivity path="/gpslog.do" location="2750,1050" dimension="362,104" />
   <StrutsActivity path="index;6" location="50,50" dimension="76,72" />
   <StrutsActivity path="/index.jsp" location="650,50" dimension="100,48" />
   <StrutsActivity path="/main/main.jsp" location="950,1650" dimension="118,53" />
@@ -26,7 +27,7 @@
   <StrutsActivity path="/main/carlist.jsp" location="2150,550" dimension="124,53" />
   <StrutsActivity path="/main/boxlist.jsp" location="2450,250" dimension="128,53" />
   <StrutsActivity path="/main/reflist.jsp" location="2150,750" dimension="122,53" />
-  <StrutsActivity path="/main/boxuploadlist.jsp" location="2750,350" dimension="169,53" />
+  <StrutsActivity path="/boxuploadlist.jsp" location="2750,550" dimension="136,53" />
   <StrutsActivity path="/hqbranch2.jsp" location="1850,1850" dimension="110,51" />
   <StrutsActivity path="/branchUserLogs.jsp" location="2150,250" dimension="154,48" />
   <StrutsActivity path="/car/carallhismap2.jsp" location="1550,1850" dimension="147,51" />
@@ -89,6 +90,8 @@
   <StrutsActivity path="carparam.jsp" location="1850,1450" dimension="108,53" />
   <StrutsActivity path="/userRegister.jsp" location="1550,2050" dimension="142,48" />
   <StrutsActivity path="/uRegisterSucceed.jsp" location="1850,2050" dimension="166,48" />
+  <StrutsActivity path="/gpsLogList.jsp" location="2750,1850" dimension="120,53" />
+  <StrutsActivity path="/main/boxuploadlist.jsp" location="2750,350" dimension="169,53" />
   <StrutsActivity path="/.jsp" location="1250,2050" dimension="70,48" />
   <StrutsActivity path="/realrefimage.jsp" location="2450,1650" dimension="119,51" />
   <StrutsActivity path="/main.jsp" location="1250,1650" dimension="85,53" />
@@ -102,7 +105,10 @@
   <StrutsActivity path="/refcurve.jsp" location="1250,1250" dimension="118,48" />
   <StrutsActivity path="/ccdc_debug/hisref.html" location="50,1350" dimension="178,48" />
   <StrutsActivity path="/aa.jsp" location="950,2050" dimension="82,48" />
-  <StrutsActivity path="/boxuploadlist.jsp" />
+  <StrutsActivity path="/tolist.jsp" location="2750,1250" dimension="85,53" />
+  <StrutsActivity path="/togpsLoglist.jsp" location="2750,1450" dimension="129,53" />
+  <StrutsActivity path="/GpsLoglist.jsp" location="2750,1650" dimension="118,53" />
+  <StrutsActivity path="/car/gpsLogList.jsp" />
   <StrutsTransition id="/hisbox.do,hboxStart,/boxstartup.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="94,850" />
@@ -160,18 +166,18 @@
   <StrutsTransition id="/alarmlogs.do,logslist,/branchUserLogs.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="2556,1885" />
-      <AbsolutePoint location="3063,1885" />
-      <AbsolutePoint location="3063,-25" />
-      <AbsolutePoint location="2227,-25" />
+      <AbsolutePoint location="3127,1885" />
+      <AbsolutePoint location="3127,-220" />
+      <AbsolutePoint location="2227,-220" />
       <AbsolutePoint location="2227,250" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/configUser.do,addUser2,/admin/addUser2.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="1729,650" />
-      <AbsolutePoint location="1729,95" />
-      <AbsolutePoint location="3003,95" />
-      <AbsolutePoint location="3003,1975" />
+      <AbsolutePoint location="1729,113" />
+      <AbsolutePoint location="3157,113" />
+      <AbsolutePoint location="3157,1975" />
       <AbsolutePoint location="2291,1975" />
     </AutomaticBendpoints>
   </StrutsTransition>
@@ -459,14 +465,6 @@
       <AbsolutePoint location="1689,1350" />
     </AutomaticBendpoints>
   </StrutsTransition>
-  <StrutsTransition id="/pro.do,boxuploadlist,/main/boxuploadlist.jsp,1" routingType="0">
-    <AutomaticBendpoints>
-      <AbsolutePoint location="1159,250" />
-      <AbsolutePoint location="1159,225" />
-      <AbsolutePoint location="2834,225" />
-      <AbsolutePoint location="2834,350" />
-    </AutomaticBendpoints>
-  </StrutsTransition>
   <StrutsTransition id="/realref.do,customer,/realrefcustomer.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="408,1113" />
@@ -484,10 +482,10 @@
   <StrutsTransition id="/realcool.do,realsys,/realcoolersys.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="1908,916" />
-      <AbsolutePoint location="3033,916" />
-      <AbsolutePoint location="3033,2303" />
-      <AbsolutePoint location="-25,2303" />
-      <AbsolutePoint location="-25,1576" />
+      <AbsolutePoint location="3217,916" />
+      <AbsolutePoint location="3217,2423" />
+      <AbsolutePoint location="-160,2423" />
+      <AbsolutePoint location="-160,1576" />
       <AbsolutePoint location="50,1576" />
     </AutomaticBendpoints>
   </StrutsTransition>
@@ -717,6 +715,12 @@
       <AbsolutePoint location="0,0" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/gpslog.do,tolist,/gpsLogList.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="2931,1102" />
+      <AbsolutePoint location="0,0" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="/pro.do,boxlist,/main/boxlist.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="1129,250" />
@@ -741,14 +745,20 @@
       <AbsolutePoint location="2209,550" />
     </AutomaticBendpoints>
   </StrutsTransition>
+  <StrutsTransition id="/gpslog.do,tolist,/car/gpsLogList.jsp,1" routingType="0">
+    <AutomaticBendpoints>
+      <AbsolutePoint location="2931,1102" />
+      <AbsolutePoint location="0,0" />
+    </AutomaticBendpoints>
+  </StrutsTransition>
   <StrutsTransition id="/configHqUser.do,addHqUser,/addHqUser.jsp,1" routingType="0">
     <AutomaticBendpoints>
-      <AbsolutePoint location="2019,454" />
-      <AbsolutePoint location="2019,478" />
-      <AbsolutePoint location="2943,478" />
-      <AbsolutePoint location="2943,1118" />
-      <AbsolutePoint location="1912,1118" />
-      <AbsolutePoint location="1912,1250" />
+      <AbsolutePoint location="2001,350" />
+      <AbsolutePoint location="2001,-130" />
+      <AbsolutePoint location="3247,-130" />
+      <AbsolutePoint location="3247,1418" />
+      <AbsolutePoint location="1912,1418" />
+      <AbsolutePoint location="1912,1303" />
     </AutomaticBendpoints>
   </StrutsTransition>
   <StrutsTransition id="/realcar.do,realMap,/carrealMap.jsp,1" routingType="0">
@@ -764,9 +774,9 @@
   <StrutsTransition id="/hq.do,hqbranch,/hqbranch2.jsp,1" routingType="0">
     <AutomaticBendpoints>
       <AbsolutePoint location="825,450" />
-      <AbsolutePoint location="825,-55" />
-      <AbsolutePoint location="2973,-55" />
-      <AbsolutePoint location="2973,1718" />
+      <AbsolutePoint location="825,-160" />
+      <AbsolutePoint location="3187,-160" />
+      <AbsolutePoint location="3187,1718" />
       <AbsolutePoint location="1905,1718" />
       <AbsolutePoint location="1905,1850" />
     </AutomaticBendpoints>

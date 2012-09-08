@@ -126,6 +126,8 @@
 	
 	<!-- 扩展车载历史报警表 -->
 	<mapping resource="org/tbcc/entity/TbccBaseHisCarAlarm.hbm.xml" />
+	
+	<mapping resource="org/tbcc/entity/TbccShyyGPSLog.hbm.xml"/>
 </session-factory>
 
 </hibernate-configuration>

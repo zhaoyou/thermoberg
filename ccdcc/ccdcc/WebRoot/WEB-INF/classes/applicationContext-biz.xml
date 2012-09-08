@@ -194,6 +194,10 @@
          <bean id="logOperate" class="org.tbcc.log.LogOperateService">
          	<property name="sessionfactory" ref="sessionFactory"></property>
          </bean>
+         
+     <bean id="gpsLogBiz" class="org.tbcc.biz.impl.ShyyGPSLogBizImpl">
+     		<property name="dao" ref="gpsLogDao"></property>
+     </bean>
         
            
 </beans>

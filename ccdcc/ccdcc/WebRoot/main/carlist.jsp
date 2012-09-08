@@ -65,6 +65,9 @@
         <div align="left" style="display:inline; " >
         <img src="images/chezai/bt_detail.gif" alt="历史数据"  style="cursor: pointer" onclick="javascript:${fn:contains(power,"车载历史数据")==true?"golist('hiscar.do','toHisCarStartUp');":"alert('您未开通车载历史数据功能');"}" />
         </div>
+        <div align="left" style="display:${param.branchId == 55 ? 'inline': 'none' };" >
+        <a title="历史数据"  href="gpslog.do?ope=toLog&branchId=${param.branchId }">上报查询</a>
+        </div>
         <div align="left"></div>
         <div align="left"></div> 
         <div align="left"></div>         </td>
