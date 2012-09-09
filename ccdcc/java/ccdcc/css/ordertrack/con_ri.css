@@ -1,0 +1,35 @@
+#right #center #bd3, {
+ border-top-style: none;
+ border-right-style: none;
+ border-bottom-style: none;
+ border-left-style: none;
+ text-align: left;
+}
+#con .right_content #tb {
+	border:1px solid #c6e4f8;
+	border-collapse:collapse;
+}
+#con .right_content #tb #tb1 {
+	background-image: url(../../images/chezai/bg_cc.gif);
+	background-repeat: repeat-x;
+	background-position: 0px 0px;
+}
+#con .right_content #tb td {
+	border: 1px solid #c6e4f8;
+}
+效果 #bottom #tb1, .tb2, td {
+	line-height:23px;
+	text-align:center;
+	border:1px solid #c6e4f8;
+}
+#t_table_display tr td a {
+	color: #06C;
+	text-decoration: none;
+}
+#t_table_display tr td a:hover {
+	color: #903;
+	text-decoration: none;
+}
+.altrow {
+	background-color:#F0F9FF;
+}
