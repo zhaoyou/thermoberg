@@ -403,4 +403,8 @@
 			<property name="hospitalBiz" ref="hospitalBiz"></property>
 		</bean>
 		
+		
+		<bean name="/resource" class="org.fdap.dataupload.TestDataUpload">
+		</bean>
+		
 </beans>

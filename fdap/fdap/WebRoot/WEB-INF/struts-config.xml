@@ -72,6 +72,9 @@
   			<forward name="ordertbcc" path="/ordertracktbcc.jsp"></forward>
   			<forward name="ordertbccref" path="/ordertracktbcc_ref.jsp"></forward>
   		</action>
+  		
+  		 <action path="/resource" parameter="ope" type="org.springframework.web.struts.DelegatingActionProxy">  
+			</action>
   	</action-mappings>
 </struts-config>
 
