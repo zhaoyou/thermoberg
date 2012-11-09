@@ -8,6 +8,7 @@
 <link href="css/head/head.css" rel="stylesheet" type="text/css" />
 <link rel="Shortcut Icon" href="images/logo.ico" />
 <script type="text/javascript" src="js/common.js"></script>
+
 	<style type="text/css"> 
 		body,dl,dt,dd {margin:0;padding:0;}
 		body {color:#FFF; font:12px "宋体";}
