@@ -22,8 +22,16 @@
 <input type="hidden" name="ids" id="ids" value="${ids }"/>
 <input type="hidden" name="orgName_statistics" id="orgName_statistics" value="${orgName }" />
 </form>
-<div class="query-div">
-	
+<div class="query_div">
+	<table>
+		<tr>
+			<td>开始时间</td>
+			<td><input class="input-time" type="text" placeholder="2012-11-11 12:12:12"></td>
+			<td>结束时间</td>
+			<td><input class="input-time" type="text" placeholder="2012-11-12 11:11:11"></td>
+			<td><input type="button" value="返回" class="btn"/></td>  
+		</tr>
+	</table>
 </div>
     <div id="right_content">
         <table id="r_table" class="table table-striped">
@@ -264,6 +272,21 @@
         	
         </table>
     </div>
+    
+    <div class="pagination pagination-large">
+		  <ul>
+		    <li class="disabled"><a href="#">Prev</a></li>
+		    <li class="active"><a href="#">1</a></li>
+		    <li ><a href="#">2</a></li>
+		    <li ><a href="#">3</a></li>
+		    <li ><a href="#">4</a></li>
+		    <li ><a href="#">5</a></li>
+		    <li ><a href="#">6</a></li>
+		    <li ><a href="#">7</a></li>
+		    <li ><a href="#">Next</a></li>  
+		  </ul>
+</div>
+
 <%@include file="layout/footer.html" %>
 </body>
 </html>
