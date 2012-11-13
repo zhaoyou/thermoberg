@@ -9,6 +9,7 @@ public class PbmMiReceiver {
 	private Long rid;
 	private String fullName;
 	private String shortName;
+	private Long oid;
 	
 	public Long getRid() {
   	return rid;
@@ -27,6 +28,12 @@ public class PbmMiReceiver {
   }
 	public void setShortName(String shortName) {
   	this.shortName = shortName;
+  }
+	public Long getOid() {
+  	return oid;
+  }
+	public void setOid(Long oid) {
+  	this.oid = oid;
   }
 	
 }

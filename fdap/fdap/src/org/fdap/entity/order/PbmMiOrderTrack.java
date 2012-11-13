@@ -14,6 +14,7 @@ public class PbmMiOrderTrack {
 	private Date orderTime;
 	private Short isDelete;
 	private Short uploadStatus;
+	private Long oid;
 	
 	public Long getOrderId() {
   	return orderId;
@@ -51,4 +52,11 @@ public class PbmMiOrderTrack {
 	public void setUploadStatus(Short uploadStatus) {
   	this.uploadStatus = uploadStatus;
   }
+	public Long getOid() {
+  	return oid;
+  }
+	public void setOid(Long oid) {
+  	this.oid = oid;
+  }
+	
 }
