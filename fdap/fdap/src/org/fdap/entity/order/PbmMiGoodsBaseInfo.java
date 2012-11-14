@@ -13,6 +13,7 @@ public class PbmMiGoodsBaseInfo {
 	private String typeName;
 	private String prodarea;
 	private String storageEnv;
+	private Long oid;
 	public Long getGoodId() {
   	return goodId;
   }
@@ -54,6 +55,12 @@ public class PbmMiGoodsBaseInfo {
   }
 	public void setStorageEnv(String storageEnv) {
   	this.storageEnv = storageEnv;
+  }
+	public Long getOid() {
+  	return oid;
+  }
+	public void setOid(Long oid) {
+  	this.oid = oid;
   }
 	
 	

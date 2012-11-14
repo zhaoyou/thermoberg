@@ -11,6 +11,8 @@ public class PbmMiGoodsFullInfo extends PbmMiGoodsBaseInfo {
 	private Long goodFullId;
 	private String lotno;
 	private Date invaliDate;
+	private Long goodId;
+	private Long oid;
 	public Long getGoodFullId() {
   	return goodFullId;
   }
@@ -29,4 +31,17 @@ public class PbmMiGoodsFullInfo extends PbmMiGoodsBaseInfo {
 	public void setInvaliDate(Date invaliDate) {
   	this.invaliDate = invaliDate;
   }
+	public Long getGoodId() {
+  	return goodId;
+  }
+	public void setGoodId(Long goodId) {
+  	this.goodId = goodId;
+  }
+	public Long getOid() {
+  	return oid;
+  }
+	public void setOid(Long oid) {
+  	this.oid = oid;
+  }
+	
 }

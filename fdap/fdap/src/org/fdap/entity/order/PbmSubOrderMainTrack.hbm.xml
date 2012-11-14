@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    zhaoyou
+-->
+ 
+<hibernate-mapping>
+    <class name="org.fdap.entity.order.PbmSubOrderMainTrack" table="PbmSubOrderMainTrack" >
+        <id name="subOrderMid" type="java.lang.Long">
+            <column name="subOrderMid" />
+            <generator class="identity"/>
+        </id>  
+  
+        <property name="subOrderParentMid" type="java.lang.Long" />
+        <property name="orderId" type="java.lang.Long" />
+        <property name="subOrderName" type="java.lang.String"/>
+        <property name="inoutType" type="java.lang.Short" />
+        <property name="inwholeOrder" type="java.lang.Short" />
+        <property name="orderStatus" type="java.lang.Short" />
+        <property name="planType" type="java.lang.Short" />
+        <property name="planStatus" type="java.lang.Short" />    
+        <property name="isDelete" type="java.lang.Short" />
+        <property name="oid" type="java.lang.Long" />
+    </class>
+</hibernate-mapping>
