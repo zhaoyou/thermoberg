@@ -14,4 +14,7 @@ public class TelePhone {
 			System.out.println("创建ITelephone失败"+e.getStackTrace());
 		}
 	}
+	public void main(String[] args ) {
+		
+	}
 }
