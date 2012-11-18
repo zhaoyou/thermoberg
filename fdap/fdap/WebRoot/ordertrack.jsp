@@ -7,83 +7,90 @@
 <title>订单药品信息</title>
 <link href="css/order/ordertrack.less" rel="stylesheet" type="text/less"/>
 <%@ include file="layout/asset.html" %>
+<script src="DatePicker/WdatePicker.js"></script>
 </head>
 <body>
 <%@ include file="layout/header.html" %>
 <ul class="breadcrumb">
   <li><a href="#">首页</a> <span class="divider">/</span></li>
-  <li class="active">A公司药品订单信息查询</li>
+  <li class="active">${org.name }药品订单信息查询</li>
 </ul>
 <form action="org.do" name="myform" id="myform" method="post">
 <input type="hidden" name="ope"  id="ope"  value="toHigherOrg"/>
-<input  type="hidden" name="oid"  id="oid" value="${oid }"/>
+<input  type="hidden" name="oid"  id="oid" value="${org.oid }"/>
 <input type="hidden" name="ids" id="ids" value="${ids }"/>
 <input type="hidden" name="orgName_statistics" id="orgName_statistics" value="${orgName }" />
 </form>
 <div class="query_div">
     	<table >
     		<tr border="0">
-    			<td>
-    				 订单开始时间
+    			<td class="q_td_first">
+    				 开始时间
     			</td>
     			<td>
-    			 <select>
-	    			  <option>2012-07-11</option><option>2012-07-12</option>
-	    			</select>
+    			<input  name="startTime" id="startTime" value="${param.startTime }"  class="Wdate input-medium" type="text" size="21"
+						 onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:00'})"/>
     			</td>
     			<td class="q_td">
-    				订单结束时间
+    				结束时间
     			</td>
     			<td>
-	    			<select>
-	    			  <option>2012-07-11</option><option>2012-07-12</option>
-	    			</select>	
+	    			<input  name="endTime" id="endTime" value="${param.endTime }"  class="Wdate input-medium" type="text" size="21"
+						 onClick="WdatePicker({skin:'default',dateFmt:'yyyy-MM-dd HH:mm:00'})"/>
     			</td>
     			<td class="q_td">
     				订单编号
     			</td>
     			<td>
-    				<input type="date" />
+    				<input type="text" name="orderNo" class="input-medium" value="${param.orderNo }"/>
     			</td>
     			</tr>
     		<tr>
-    			<td>
+    			<td class="q_td_first">
     				收货单位
     			</td>
     			<td>
-    				<select>
-	    			  <option>上海儿童医学中心</option><option>上海东方医院</option>
+    				<select name="receiver">
+	    				<c:forEach var="r" items="${receiverList}">
+	    					<option value="${r.rid }"> ${r.shortName }</option>
+	    				</c:forEach> 
 	    			</select>
     			</td>
     			<td class="q_td">
     			  生产商
     			</td>
     			<td>
-    				<select>
-	    			  <option>西安杨森</option><option>华东宁波</option>
+    				<select name="prodArea">
+	    				<c:forEach var="a" items="${areaList}">
+	    					<option value="${a }"> ${a}</option>
+	    				</c:forEach> 
 	    			</select>
     			</td>
     			<td class="q_td">
     				生产批号
     			</td>
     			<td>
-    				<input type="text" placeholder="Number"/>
+    				<input type="text" name="lotno" class="input-medium"/>
     			</td>
     		</tr>
     		<tr>
-    			<td>品名
+    			<td class="q_td_first">品名
     			</td>
     			<td>
-    				<select>
-	    			  <option>胰岛素aaa</option><option>狂犬育苗#22</option>
+    				<select name="goodsName">
+	    				<c:forEach var="good" items="${goodslist}">
+	    					<option value="${good.goodId }"> ${good.goodsName}</option>
+	    				</c:forEach> 
 	    			</select>
     			</td>
     			<td class="q_td">
     				规格
     			</td>
     			<td>
-    				<select>
-	    			  <option>100ml/瓶</option><option>400ml/瓶</option>
+    				<select name="goodsType">
+	    				<c:forEach var="g" items="${goodTypeList}">
+	    					<option value="${g }"> ${g}</option>
+	    				</c:forEach> 
 	    			</select>
     			</td>
     			<td>

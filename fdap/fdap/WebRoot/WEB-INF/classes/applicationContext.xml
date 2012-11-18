@@ -150,6 +150,19 @@
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 	
+	<!-- order track -->
+	<bean id="receiverDao" class="org.fdap.dao.impl.order.PbmMiReceiverDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="goodsDao" class="org.fdap.dao.impl.order.PbmGoodsBaseInfoDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	
+	
+	
+	
 	<!-- 定义业务访问类 -->
 	<bean id="userBiz" class="org.fdap.biz.impl.UserBizImpl">
 		<property name="userDao" ref="userDao"></property>
@@ -278,6 +291,19 @@
 		<property name="hospitalDao" ref="hospitalDao"/>
 	</bean>
 	
+	
+	
+	<!-- order track -->
+	<bean id="recieverBiz" class="org.fdap.biz.impl.order.PbmMiReceiverBizImpl">
+		<property name="receiverDao" ref="receiverDao"></property>
+	</bean>
+	
+	<bean id="goodsBiz" class="org.fdap.biz.impl.order.PbmGoodsBaseInfoBizImpl">
+		<property name="goodsBaseInfoDao" ref="goodsDao"></property>
+	</bean>
+	
+	
+	
 	<!--  定义action访问类 -->
 	
 	<bean name="/user" class="org.fdap.action.UserAction">
@@ -335,7 +361,12 @@
 	</bean>
 	
 	<bean name="/order" class="org.fdap.action.OrderTrackAction">
+		<property name="receiverBiz" ref="recieverBiz"></property>
+		<property name="goodsBiz" ref="goodsBiz"></property>
+		<property name="orgBiz" ref="orgBiz"></property>
 	</bean>
+	
+	
 	
 	<!-- 该类用来计算数据的最大值、最小值和平均值 -->
 		<bean id="getmaxminavg" class="org.fdap.util.GetMaxMinAvg"></bean>

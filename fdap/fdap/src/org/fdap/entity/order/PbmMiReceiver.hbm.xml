@@ -15,5 +15,6 @@
         <property name="fullName" type="java.lang.String" />
         <property name="shortName" type="java.lang.String" />
         <property name="oid" type="java.lang.Long" />
+        <property name="isDelete" type="java.lang.Short" />
     </class>
 </hibernate-mapping>

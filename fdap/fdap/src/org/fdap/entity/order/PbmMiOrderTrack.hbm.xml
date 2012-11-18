@@ -13,7 +13,7 @@
         </id>  
   
         <property name="receiverId" type="java.lang.Long" />
-        <property name="orderId" type="java.lang.Long" />
+        <property name="orderNo" type="java.lang.Long" />
         <property name="orderTime" type="java.util.Date" />
         <property name="isDelete" type="java.lang.Short"/>
          <property name="uploadStatus" type="java.lang.Short"/>

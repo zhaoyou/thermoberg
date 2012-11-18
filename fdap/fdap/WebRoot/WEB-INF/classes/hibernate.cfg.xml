@@ -98,6 +98,20 @@
 	
 	<mapping resource="org/fdap/entity/FdapHospital.hbm.xml"/>	
 	
+	<!-- pill order track -->
+	<mapping resource="org/fdap/entity/order/PbmErpRefInOutTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiBarCodeDetailTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiBarCodeTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiBox.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiCar.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiGoodsBaseInfo.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiGoodsFullInfo.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiOrderTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiReceiver.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmMiRef.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmSubOrderDetailTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmSubOrderMainTrack.hbm.xml"/>
+	
 </session-factory>
 
 </hibernate-configuration>

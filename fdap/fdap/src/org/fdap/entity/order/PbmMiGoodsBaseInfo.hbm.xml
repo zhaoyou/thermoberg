@@ -18,6 +18,8 @@
         <property name="typeName" type="java.lang.String" />
         <property name="prodarea" type="java.lang.String" />
         <property name="storageEnv" type="java.lang.String" />
+        
         <property name="oid" type="java.lang.Long" />
+        <property name="isDelete" type="java.lang.Short"></property>
     </class>
 </hibernate-mapping>

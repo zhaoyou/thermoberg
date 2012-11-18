@@ -7,12 +7,21 @@ import java.util.Date;
  * @author zhaoyou
  *
  */
-public class PbmMiGoodsFullInfo extends PbmMiGoodsBaseInfo {
+public class PbmMiGoodsFullInfo {
 	private Long goodFullId;
 	private String lotno;
 	private Date invaliDate;
 	private Long goodId;
+	
 	private Long oid;
+	private Short isDelete;
+	
+	public Short getIsDelete() {
+  	return isDelete;
+  }
+	public void setIsDelete(Short isDelete) {
+  	this.isDelete = isDelete;
+  }
 	public Long getGoodFullId() {
   	return goodFullId;
   }
