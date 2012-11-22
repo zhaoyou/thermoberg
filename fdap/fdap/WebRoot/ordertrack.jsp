@@ -8,19 +8,19 @@
 <link href="css/order/ordertrack.less" rel="stylesheet" type="text/less"/>
 <%@ include file="layout/asset.html" %>
 <script src="DatePicker/WdatePicker.js"></script>
+<script src="js/front/ordertrack.js"></script>
 </head>
-<body>
+<body onload="ordertrack.init()">
 <%@ include file="layout/header.html" %>
 <ul class="breadcrumb">
   <li><a href="#">首页</a> <span class="divider">/</span></li>
   <li class="active">${org.name }药品订单信息查询</li>
 </ul>
-<form action="org.do" name="myform" id="myform" method="post">
+<form action="#" name="myform" id="myform" method="get">
 <input type="hidden" name="ope"  id="ope"  value="toHigherOrg"/>
-<input  type="hidden" name="oid"  id="oid" value="${org.oid }"/>
+<input type="hidden" name="oid"  id="oid" value="${org.oid }"/>
 <input type="hidden" name="ids" id="ids" value="${ids }"/>
 <input type="hidden" name="orgName_statistics" id="orgName_statistics" value="${orgName }" />
-</form>
 <div class="query_div">
     	<table >
     		<tr border="0">
@@ -42,7 +42,7 @@
     				订单编号
     			</td>
     			<td>
-    				<input type="text" name="orderNo" class="input-medium" value="${param.orderNo }"/>
+    				<input id="orderNo" type="text" name="orderNo" class="input-medium" value="${param.orderNo }"/>
     			</td>
     			</tr>
     		<tr>
@@ -50,7 +50,7 @@
     				收货单位
     			</td>
     			<td>
-    				<select name="receiver">
+    				<select id="receiver" name="receiver">
 	    				<c:forEach var="r" items="${receiverList}">
 	    					<option value="${r.rid }"> ${r.shortName }</option>
 	    				</c:forEach> 
@@ -60,7 +60,7 @@
     			  生产商
     			</td>
     			<td>
-    				<select name="prodArea">
+    				<select id="prodArea" name="prodArea">
 	    				<c:forEach var="a" items="${areaList}">
 	    					<option value="${a }"> ${a}</option>
 	    				</c:forEach> 
@@ -70,14 +70,14 @@
     				生产批号
     			</td>
     			<td>
-    				<input type="text" name="lotno" class="input-medium"/>
+    				<input id="lotno" type="text" name="lotno" class="input-medium"/>
     			</td>
     		</tr>
     		<tr>
     			<td class="q_td_first">品名
     			</td>
     			<td>
-    				<select name="goodsName">
+    				<select id="goodsName" name="goodsName">
 	    				<c:forEach var="good" items="${goodslist}">
 	    					<option value="${good.goodId }"> ${good.goodsName}</option>
 	    				</c:forEach> 
@@ -87,7 +87,7 @@
     				规格
     			</td>
     			<td>
-    				<select name="goodsType">
+    				<select id="goodsType" name="goodsType">
 	    				<c:forEach var="g" items="${goodTypeList}">
 	    					<option value="${g }"> ${g}</option>
 	    				</c:forEach> 
@@ -96,8 +96,9 @@
     			<td>
     			</td>
     			<td>
-    				<input type="button" class="btn btn-primary" value="查 询" onclick="alert('根据条件查询相应的订单信息！');" />
-    				<input type="button" class="btn" value="返回" />
+    				<input type="button" class="btn btn-primary" value="查 询"/>
+    				<input type="button" class="btn" value="返 回"
+    						onclick="javascript:window.location.href='org.do?ope=toHigherOrg&oid=${org.oid }'" />
     			</td>
     		</tr>
     	</table>
@@ -105,24 +106,27 @@
     <div class="container-fluid">
   		<div class="row-fluid">
     		<div class="span2">
-    			<ul class="nav nav-list">
-					  <li class="nav-header">上海东方医院</li>
-					  <li><a href="#">20120711382</a></li>
-					  <li><a href="#">20120713990</a></li>
-					  <li><a href="#">20120713990</a></li>
-					</ul>
-					<ul class="nav nav-list">
-					  <li class="nav-header">同济医院</li>
-					  <li><a href="#">20120711382</a></li>
-					  <li><a href="#">20120713990</a></li>
-					  <li><a href="#">20120713990</a></li>
-					</ul>
-					<ul class="nav nav-list">
-					  <li class="nav-header">上海杨思医院</li>
-					  <li><a href="#">20120711382</a></li>
-					  <li><a href="#">20120713990</a></li>
-					  <li><a href="#">20120713990</a></li>
-					</ul>
+    			<logic:empty name="orderList">
+    			  <logic:empty name="query">
+    			    请先查询订单！
+    			  </logic:empty>
+    			  <logic:notEmpty name="query">
+    			    没有查询到订单！
+    			  </logic:notEmpty>
+    			</logic:empty>
+    			<logic:notEmpty name="orderList">
+    				<c:forEach var="orderView" items="${orderList}">
+    					<ul class="nav nav-list">
+    					<li class="nav-header">${orderView.receiver }</li>
+	    					<c:forEach var="view" items="${orderView.list}">
+	    						 <li><a href="#">${ view.orderNo}</a></li>
+	    					</c:forEach>
+    					</ul>
+    				</c:forEach>
+    				
+						 
+						
+    			</logic:notEmpty>
     		</div>
     	  <div class="span10">
           <table class="table table-striped">
@@ -308,6 +312,7 @@
     	  </div>
   	  </div>
     </div>
+</form>
 <%@include file="layout/footer.html" %>
 </body>
 </html>

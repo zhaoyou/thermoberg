@@ -159,10 +159,14 @@
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 	
-	
-	
-	
-	
+	<bean id="orderTrack" class="org.fdap.dao.impl.order.PbmOrderTrackDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+
+
+
+
 	<!-- 定义业务访问类 -->
 	<bean id="userBiz" class="org.fdap.biz.impl.UserBizImpl">
 		<property name="userDao" ref="userDao"></property>
@@ -302,6 +306,9 @@
 		<property name="goodsBaseInfoDao" ref="goodsDao"></property>
 	</bean>
 	
+	<bean id="orderTrackBiz" class="org.fdap.biz.impl.order.PbmOrderTrackBizImpl">
+		<property name="orderTrackDao" ref="orderTrack"></property>
+	</bean>
 	
 	
 	<!--  定义action访问类 -->
@@ -364,6 +371,7 @@
 		<property name="receiverBiz" ref="recieverBiz"></property>
 		<property name="goodsBiz" ref="goodsBiz"></property>
 		<property name="orgBiz" ref="orgBiz"></property>
+		<property name="orderTrackBiz" ref="orderTrackBiz"></property>
 	</bean>
 	
 	
