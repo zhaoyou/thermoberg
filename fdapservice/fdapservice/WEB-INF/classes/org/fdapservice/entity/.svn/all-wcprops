@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/src/org/fdapservice/entity
+END
+CarHisData.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fdapservice/!svn/ver/5/dev/fdapservice/src/org/fdapservice/entity/CarHisData.java
+END
+CarRealData.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fdapservice/!svn/ver/5/dev/fdapservice/src/org/fdapservice/entity/CarRealData.java
+END
+CarStartup.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/fdapservice/!svn/ver/5/dev/fdapservice/src/org/fdapservice/entity/CarStartup.java
+END
+RefRealData.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/fdapservice/!svn/ver/4/dev/fdapservice/src/org/fdapservice/entity/RefRealData.java
+END
