@@ -2,7 +2,7 @@ package org.fdap.dao.order;
 
 import java.util.List;
 
-import org.fdap.entity.PbmBarcodeTrack;
+import org.fdap.entity.order.PbmMiBarCodeTrack;;
 
 /**
  * 
@@ -10,5 +10,5 @@ import org.fdap.entity.PbmBarcodeTrack;
  *
  */
 public interface BarCodeTrackDao {
-  List<PbmBarcodeTrack> getBy(Long orderId);
+  List<PbmMiBarCodeTrack> getBy(Long orderId);
 }

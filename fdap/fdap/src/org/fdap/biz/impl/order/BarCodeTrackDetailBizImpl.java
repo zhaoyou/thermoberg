@@ -1,10 +1,10 @@
-package org.fdap.biz.order;
+package org.fdap.biz.impl.order;
 
 import java.util.List;
 
-import org.fdap.biz.impl.order.BarCodeTrackDetailBiz;
+import org.fdap.biz.order.BarCodeTrackDetailBiz;
 import org.fdap.dao.order.BarCodeTrackDetailDao;
-import org.fdap.entity.PbmBarcodeDetailTrack;
+import org.fdap.entity.order.PbmMiBarCodeDetailTrack;
 
 /**
  * 
@@ -20,9 +20,8 @@ public class BarCodeTrackDetailBizImpl implements BarCodeTrackDetailBiz {
   }
 
 	@Override
-  public List<PbmBarcodeDetailTrack> getByOrderId(Long orderId) {
-	  //return detailDao.getByOrder(orderId);
-		return null;
+  public List<PbmMiBarCodeDetailTrack> getByOrderId(Long orderId) {
+	  return detailDao.getByOrder(orderId);
   }
 	
 }
