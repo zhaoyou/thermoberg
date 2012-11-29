@@ -13,7 +13,7 @@ public class BarCodeTrackDetailDaoImpl extends HibernateTemplate implements
 	@SuppressWarnings("unchecked")
   @Override
   public List<PbmMiBarCodeDetailTrack> getByOrder(Long orderId) {
-	  String hql = "from PbmMiBarCodeDetailTrack d where d.orderId = ?";
+	  String hql = "from PbmMiBarCodeDetailTrack d where d.orderId = ? and d.isDelete = 0";
 	  Query query = this.getSession().createQuery(hql);
 	  query.setLong(0, orderId);
 	  return query.list();

@@ -19,7 +19,9 @@ public class PbmOrderTrackDaoImpl extends HibernateTemplate implements PbmOrderT
 			 "   pbmMiReceiver ON pbmOrderTrack.Receiverid = pbmMiReceiver.rid INNER JOIN " +
 			 "   pbmBarcodeDetailTrack ON pbmOrderTrack.OrderId = pbmBarcodeDetailTrack.orderId INNER JOIN " +
 			 "   pbmGoodsFullInfo ON pbmBarcodeDetailTrack.GoodsFullId = pbmGoodsFullInfo.GoodFullId INNER JOIN " +
-			 "   pbmGoodsBasicInfo ON pbmGoodsFullInfo.GoodId = pbmGoodsBasicInfo.GoodId  where pbmOrderTrack.oid = ? ";
+			 "   pbmGoodsBasicInfo ON pbmGoodsFullInfo.GoodId = pbmGoodsBasicInfo.GoodId  where pbmOrderTrack.oid = ? " +
+			 " and pbmOrderTrack.isDelete = 0 and pbmMiReceiver.isDelete = 0 and pbmBarcodeDetailTrack.isDelete = 0 and " +
+			 " and pbmGoodsFullInfo.isDelete = 0 and pbmGoodsBasicInfo.isDelete = 0 ";
 	 
 	  
 	  sb.append(sql);
@@ -37,19 +39,19 @@ public class PbmOrderTrackDaoImpl extends HibernateTemplate implements PbmOrderT
 	  }
 	  
 	  if (prodArea != null && !"".equals(prodArea)) {
-	  	sb.append(" and pbmGoodsBasicInfo.prodarea = '" + prodArea + "'");
+	  	sb.append(" and pbmGoodsBasicInfo.prodarea  like '%" + prodArea + "%'");
 	  }
 	  
 	  if (lotno != null && !"".equals(lotno)) {
-	  	sb.append(" and pbmGoodsFullInfo.lotno = '" + lotno + "'");
+	  	sb.append(" and pbmGoodsFullInfo.lotno like'%" + lotno + "%'");
 	  }
 	  
 	  if (goodsname != null && !"".equals(goodsname)) {
-	  	sb.append(" and pbmGoodsBasicInfo.goodsname = '" + goodsname + "'");
+	  	sb.append(" and pbmGoodsBasicInfo.goodsname like '%" + goodsname + "%'");
 	  }
 	  
 	  if (goodsType != null && !"".equals(goodsType)) {
-	  	sb.append(" and pbmGoodsBasicInfo.goodsType = '" + goodsType + "'");
+	  	sb.append(" and pbmGoodsBasicInfo.goodsType like '%" + goodsType + "%'");
 	  }
 	  
 	  SQLQuery query = this.getSession().createSQLQuery(sql);

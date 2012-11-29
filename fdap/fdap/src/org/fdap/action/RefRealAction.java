@@ -54,6 +54,14 @@ public class RefRealAction extends BaseAction {
 	public void setRefRealBiz(RefRealBiz refRealBiz) {
 		this.refRealBiz = refRealBiz;
 	}
+	
+	public ActionForward toRealProject(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+	
+		String oid = request.getParameter("oid") ;
+		return mapping.findForward("realproject");
+	}
 
 	/**
 	 * 跳转到仓库实时数据页面

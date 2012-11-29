@@ -17,4 +17,11 @@ public class PbmGoodsBaseInfoDaoImpl extends HibernateTemplate implements PbmGoo
 		return query.list();
 	}
 
+	@Override
+  public PbmMiGoodsBaseInfo get(Long id) {
+		return (PbmMiGoodsBaseInfo)this.getSession().get(PbmMiGoodsBaseInfo.class, id);
+  }
+	
+	
+
 }

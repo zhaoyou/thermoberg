@@ -9,7 +9,6 @@ public class PbmMiBarCodeTrack {
 	private Long bcId;
 	private Long orderId;
 	private String barCode;
-	private Short barCodeType;
 	private Integer packetType;
 	private Integer packetNum;
 	private Short isDelete;
@@ -31,12 +30,6 @@ public class PbmMiBarCodeTrack {
   }
 	public void setBarCode(String barCode) {
   	this.barCode = barCode;
-  }
-	public Short getBarCodeType() {
-  	return barCodeType;
-  }
-	public void setBarCodeType(Short barCodeType) {
-  	this.barCodeType = barCodeType;
   }
 	public Integer getPacketType() {
   	return packetType;

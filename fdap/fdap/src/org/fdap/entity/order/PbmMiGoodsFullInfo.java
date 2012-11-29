@@ -12,6 +12,7 @@ public class PbmMiGoodsFullInfo {
 	private String lotno;
 	private Date invaliDate;
 	private Long goodId;
+	private PbmMiGoodsBaseInfo baseInfo;
 	
 	private Long oid;
 	private Short isDelete;
@@ -51,6 +52,12 @@ public class PbmMiGoodsFullInfo {
   }
 	public void setOid(Long oid) {
   	this.oid = oid;
+  }
+	public PbmMiGoodsBaseInfo getBaseInfo() {
+  	return baseInfo;
+  }
+	public void setBaseInfo(PbmMiGoodsBaseInfo baseInfo) {
+  	this.baseInfo = baseInfo;
   }
 	
 }

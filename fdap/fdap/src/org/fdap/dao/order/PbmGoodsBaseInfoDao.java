@@ -12,4 +12,5 @@ import org.fdap.entity.order.PbmMiGoodsBaseInfo;
  */
 public interface PbmGoodsBaseInfoDao {
 	public List<PbmMiGoodsBaseInfo> getGoodsBaseInfoList(Long oid);
+	PbmMiGoodsBaseInfo get(Long fullId);
 }
