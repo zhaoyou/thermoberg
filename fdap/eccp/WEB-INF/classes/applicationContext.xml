@@ -162,6 +162,18 @@
 	<bean id="orderTrack" class="org.fdap.dao.impl.order.PbmOrderTrackDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<bean id="orderSubDao" class="org.fdap.dao.impl.order.SubOrderMainTrackDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="barCodeDao" class="org.fdap.dao.impl.order.BarCodeTrackDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="barCodeDetailDao" class="org.fdap.dao.impl.order.BarCodeTrackDetailDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 
 
 
@@ -308,6 +320,18 @@
 	
 	<bean id="orderTrackBiz" class="org.fdap.biz.impl.order.PbmOrderTrackBizImpl">
 		<property name="orderTrackDao" ref="orderTrack"></property>
+	</bean>
+	
+	<bean id="OrderSubBiz" class="org.fdap.biz.impl.order.SubOrderMainTrackBizImpl">
+		<property name="subOrderMainDao" ref="orderSubDao"></property>
+	</bean>
+	
+	<bean id="barCodeBiz" class="org.fdap.biz.impl.order.BarCodeTrackBizImpl">
+		<property name="dao" ref="barCodeDao"></property>
+	</bean>
+	
+	<bean id="barCodeDetailBiz" class="org.fdap.biz.impl.order.BarCodeTrackDetailBizImpl">
+		<property name="detailDao" ref="barCodeDetailDao"></property>
 	</bean>
 	
 	

@@ -14,7 +14,6 @@
   
         <property name="orderId" type="java.lang.Long" />
         <property name="barCode"  type="java.lang.String"/>
-        <property name="barCodeType" type="java.lang.Short" />
         
         <property name="packetType" type="java.lang.Integer" />
         <property name="packetNum" type="java.lang.Integer" />
