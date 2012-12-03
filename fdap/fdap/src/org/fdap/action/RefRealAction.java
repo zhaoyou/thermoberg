@@ -75,7 +75,7 @@ public class RefRealAction extends BaseAction {
 		//保存所有的仓库工程参数
 		// TODO (zhaoyou) should be add multi project.
 		List<Fdapproject> list = this.getRefRealBiz().getRefProjectByOid(new Long(oid));
-		request.setAttribute("projectId", list != null && list.size() > 0 ? list.get(0) : "-1");
+		request.setAttribute("projectId", ((list != null && list.size() > 0) ? list.get(0).getProjectNO() : "-1"));
 		
 		return mapping.findForward("realproject");
 	}
