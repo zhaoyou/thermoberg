@@ -90,8 +90,9 @@
 <form name="myform" id="myform" action="" method="post">
 <input  type="hidden" name="ope" id="ope" value=""/> 
 <input type="hidden" name="oid"  id="oid" value="${fdaporg.oid }"/>
-<input type="hidden" name="projectIds"  id="projectIds" value="${projectIds }"/>
-<input type="hidden" name="refsize" id="refsize" value="${refsize }" />
+				<input type="hidden" name="projectIds" id="projectIds"
+					value="${projectIds }" />
+				<input type="hidden" name="refsize" id="refsize" value="${refsize }" />
 </form>
 <div id="content">
   <div id="center">
@@ -115,7 +116,7 @@
               <tr>
                 <td width="10%" style="border:none;"><a href="javascript:;"><img src="images/index/canku.gif" width="100" height="24" /></a></td>
                 <td width="13%" style="border:none;"><a href="javascript:goback('carReal.do','toRealCar');"><img src="images/index/car.gif" width="100" height="24" /></a></td>
-                <td width="77%" style="border:none;">&nbsp;</td>
+                <td width="77%" style="border:none; text-align: left;"><a href="refReal.do?ope=toRealProject&oid=${fdaporg.oid }">仓库图层</a></td>
               </tr>
             </table></td>
         </tr>

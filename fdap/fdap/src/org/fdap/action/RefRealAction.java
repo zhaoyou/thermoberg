@@ -60,6 +60,23 @@ public class RefRealAction extends BaseAction {
 			throws Exception {
 	
 		String oid = request.getParameter("oid") ;
+		
+		//验证参数
+		if(oid==null || oid.equals("")){
+			logger.warn("传递了非法的oid参数");
+			throw new Exception("传递了非法的oid参数");
+		}
+		
+		//保存企业的信息，用于显示名称
+		Fdaporg fdaporg = this.getOrgBiz().getByOid(new Long(oid));
+		request.setAttribute("fdaporg", fdaporg);
+		
+		
+		//保存所有的仓库工程参数
+		// TODO (zhaoyou) should be add multi project.
+		List<Fdapproject> list = this.getRefRealBiz().getRefProjectByOid(new Long(oid));
+		request.setAttribute("projectId", list != null && list.size() > 0 ? list.get(0) : "-1");
+		
 		return mapping.findForward("realproject");
 	}
 
@@ -102,6 +119,7 @@ public class RefRealAction extends BaseAction {
 		
 		return mapping.findForward("realdata");
 	}
+	
 	
 	/**
 	 * 更新仓库实时数据

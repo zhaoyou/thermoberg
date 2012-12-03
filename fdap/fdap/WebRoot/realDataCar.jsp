@@ -171,7 +171,7 @@
               <tr>
                 <td width="10%" style="border:none;"><a href="javascript:goback('refReal.do','toRealRef');"><img src="images/index/canku.gif" width="100" height="24" /></a></td>
                 <td width="13%" style="border:none;"><a href="javascript:;"><img  src="images/index/car.gif" width="100" height="24" /></a></td>
-                <td width="77%" style="border:none;">&nbsp;</td>
+                <td width="77%" style="border:none;text-align: left" ><a href="refReal.do?ope=toRealProject&oid=${fdaporg.oid }">仓库图层</a></td>
               </tr>
             </table>
             </td>
