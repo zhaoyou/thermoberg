@@ -15,6 +15,8 @@ import org.fdap.biz.OrgBiz;
 import org.fdap.biz.order.PbmGoodsBaseInfoBiz;
 import org.fdap.biz.order.PbmMiReceiverBiz;
 import org.fdap.biz.order.PbmOrderTrackBiz;
+import org.fdap.biz.order.SubOrderMainTrackBiz;
+import org.fdap.entity.order.PbmMedicineSummary;
 import org.fdap.entity.order.PbmMiGoodsBaseInfo;
 import org.fdap.entity.order.PbmMiReceiver;
 import org.fdap.util.BaseAction;
@@ -25,7 +27,12 @@ public class OrderTrackAction extends BaseAction {
 	private PbmGoodsBaseInfoBiz goodsBiz;
 	private OrgBiz orgBiz;
 	private PbmOrderTrackBiz orderTrackBiz;
+	private SubOrderMainTrackBiz subOrderMainTrackBiz;
 	
+	public void setSubOrderMainTrackBiz(SubOrderMainTrackBiz subOrderMainTrackBiz) {
+		this.subOrderMainTrackBiz = subOrderMainTrackBiz;
+	}
+
 	public void setOrgBiz(OrgBiz orgBiz) {
   	this.orgBiz = orgBiz;
   }
@@ -56,7 +63,7 @@ public class OrderTrackAction extends BaseAction {
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		String orderNo = request.getParameter("orderNo");
-		String rid = request.getParameter("rid");
+		String rid = request.getParameter("receiver");
 		String prodArea = request.getParameter("prodArea");
 		String lotno = request.getParameter("lotno");
 		String goodsName = request.getParameter("goodsName");
@@ -75,7 +82,7 @@ public class OrderTrackAction extends BaseAction {
 	}
 	
 	
-//to order page.
+    //to order page.
 	public ActionForward queryOrder(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -84,7 +91,7 @@ public class OrderTrackAction extends BaseAction {
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		String orderNo = request.getParameter("orderNo");
-		String rid = request.getParameter("rid");
+		String rid = request.getParameter("receiver");
 		String prodArea = request.getParameter("prodArea");
 		String lotno = request.getParameter("lotno");
 		String goodsName = request.getParameter("goodsName");
@@ -96,6 +103,38 @@ public class OrderTrackAction extends BaseAction {
 		
 		request.setAttribute("orderList", orderTrackBiz.getOrder(oid, startTime, endTime,
 				orderNo, rid, prodArea,	lotno, goodsName, goodsType));
+		
+		return mapping.findForward("order");
+	}
+	
+	// query order detail info.
+	public ActionForward queryOrderDetail(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		String oid = request.getParameter("oid");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+		String orderNo = request.getParameter("orderNo");
+		String rid = request.getParameter("receiver");
+		String prodArea = request.getParameter("prodArea");
+		String lotno = request.getParameter("lotno");
+		String goodsName = request.getParameter("goodsName");
+		String goodsType = request.getParameter("goodsType");
+		
+		String orderId = request.getParameter("orderId");
+		
+		
+		
+		getResource(request, oid);
+		
+		request.setAttribute("orderList", orderTrackBiz.getOrder(oid, startTime, endTime,
+				orderNo, rid, prodArea,	lotno, goodsName, goodsType));
+		
+		List<PbmMedicineSummary> list = subOrderMainTrackBiz.getInfo(Long.parseLong(orderId), goodsName,
+				goodsType, prodArea, lotno);
+		
+		request.setAttribute("detailList", list);
 		
 		return mapping.findForward("order");
 	}

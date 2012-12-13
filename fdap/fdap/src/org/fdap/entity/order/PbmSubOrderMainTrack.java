@@ -17,6 +17,22 @@ public class PbmSubOrderMainTrack {
 	private Short planStatus;
 	private Short isDelete;
 	private Long oid;
+	
+	private Integer wholePacketNum;
+	private Integer loosePacketNum;
+	
+	public Integer getWholePacketNum() {
+		return wholePacketNum;
+	}
+	public void setWholePacketNum(Integer wholePacketNum) {
+		this.wholePacketNum = wholePacketNum;
+	}
+	public Integer getLoosePacketNum() {
+		return loosePacketNum;
+	}
+	public void setLoosePacketNum(Integer loosePacketNum) {
+		this.loosePacketNum = loosePacketNum;
+	}
 	public Long getSubOrderParentMid() {
   	return subOrderParentMid;
   }

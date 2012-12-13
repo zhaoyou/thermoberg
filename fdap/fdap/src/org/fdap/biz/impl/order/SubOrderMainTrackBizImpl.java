@@ -1,5 +1,6 @@
 package org.fdap.biz.impl.order;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	}
 
 	@Override
-  public List<Map<String, String>> getInfo(Long orderId, Long fullId, String goodTypeName,
+  public List<PbmMedicineSummary> getInfo(Long orderId, String goodsName, String goodTypeName,
   		String prodArea, String lotno) {
 	  List<PbmSubOrderMainTrack> mainlist = subOrderMainDao.getByOrder(orderId);
 	  List<PbmSubOrderDetailTrack> mainDetailList = subOrderMailDetailDao.getByOrder(orderId);
@@ -70,7 +71,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  				PbmMiGoodsFullInfo fullInfo = fullInfoDao.get(mbdt.getGoodsFullId());
 	  				
 	  				// 药品基本信息过滤
-	  				if (isProductValid(fullInfo, fullId, goodTypeName, prodArea, lotno) == false) {
+	  				if (isProductValid(fullInfo, goodsName, goodTypeName, prodArea, lotno) == false) {
 	  					if (mbt.getPacketType() == 2) {  //整件
 	  						break;  //查找下一条码
 	  					} else { // 散件
@@ -121,7 +122,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  				
 	  				PbmMiGoodsFullInfo megfi = fullInfoDao.get(mbdt.getGoodsFullId());
 	  				
-	  				if (isProductValid(megfi, fullId, goodTypeName, prodArea, lotno) == false) {
+	  				if (isProductValid(megfi, goodsName, goodTypeName, prodArea, lotno) == false) {
 	  					break;
 	  				}
 	  				
@@ -167,13 +168,13 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  		}
 	  	}
 	  }
-	  return null;
+	  return (List<PbmMedicineSummary>)ht.values();
   }
 	
-	private boolean isProductValid(PbmMiGoodsFullInfo info, Long goodId, String typeName,
+	private boolean isProductValid(PbmMiGoodsFullInfo info, String goodsName, String typeName,
 			String prodArea, String lotno) {
 		
-		if (info.getBaseInfo().getGoodId().equals(goodId) == false) {
+		if (info.getBaseInfo().getGoodsName().equals(goodsName) == false) {
 			return false;
 		}
 		

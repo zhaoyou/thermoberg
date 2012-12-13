@@ -22,5 +22,7 @@
         <property name="planStatus" type="java.lang.Short" />    
         <property name="isDelete" type="java.lang.Short" />
         <property name="oid" type="java.lang.Long" />
+        <property name="wholePacketNum" type="java.lang.Integer"></property>
+        <property name="loosePacketNum" type="java.lang.Integer"></property>
     </class>
 </hibernate-mapping>

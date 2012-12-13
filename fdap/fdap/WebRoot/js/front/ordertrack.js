@@ -22,6 +22,7 @@ ordertrack.get = function(id) {
 }
 
 
+// 获取符合条件的订单信息
 ordertrack.query = function() {
   var url = 'order.do?ope=queryOrder&startTime=' + ordertrack.startTime.value +
   		'&endTime=' + ordertrack.endTime.value + '&orderNo=' + ordertrack.orderNo.value +
@@ -30,4 +31,15 @@ ordertrack.query = function() {
   		'&goodsType=' + ordertrack.goodsType.value + '&oid=' + ordertrack.oid.value + 
   		'&query=1';
   window.location.href = url;
+}
+
+// 获取订单的药品的详细信息
+ordertrack.getOrderDetail = function(orderId) {
+  var url = 'order.do?ope=queryOrderDetail&startTime=' + ordertrack.startTime.value +
+  	'&endTime=' + ordertrack.endTime.value + '&orderNo=' + ordertrack.orderNo.value +
+  	'&receiver=' + ordertrack.receiver.value + '&prodArea=' + ordertrack.prodArea.value +
+	'&lotno=' + ordertrack.lotno.value + '&goodsName=' + ordertrack.goodsName.value +
+  	'&goodsType=' + ordertrack.goodsType.value + '&oid=' + ordertrack.oid.value + 
+  	'&orderId=' + orderId;
+  window.location.href = url;  
 }

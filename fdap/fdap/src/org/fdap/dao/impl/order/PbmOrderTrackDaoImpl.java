@@ -20,15 +20,18 @@ public class PbmOrderTrackDaoImpl extends HibernateTemplate implements PbmOrderT
 			 "   pbmBarcodeDetailTrack ON pbmOrderTrack.OrderId = pbmBarcodeDetailTrack.orderId INNER JOIN " +
 			 "   pbmGoodsFullInfo ON pbmBarcodeDetailTrack.GoodsFullId = pbmGoodsFullInfo.GoodFullId INNER JOIN " +
 			 "   pbmGoodsBasicInfo ON pbmGoodsFullInfo.GoodId = pbmGoodsBasicInfo.GoodId  where pbmOrderTrack.oid = ? " +
-			 " and pbmOrderTrack.isDelete = 0 and pbmMiReceiver.isDelete = 0 and pbmBarcodeDetailTrack.isDelete = 0 and " +
+			 " and pbmOrderTrack.isDelete = 0 and pbmMiReceiver.isDelete = 0 and pbmBarcodeDetailTrack.isDelete = 0 " +
 			 " and pbmGoodsFullInfo.isDelete = 0 and pbmGoodsBasicInfo.isDelete = 0 ";
 	 
 	  
 	  sb.append(sql);
 	  
-	  if (s != null && !"".equals(s) && e != null && !"".equals(e))
-	  	sb.append(" and pbmOrderTrack.orderTime > '" + s +
-	  			"' and pbmOrderTrack.orderTime < '" + e + "' ");
+	  if (s != null && !"".equals(s))
+	  	sb.append(" and pbmOrderTrack.orderTime > '" + s  +"'");
+	  
+	  if (e != null && !"".equals(e)) {
+		  sb.append(" and pbmOrderTrack.orderTime < '" + e + "' ");
+	  }
 	  
 	  if ( orderNo != null && !"".equals(orderNo)) {
 	  	sb.append(" and pbmOrderTrack.OrderNo like '%" + orderNo + "%'");
@@ -38,7 +41,7 @@ public class PbmOrderTrackDaoImpl extends HibernateTemplate implements PbmOrderT
 	  	sb.append(" and pbmOrderTrack.ReceiverId = " + rid);
 	  }
 	  
-	  if (prodArea != null && !"".equals(prodArea)) {
+	  if (prodArea != null && !"-1".equals(prodArea)) {
 	  	sb.append(" and pbmGoodsBasicInfo.prodarea  like '%" + prodArea + "%'");
 	  }
 	  
@@ -46,15 +49,15 @@ public class PbmOrderTrackDaoImpl extends HibernateTemplate implements PbmOrderT
 	  	sb.append(" and pbmGoodsFullInfo.lotno like'%" + lotno + "%'");
 	  }
 	  
-	  if (goodsname != null && !"".equals(goodsname)) {
+	  if (goodsname != null && !"-1".equals(goodsname)) {
 	  	sb.append(" and pbmGoodsBasicInfo.goodsname like '%" + goodsname + "%'");
 	  }
 	  
-	  if (goodsType != null && !"".equals(goodsType)) {
+	  if (goodsType != null && !"-1".equals(goodsType)) {
 	  	sb.append(" and pbmGoodsBasicInfo.goodsType like '%" + goodsType + "%'");
 	  }
 	  
-	  SQLQuery query = this.getSession().createSQLQuery(sql);
+	  SQLQuery query = this.getSession().createSQLQuery(sb.toString());
 	  query.setLong(0, oid);
 	  return query.list();
   }

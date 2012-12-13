@@ -396,6 +396,7 @@
 		<property name="goodsBiz" ref="goodsBiz"></property>
 		<property name="orgBiz" ref="orgBiz"></property>
 		<property name="orderTrackBiz" ref="orderTrackBiz"></property>
+		<property name="subOrderMainTrackBiz" ref="OrderSubBiz"></property>
 	</bean>
 	
 	

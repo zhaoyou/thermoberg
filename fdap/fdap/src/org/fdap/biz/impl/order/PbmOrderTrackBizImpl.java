@@ -28,8 +28,8 @@ public class PbmOrderTrackBizImpl implements PbmOrderTrackBiz {
       String goodsname, String goodsType) {
 	  Long oid_long = null;
 	  Long rid_long = null;
-	  if (oid != null) oid_long = Long.parseLong(oid);
-	  if (rid != null) rid_long = Long.parseLong(rid);
+	  if (oid != null && !"-1".equals(oid)) oid_long = Long.parseLong(oid);
+	  if (rid != null && !"-1".equals(rid)) rid_long = Long.parseLong(rid);
 	  List list = orderTrackDao.queryOrder(oid_long, s, e, orderNo,
 	  		rid_long, prodArea, lotno, goodsname, goodsType);
 	  
@@ -40,8 +40,11 @@ public class PbmOrderTrackBizImpl implements PbmOrderTrackBiz {
 	  	OrderView view = new OrderView();
   		view.setOid(Long.parseLong(obj[1].toString()));
   		view.setOrderNo(obj[2].toString());
-	  	if (map.containsKey(obj[0].toString())) { 		
-	  		 map.get(obj[0].toString()).add(view);
+	  	if (map.containsKey(obj[0].toString())) {
+	      // 相同的订单
+	  	  if (!map.get(obj[0].toString()).contains(view)) {
+	  	    map.get(obj[0].toString()).add(view);
+	  	  }
 	  	} else {
 	  		 List<OrderView> views = new ArrayList<OrderView>();
 	  		 views.add(view);
@@ -58,14 +61,8 @@ public class PbmOrderTrackBizImpl implements PbmOrderTrackBiz {
 	  	resultList.add(tview);
 	  }
 	  
-//	  System.out.println(resultList.toString() + "");
-//	  for(OrderTrackView v: resultList) {
-//	  	System.out.println(v.getReceiver());
-//	  	for (OrderView view: v.getList()) {
-//	  		System.out.println(view.getOid() + ":" + view.getOrderNo());
-//	  	}
-//	  }
 	  return resultList;
   }
+	
 
 }

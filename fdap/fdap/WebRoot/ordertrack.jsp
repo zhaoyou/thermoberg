@@ -51,8 +51,9 @@
     			</td>
     			<td>
     				<select id="receiver" name="receiver">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="r" items="${receiverList}">
-	    					<option value="${r.rid }"> ${r.shortName }</option>
+	    					<option value="${r.rid }" ${param.receiver == r.rid ? "selected" : "" }> ${r.shortName }</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -61,8 +62,9 @@
     			</td>
     			<td>
     				<select id="prodArea" name="prodArea">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="a" items="${areaList}">
-	    					<option value="${a }"> ${a}</option>
+	    					<option value="${a }" ${param.prodArea == a ? "selected" : "" }> ${a}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -78,8 +80,9 @@
     			</td>
     			<td>
     				<select id="goodsName" name="goodsName">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="good" items="${goodslist}">
-	    					<option value="${good.goodId }"> ${good.goodsName}</option>
+	    					<option value="${good.goodsName }" ${param.goodsName == good.goodsName ? "selected" : ""  }> ${good.goodsName}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -88,12 +91,13 @@
     			</td>
     			<td>
     				<select id="goodsType" name="goodsType">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="g" items="${goodTypeList}">
-	    					<option value="${g }"> ${g}</option>
+	    					<option value="${g }" ${param.goodsType == g ? "selected" : "" }> ${g}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
-    			<td>
+    			<td>	
     			</td>
     			<td>
     				<input type="button" class="btn btn-primary" value="查 询"/>
@@ -119,7 +123,7 @@
     					<ul class="nav nav-list">
     					<li class="nav-header">${orderView.receiver }</li>
 	    					<c:forEach var="view" items="${orderView.list}">
-	    						 <li><a href="#">${ view.orderNo}</a></li>
+	    						 <li><a href="javascript:ordertrack.getOrderDetail('${view.oid }')">${ view.orderNo}</a></li>
 	    					</c:forEach>
     					</ul>
     				</c:forEach>
