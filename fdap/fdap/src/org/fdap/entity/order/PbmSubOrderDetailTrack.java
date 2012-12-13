@@ -8,6 +8,7 @@ package org.fdap.entity.order;
 public class PbmSubOrderDetailTrack {
 	private Long subOrderDetailId;
 	private Long subOrderMid;
+	private Long orderId;
 	private Long bcdId;
 	private Integer totalNum;
 	private Short isDelete;
@@ -48,6 +49,12 @@ public class PbmSubOrderDetailTrack {
 	public void setOid(Long oid) {
   	this.oid = oid;
   }
+	public Long getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
 	
 	
 }

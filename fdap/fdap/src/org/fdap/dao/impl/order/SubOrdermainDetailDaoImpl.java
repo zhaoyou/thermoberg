@@ -13,6 +13,7 @@ public class SubOrdermainDetailDaoImpl extends HibernateTemplate implements
 	@SuppressWarnings("unchecked")
   @Override
 	public List<PbmSubOrderDetailTrack> getByOrder(Long orderId) {
+		System.out.println("orderId: " + orderId);
 		String hql = "from PbmSubOrderDetailTrack d where d.orderId = ? and d.isDelete = 0";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong(0, orderId);

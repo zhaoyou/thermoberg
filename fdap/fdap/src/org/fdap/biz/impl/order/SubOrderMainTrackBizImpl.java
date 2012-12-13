@@ -1,10 +1,11 @@
 package org.fdap.biz.impl.order;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fdap.biz.order.PbmGoodsFullInfoBiz;
 import org.fdap.biz.order.SubOrderMainTrackBiz;
 import org.fdap.dao.order.BarCodeTrackDao;
 import org.fdap.dao.order.BarCodeTrackDetailDao;
@@ -17,6 +18,10 @@ import org.fdap.entity.order.PbmMiBarCodeTrack;
 import org.fdap.entity.order.PbmMiGoodsFullInfo;
 import org.fdap.entity.order.PbmSubOrderDetailTrack;
 import org.fdap.entity.order.PbmSubOrderMainTrack;
+import org.fdap.util.GsonUtil;
+
+import com.google.gson.Gson;
+
 
 public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 
@@ -24,8 +29,15 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	private SubOrderMainDetailDao subOrderMailDetailDao = null;
 	private BarCodeTrackDao barCodeTrackDao = null;
 	private BarCodeTrackDetailDao barCodeTrackDetailDao = null;
-	private PbmGoodsFullInfoDao fullInfoDao = null;
+	private PbmGoodsFullInfoBiz fullInfoBiz = null;
+	private GsonUtil out = null;
 	
+	public void setOut(GsonUtil out) {
+		this.out = out;
+	}
+	public void setFullInfoBiz(PbmGoodsFullInfoBiz fullInfoBiz) {
+		this.fullInfoBiz = fullInfoBiz;
+	}
 	public void setSubOrderMailDetailDao(SubOrderMainDetailDao subOrderMailDetailDao) {
   	this.subOrderMailDetailDao = subOrderMailDetailDao;
   }
@@ -39,9 +51,6 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
   	this.subOrderMainDao = subOrderMainDao;
   }
 
-	public void setFullInfoDao(PbmGoodsFullInfoDao fullInfoDao) {
-  	this.fullInfoDao = fullInfoDao;
-  }
 	@Override
 	public List<PbmSubOrderMainTrack> getByOrderId(Long orderId) {
 		return subOrderMainDao.getByOrder(orderId);
@@ -57,27 +66,34 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  List<PbmMiBarCodeDetailTrack> barCodeDetailList = barCodeTrackDetailDao.getByOrder(orderId);
 	  Map<Long, PbmMedicineSummary> ht = new HashMap<Long, PbmMedicineSummary>();
 	  PbmMedicineSummary mms = new PbmMedicineSummary();
+	  System.out.println("mainList: " + mainlist.size());
+	  System.out.println("mainDetailList: " + mainDetailList.size());
+	  System.out.println("barCodeList: " + barCodeList.size());
+	  System.out.println("baCodeDetailList: " + barCodeDetailList.size());
 	  // for each 每一个子订单主记录
 	  for (PbmSubOrderMainTrack msomt: mainlist ) {
 	  	if (msomt.getInoutType() == 0 && msomt.getInwholeOrder() == 1) { // 完整订单.
 	  		// 遍历所有的条码主跟踪记录
 	  		for (PbmMiBarCodeTrack mbt: barCodeList) {
 	  			// 遍历条码详细记录信息
+	  			
 	  			for (PbmMiBarCodeDetailTrack mbdt: barCodeDetailList) {
-	  				if (mbdt.getBcdId() != mbt.getBcId()) { //不属于当前条码
+	  				if (!mbdt.getBcId().toString().equals(mbt.getBcId().toString())) { //不属于当前条码
 	  					continue;
 	  				}
 	  				
-	  				PbmMiGoodsFullInfo fullInfo = fullInfoDao.get(mbdt.getGoodsFullId());
+	  				PbmMiGoodsFullInfo fullInfo = fullInfoBiz.getById(mbdt.getGoodsFullId());		
 	  				
 	  				// 药品基本信息过滤
-	  				if (isProductValid(fullInfo, goodsName, goodTypeName, prodArea, lotno) == false) {
+	  				if (!isProductValid(fullInfo, goodsName, goodTypeName, prodArea, lotno)) {
 	  					if (mbt.getPacketType() == 2) {  //整件
 	  						break;  //查找下一条码
 	  					} else { // 散件
 	  						continue; // 继续查找当前条码其他信息
 	  					}
 	  				}
+	  				
+	  				
 	  				
 	  				if (ht.containsKey(mbdt.getKid()) == false) {
 	  					mms = new PbmMedicineSummary();
@@ -120,7 +136,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  					continue;
 	  				}
 	  				
-	  				PbmMiGoodsFullInfo megfi = fullInfoDao.get(mbdt.getGoodsFullId());
+	  				PbmMiGoodsFullInfo megfi = fullInfoBiz.getById(mbdt.getGoodsFullId());
 	  				
 	  				if (isProductValid(megfi, goodsName, goodTypeName, prodArea, lotno) == false) {
 	  					break;
@@ -168,25 +184,31 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  		}
 	  	}
 	  }
-	  return (List<PbmMedicineSummary>)ht.values();
+	  
+	  List<PbmMedicineSummary> resultList = new ArrayList<PbmMedicineSummary>();
+	  for(PbmMedicineSummary s: ht.values()) {
+		out.print(s);
+		resultList.add(s);
+	  }
+	  System.out.println("list: " + resultList.size());
+	  return resultList;
   }
 	
 	private boolean isProductValid(PbmMiGoodsFullInfo info, String goodsName, String typeName,
 			String prodArea, String lotno) {
-		
-		if (info.getBaseInfo().getGoodsName().equals(goodsName) == false) {
+		if (!"-1".equals(goodsName) && !info.getBaseInfo().getGoodsName().equals(goodsName)) {
 			return false;
 		}
 		
-		if (info.getBaseInfo().getGoodsType().equals(typeName) == false) {
+		if (!"-1".equals(typeName) && !info.getBaseInfo().getGoodsType().equals(typeName)) {
 			return false;
 		}
 		
-		if (info.getBaseInfo().getProdarea().endsWith(prodArea) == false) {
+		if (!"-1".equals(prodArea)&& !info.getBaseInfo().getProdarea().equals(prodArea)) {
 			return false;
 		}
 		
-		if (info.getLotno().contains(lotno) == false) {
+		if (!"".equals(lotno) && !info.getLotno().contains(lotno)) {
 			return false;
 		}
 		return true;

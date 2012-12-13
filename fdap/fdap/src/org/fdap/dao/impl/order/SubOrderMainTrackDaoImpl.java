@@ -12,8 +12,8 @@ public class SubOrderMainTrackDaoImpl extends HibernateTemplate implements SubOr
 	@SuppressWarnings("unchecked")
   @Override
 	public List<PbmSubOrderMainTrack> getByOrder(Long orderId) {
-		String hql = "from PbmSubOrderMainTrack m where m.orderId = ? " +
-				" m.isDelete=0 order by m.bubOrderMId,m.inOutType asc";
+		String hql = "from PbmSubOrderMainTrack m where m.orderId = ? and " +
+				" m.isDelete=0 order by m.subOrderMid,m.inoutType asc";
 		Query query = this.getSession().createQuery(hql);
 		query.setLong(0, orderId);
 		return query.list();
