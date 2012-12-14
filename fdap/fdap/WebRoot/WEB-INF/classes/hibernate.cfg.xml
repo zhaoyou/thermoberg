@@ -112,6 +112,11 @@
 	<mapping resource="org/fdap/entity/order/PbmSubOrderDetailTrack.hbm.xml"/>
 	<mapping resource="org/fdap/entity/order/PbmSubOrderMainTrack.hbm.xml"/>
 	
+	<mapping resource="org/fdap/entity/order/PbmRefRelation.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmRefInOutTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmCarInOutTrack.hbm.xml"/>
+	<mapping resource="org/fdap/entity/order/PbmCarRelation.hbm.xml"/>
+	
 </session-factory>
 
 </hibernate-configuration>

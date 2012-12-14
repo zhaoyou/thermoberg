@@ -186,6 +186,10 @@
 	<bean id="subOrderMailDetailDao" class="org.fdap.dao.impl.order.SubOrdermainDetailDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<bean id="erpRefInOutDao" class="org.fdap.dao.impl.order.PbmErpRefInOutDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 
 
 
@@ -356,6 +360,10 @@
 		<property name="detailDao" ref="barCodeDetailDao"></property>
 	</bean>
 	
+	<bean id="erpRefInOutBiz" class="org.fdap.biz.impl.order.PbmErpRefInOutBizImpl">
+		<property name="pbmErpRefInOutDao" ref="erpRefInOutDao"></property>
+	</bean>
+	
 	
 	<!--  定义action访问类 -->
 	
@@ -419,6 +427,7 @@
 		<property name="orgBiz" ref="orgBiz"></property>
 		<property name="orderTrackBiz" ref="orderTrackBiz"></property>
 		<property name="subOrderMainTrackBiz" ref="OrderSubBiz"></property>
+		<property name="erpRefInOutBiz" ref="erpRefInOutBiz"></property>
 	</bean>
 	
 	

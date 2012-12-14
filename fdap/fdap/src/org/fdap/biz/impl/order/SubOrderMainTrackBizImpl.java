@@ -86,7 +86,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  				
 	  				// 药品基本信息过滤
 	  				if (!isProductValid(fullInfo, goodsName, goodTypeName, prodArea, lotno)) {
-	  					if (mbt.getPacketType() == 2) {  //整件
+	  					if (mbt.getPacketType() == 1) {  //整件
 	  						break;  //查找下一条码
 	  					} else { // 散件
 	  						continue; // 继续查找当前条码其他信息
@@ -101,7 +101,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  					mms = ht.get(mbdt.getKid());
 	  				}
 	  				
-	  				if (mbt.getPacketType() == 2) { //整件
+	  				if (mbt.getPacketType() == 1) { //整件
 	  					mms.setWholePacketNum(mms.getWholePacketNum() + mbt.getPacketNum());
 	  					mms.setWholePacketUnitNum(mbdt.getTotalNum());
 	  				} else { // 散件
@@ -117,7 +117,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  					ht.put(mbdt.getKid(), mms);
 	  				}
 	  				
-	  				if (mbt.getPacketType() == 2) { //整件
+	  				if (mbt.getPacketType() == 1) { //整件
 	  					break; // 查找下一条码
 	  				} else { // 散件
 	  					continue;
@@ -154,7 +154,7 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 	  						mms = ht.get(mbdt.getKid());
 	  					}
 	  					
-	  					if (mbt.getPacketType() == 2) { // 整件
+	  					if (mbt.getPacketType() == 1) { // 整件
 	  						if (msodt.getTotalNum() / mbdt.getTotalNum() > 0){ //存在整件
 	  							mms.setWholePacketNum(mms.getWholePacketNum() + msodt.getTotalNum() / mbdt.getTotalNum());
 	  							mms.setWholePacketUnitNum(mbdt.getTotalNum());

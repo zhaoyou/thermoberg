@@ -12,14 +12,17 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.fdap.biz.OrgBiz;
+import org.fdap.biz.order.PbmErpRefInOutBiz;
 import org.fdap.biz.order.PbmGoodsBaseInfoBiz;
 import org.fdap.biz.order.PbmMiReceiverBiz;
 import org.fdap.biz.order.PbmOrderTrackBiz;
 import org.fdap.biz.order.SubOrderMainTrackBiz;
+import org.fdap.entity.order.PbmErpRefInOutTrack;
 import org.fdap.entity.order.PbmMedicineSummary;
 import org.fdap.entity.order.PbmMiGoodsBaseInfo;
 import org.fdap.entity.order.PbmMiReceiver;
 import org.fdap.util.BaseAction;
+import org.fdap.util.GsonUtil;
 
 public class OrderTrackAction extends BaseAction {
 	
@@ -28,7 +31,18 @@ public class OrderTrackAction extends BaseAction {
 	private OrgBiz orgBiz;
 	private PbmOrderTrackBiz orderTrackBiz;
 	private SubOrderMainTrackBiz subOrderMainTrackBiz;
+	private PbmErpRefInOutBiz erpRefInOutBiz; 
+	private GsonUtil out;
 	
+	
+	public void setOut(GsonUtil out) {
+		this.out = out;
+	}
+
+	public void setErpRefInOutBiz(PbmErpRefInOutBiz erpRefInOutBiz) {
+		this.erpRefInOutBiz = erpRefInOutBiz;
+	}
+
 	public void setSubOrderMainTrackBiz(SubOrderMainTrackBiz subOrderMainTrackBiz) {
 		this.subOrderMainTrackBiz = subOrderMainTrackBiz;
 	}
@@ -179,12 +193,26 @@ public class OrderTrackAction extends BaseAction {
 		return arealist;
 	}
 	
+	
+	
 	// to ordertbcc.
 	public ActionForward toOrdertbcc(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		String oid = request.getParameter("oid");
+		String orderId = request.getParameter("orderId");
+		String kid = request.getParameter("kid");
+		String subOrderMid = request.getParameter("subOrderMid");
+		
+		System.out.println("oid: " + oid + " orderId: " + orderId + " kid" + kid 
+				+ " subOrderMid: " + subOrderMid);
+		List<PbmErpRefInOutTrack> list = 
+			erpRefInOutBiz.getByKid(Long.parseLong(kid), Long.parseLong(oid));
+		
+		out.print(list);
 		return mapping.findForward("ordertbcc");
 	}
+	
 	
 	// to rodertbcc ref.
 	public ActionForward toOrdertbccRef(ActionMapping mapping, ActionForm form,

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    zhaoyou
+-->
+ 
+<hibernate-mapping>
+    <class name="org.fdap.entity.order.PbmCarRelation" table="pbmCarRelation" >
+        <id name="id" type="java.lang.Long">
+            <column name="id" />
+            <generator class="identity"/>
+        </id>  
+        <property name="miCarId" type="java.lang.Long" />
+        <property name="miCarName" type="java.lang.String" />
+ 		<property name="ccCarId" type="java.lang.String" />
+  		<property name="ccCarName" type="java.lang.String" />
+        <property name="isDelete" type="java.lang.Short" />
+        <property name="oid" type="java.lang.Long" />
+    </class>
+</hibernate-mapping>
