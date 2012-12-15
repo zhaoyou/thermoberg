@@ -23,6 +23,30 @@ public class PbmErpRefInOutTrack {
 	private Short inoutStatus;
 	private Short isDelete;
 	private Long oid;
+	
+	// for page show.
+	private String storeEnv;
+	private String storeType;
+	private String storeName;
+	
+	public String getStoreEnv() {
+		return storeEnv;
+	}
+	public void setStoreEnv(String storeEnv) {
+		this.storeEnv = storeEnv;
+	}
+	public String getStoreType() {
+		return storeType;
+	}
+	public void setStoreType(String storeType) {
+		this.storeType = storeType;
+	}
+	public String getStoreName() {
+		return storeName;
+	}
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 	public Long getKdId() {
   	return kdId;
   }

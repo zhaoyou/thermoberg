@@ -13,7 +13,7 @@
         </id>  
         <property name="miCarId" type="java.lang.Long" />
         <property name="miCarName" type="java.lang.String" />
- 		<property name="ccCarId" type="java.lang.String" />
+ 		<property name="ccCarId" type="java.lang.Long" />
   		<property name="ccCarName" type="java.lang.String" />
         <property name="isDelete" type="java.lang.Short" />
         <property name="oid" type="java.lang.Long" />

@@ -190,6 +190,10 @@
 	<bean id="erpRefInOutDao" class="org.fdap.dao.impl.order.PbmErpRefInOutDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<bean id="trackRefDao" class="org.fdap.dao.impl.order.TrackRefDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 
 
 
@@ -364,6 +368,10 @@
 		<property name="pbmErpRefInOutDao" ref="erpRefInOutDao"></property>
 	</bean>
 	
+	<bean id="trackRefBiz" class="org.fdap.biz.impl.order.TrackRefBizImpl">
+		<property name="trackRefDao" ref="trackRefDao"></property>
+	</bean>
+	
 	
 	<!--  定义action访问类 -->
 	
@@ -428,6 +436,8 @@
 		<property name="orderTrackBiz" ref="orderTrackBiz"></property>
 		<property name="subOrderMainTrackBiz" ref="OrderSubBiz"></property>
 		<property name="erpRefInOutBiz" ref="erpRefInOutBiz"></property>
+		<property name="out" ref="gson"></property>
+		<property name="trackRefBiz" ref="trackRefBiz"></property>
 	</bean>
 	
 	

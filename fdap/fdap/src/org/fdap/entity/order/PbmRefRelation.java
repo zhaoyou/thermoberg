@@ -4,7 +4,7 @@ public class PbmRefRelation {
 	private Long id;
 	private Long erpRefId;
 	private String erpRefName;
-	private String ccRefId;
+	private Long ccRefId;
 	private String ccRefName;
 	private Short isDelete;
 	private Long oid;
@@ -26,10 +26,10 @@ public class PbmRefRelation {
 	public void setErpRefName(String erpRefName) {
 		this.erpRefName = erpRefName;
 	}
-	public String getCcRefId() {
+	public Long getCcRefId() {
 		return ccRefId;
 	}
-	public void setCcRefId(String ccRefId) {
+	public void setCcRefId(Long ccRefId) {
 		this.ccRefId = ccRefId;
 	}
 	public String getCcRefName() {

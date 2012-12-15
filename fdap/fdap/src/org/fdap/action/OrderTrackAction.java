@@ -17,6 +17,7 @@ import org.fdap.biz.order.PbmGoodsBaseInfoBiz;
 import org.fdap.biz.order.PbmMiReceiverBiz;
 import org.fdap.biz.order.PbmOrderTrackBiz;
 import org.fdap.biz.order.SubOrderMainTrackBiz;
+import org.fdap.biz.order.TrackRefBiz;
 import org.fdap.entity.order.PbmErpRefInOutTrack;
 import org.fdap.entity.order.PbmMedicineSummary;
 import org.fdap.entity.order.PbmMiGoodsBaseInfo;
@@ -33,8 +34,13 @@ public class OrderTrackAction extends BaseAction {
 	private SubOrderMainTrackBiz subOrderMainTrackBiz;
 	private PbmErpRefInOutBiz erpRefInOutBiz; 
 	private GsonUtil out;
+	private TrackRefBiz trackRefBiz;
 	
 	
+	public void setTrackRefBiz(TrackRefBiz trackRefBiz) {
+		this.trackRefBiz = trackRefBiz;
+	}
+
 	public void setOut(GsonUtil out) {
 		this.out = out;
 	}
@@ -203,13 +209,24 @@ public class OrderTrackAction extends BaseAction {
 		String orderId = request.getParameter("orderId");
 		String kid = request.getParameter("kid");
 		String subOrderMid = request.getParameter("subOrderMid");
+		String goodsName = request.getParameter("goodsName");
+		String orderName = request.getParameter("orderName");
 		
-		System.out.println("oid: " + oid + " orderId: " + orderId + " kid" + kid 
-				+ " subOrderMid: " + subOrderMid);
+		System.out.println("oid: " + oid + " orderId: " + orderId + " kid: " + kid 
+				+ " subOrderMid: " + subOrderMid + " goodsName: " + goodsName);
 		List<PbmErpRefInOutTrack> list = 
 			erpRefInOutBiz.getByKid(Long.parseLong(kid), Long.parseLong(oid));
 		
+		for (PbmErpRefInOutTrack t: list) {
+			List xx = trackRefBiz.getRefEnv(t.getErpRefId());
+			out.print(xx);
+		}
+		
 		out.print(list);
+		request.setAttribute("goodsName", goodsName);
+		request.setAttribute("orderName", orderName);
+		request.setAttribute("tracklist", list);
+		
 		return mapping.findForward("ordertbcc");
 	}
 	

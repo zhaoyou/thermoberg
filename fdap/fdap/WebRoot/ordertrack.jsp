@@ -148,7 +148,7 @@
         	<tbody>
         		<c:forEach var="d" items="${detailList}">
         			<tr >
-		        	<td> <a target="_blank" href="order.do?ope=toOrdertbcc&oid=${param.oid }&orderId=${d.msomt.orderId }&kid=${d.kid }&subOrderMid=${d.msomt.subOrderMid }">${d.msomt.subOrderName }</a></td>
+		        	<td> <a target="_blank" href="order.do?ope=toOrdertbcc&oid=${param.oid }&orderId=${d.msomt.orderId }&kid=${d.kid }&subOrderMid=${d.msomt.subOrderMid }&goodsName=${d.megfi.baseInfo.goodsName}&orderName=${d.msomt.subOrderName }">${d.msomt.subOrderName }</a></td>
 		        	<td>${d.megfi.baseInfo.goodsName }</td>
 		        	<td>${d.totalNum }</td>
 		        	<td>${d.wholePacketNum }</td>

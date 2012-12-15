@@ -13,7 +13,7 @@
         </id>  
         <property name="erpRefId" type="java.lang.Long" />
         <property name="erpRefName" type="java.lang.String" />
- 		<property name="ccRefId" type="java.lang.String" />
+ 		<property name="ccRefId" type="java.lang.Long" />
   		<property name="ccRefName" type="java.lang.String" />
         <property name="isDelete" type="java.lang.Short" />
         <property name="oid" type="java.lang.Long" />

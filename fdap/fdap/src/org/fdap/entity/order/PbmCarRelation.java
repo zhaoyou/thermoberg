@@ -4,7 +4,7 @@ public class PbmCarRelation {
 	private Long id;
 	private Long miCarId;
 	private String miCarName;
-	private String ccCarId;
+	private Long ccCarId;
 	private String ccCarName;
 	private Short isDelete;
 	private Long oid;
@@ -26,10 +26,10 @@ public class PbmCarRelation {
 	public void setMiCarName(String miCarName) {
 		this.miCarName = miCarName;
 	}
-	public String getCcCarId() {
+	public Long getCcCarId() {
 		return ccCarId;
 	}
-	public void setCcCarId(String ccCarId) {
+	public void setCcCarId(Long ccCarId) {
 		this.ccCarId = ccCarId;
 	}
 	public String getCcCarName() {

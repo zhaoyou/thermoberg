@@ -15,7 +15,7 @@
         <property name="orderId" type="java.lang.Long" />
         <property name="inTime" type="java.util.Date"></property>
         <property name="outTime" type="java.util.Date"></property>
-        <property name="goodsFullId" type="java.lang.Long" />
+        <property name="goodFullId" type="java.lang.Long" />
         <property name="totalNum" type="java.lang.Integer" />
         <property name="erpRefId" type="java.lang.Long" />
         <property name="erpPosId" type="java.lang.Long" />
