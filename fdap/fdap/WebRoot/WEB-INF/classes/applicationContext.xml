@@ -438,6 +438,9 @@
 		<property name="erpRefInOutBiz" ref="erpRefInOutBiz"></property>
 		<property name="out" ref="gson"></property>
 		<property name="trackRefBiz" ref="trackRefBiz"></property>
+		<property name="refHisBiz" ref="refhisBiz"></property>
+		<property name="orgbiz" ref="orgBiz"></property>
+		<property name="refConfigBiz" ref="refConfigBiz"></property>
 	</bean>
 	
 	

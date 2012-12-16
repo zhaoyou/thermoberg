@@ -44,7 +44,7 @@
 		        	<td>${t.outTimeStr }</td>
 		        	<td>${t.storeEnv }</td>
 		        	<td>${t.storeType }</td>
-		        	<td><a href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${t.inTimeStr }&end=${t.outTimeStr }&refId=${t.storeId }">${t.storeName }</a></td>
+		        	<td><a target="_blank" href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${t.inTimeStr }&end=${t.outTimeStr }&refId=${t.storeId }">${t.storeName }</a></td>
 		        	<td>
 						<c:if test="${t.inoutType == 0}">
 							正常
@@ -69,7 +69,7 @@
 		        	<td>${r.outTimeStr }</td>
 		        	<td>${r.storeEnv }</td>
 		        	<td>${r.storeType }</td>
-		        	<td><a  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${r.inTimeStr }&end=${r.outTimeStr }&refId=${r.storeId }">${r.storeName }</a></td>
+		        	<td><a target="_blank"  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${r.inTimeStr }&end=${r.outTimeStr }&refId=${r.storeId }">${r.storeName }</a></td>
 		        	<td>
 						<c:if test="${subOrder.inoutType == 0}">
 							正常
@@ -95,7 +95,7 @@
 		        	<td>${c.outTimeStr }</td>
 		        	<td>${c.storeEnv }</td>
 		        	<td>${c.storeType }</td>
-		        	<td><a  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
+		        	<td><a target="_blank" href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
 		        	<td>
 						<c:if test="${subOrder.inoutType == 0}">
 							正常
