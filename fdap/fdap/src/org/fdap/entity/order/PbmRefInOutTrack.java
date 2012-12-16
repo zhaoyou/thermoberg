@@ -1,5 +1,6 @@
 package org.fdap.entity.order;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PbmRefInOutTrack {
@@ -18,6 +19,42 @@ public class PbmRefInOutTrack {
 	private Short isDelete;
 	private Short uploadStatus;
 	private Long oid;
+	
+	// for page show.
+	private String storeEnv;
+	private String storeType;
+	private String storeName;
+	private Long storeId;
+	
+	
+	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public String getInTimeStr() {
+		return sf.format(this.getInTime());
+	}
+	
+	public String getOutTimeStr() {
+		return sf.format(this.getOutTime());
+	}
+	
+	public String getStoreEnv() {
+		return storeEnv;
+	}
+	public void setStoreEnv(String storeEnv) {
+		this.storeEnv = storeEnv;
+	}
+	public String getStoreType() {
+		return storeType;
+	}
+	public void setStoreType(String storeType) {
+		this.storeType = storeType;
+	}
+	public String getStoreName() {
+		return storeName;
+	}
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 	public Long getKdId() {
 		return kdId;
 	}
@@ -107,5 +144,13 @@ public class PbmRefInOutTrack {
 	}
 	public void setOid(Long oid) {
 		this.oid = oid;
+	}
+
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
 	}	
 }

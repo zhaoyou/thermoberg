@@ -1,5 +1,6 @@
 package org.fdap.entity.order;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -28,6 +29,19 @@ public class PbmErpRefInOutTrack {
 	private String storeEnv;
 	private String storeType;
 	private String storeName;
+	private Long storeId;
+	
+	
+	
+	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	public String getInTimeStr() {
+		return sf.format(this.getInTime());
+	}
+	
+	public String getOutTimeStr() {
+		return sf.format(this.getOutTime());
+	}
 	
 	public String getStoreEnv() {
 		return storeEnv;
@@ -137,6 +151,14 @@ public class PbmErpRefInOutTrack {
 	public void setOid(Long oid) {
   	this.oid = oid;
   }
+
+	public Long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Long storeId) {
+		this.storeId = storeId;
+	}
 	
 	
 }

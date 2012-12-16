@@ -11,4 +11,5 @@ import org.fdap.entity.order.PbmSubOrderMainTrack;
  */
 public interface SubOrderMainTrackDao {
 	List<PbmSubOrderMainTrack> getByOrder(Long orderid);
+	PbmSubOrderMainTrack get(Long subOrderMid);
 }

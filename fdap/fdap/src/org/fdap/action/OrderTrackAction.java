@@ -18,10 +18,13 @@ import org.fdap.biz.order.PbmMiReceiverBiz;
 import org.fdap.biz.order.PbmOrderTrackBiz;
 import org.fdap.biz.order.SubOrderMainTrackBiz;
 import org.fdap.biz.order.TrackRefBiz;
+import org.fdap.entity.order.PbmCarInOutTrack;
 import org.fdap.entity.order.PbmErpRefInOutTrack;
 import org.fdap.entity.order.PbmMedicineSummary;
 import org.fdap.entity.order.PbmMiGoodsBaseInfo;
 import org.fdap.entity.order.PbmMiReceiver;
+import org.fdap.entity.order.PbmRefInOutTrack;
+import org.fdap.entity.order.PbmSubOrderMainTrack;
 import org.fdap.util.BaseAction;
 import org.fdap.util.GsonUtil;
 
@@ -217,15 +220,58 @@ public class OrderTrackAction extends BaseAction {
 		List<PbmErpRefInOutTrack> list = 
 			erpRefInOutBiz.getByKid(Long.parseLong(kid), Long.parseLong(oid));
 		
+		List<PbmRefInOutTrack> refList = trackRefBiz.getRefTrack(Long.parseLong(oid),
+				Long.parseLong(subOrderMid), Long.parseLong(orderId));
+		
+		List<PbmCarInOutTrack> carList = trackRefBiz.getCarTrack(Long.parseLong(oid),
+				Long.parseLong(subOrderMid), Long.parseLong(orderId));
+		
 		for (PbmErpRefInOutTrack t: list) {
 			List xx = trackRefBiz.getRefEnv(t.getErpRefId());
-			out.print(xx);
+			if (xx != null && xx.size() > 0) {
+				Object[] info = (Object[])xx.get(0);
+				t.setStoreEnv(new Double(info[3].toString()).intValue() + "℃" +
+						" - " + new Double(info[2].toString()).intValue() + "℃");
+				t.setStoreType(info[0].toString());
+				t.setStoreName(info[1].toString());
+				t.setStoreId(Long.parseLong(info[4].toString()));
+			}
 		}
 		
-		out.print(list);
+		for(PbmRefInOutTrack r: refList) {
+			List xx = trackRefBiz.getRefEnv(r.getErpRefId());
+			if (xx != null && xx.size() > 0) {
+				Object[] info = (Object[])xx.get(0);
+				r.setStoreEnv(new Double(info[3].toString()).intValue() + "℃" +
+						" - " + new Double(info[2].toString()).intValue() + "℃");
+				r.setStoreType(info[0].toString());
+				r.setStoreName(info[1].toString());
+				r.setStoreId(Long.parseLong(info[4].toString()));
+			}
+		}
+		
+		for(PbmCarInOutTrack c: carList) {
+			List xx = trackRefBiz.getCarEnv(c.getMiCarId());
+			if (xx != null && xx.size() > 0) {
+				Object[] info = (Object[])xx.get(0);
+				c.setStoreEnv(new Double(info[3].toString()).intValue() + "℃" +
+						" - " + new Double(info[2].toString()).intValue() + "℃");
+				c.setStoreType(info[0].toString());
+				c.setStoreName(info[1].toString());
+				c.setStoreId(Long.parseLong(info[4].toString()));
+			}
+		}
+		
+		PbmSubOrderMainTrack subOrder = subOrderMainTrackBiz.get(Long.parseLong(subOrderMid));
+		
+		
+		//out.print(list);
 		request.setAttribute("goodsName", goodsName);
 		request.setAttribute("orderName", orderName);
 		request.setAttribute("tracklist", list);
+		request.setAttribute("refList", refList);
+		request.setAttribute("carList", carList);
+		request.setAttribute("subOrder", subOrder);
 		
 		return mapping.findForward("ordertbcc");
 	}
@@ -235,6 +281,12 @@ public class OrderTrackAction extends BaseAction {
 	public ActionForward toOrdertbccRef(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		String oid = request.getParameter("oid");
+		String start = request.getParameter("start");
+		String end = request.getParameter("end");
+		String refId = request.getParameter("refId");
+		System.out.println("oid: " + oid + " start: " + start +
+				" end: " + end + " refId: " + refId);
 		return mapping.findForward("ordertbccref");
 	}
 	

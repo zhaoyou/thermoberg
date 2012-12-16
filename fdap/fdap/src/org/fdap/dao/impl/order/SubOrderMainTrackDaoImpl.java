@@ -19,4 +19,11 @@ public class SubOrderMainTrackDaoImpl extends HibernateTemplate implements SubOr
 		return query.list();
 	}
 
+	@Override
+	public PbmSubOrderMainTrack get(Long subOrderMid) {
+		return (PbmSubOrderMainTrack)this.getSession().get(PbmSubOrderMainTrack.class, subOrderMid);
+	}
+	
+	
+
 }

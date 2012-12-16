@@ -40,11 +40,11 @@
         	<c:forEach var="t" items="${tracklist}">
         		<tr>
 		        	<td>${goodsName }</td>
-		        	<td>${t.inTime }</td>
-		        	<td>${t.outTime }</td>
-		        	<td>2-8</td>
-		        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-		        	<td>正常</td>
+		        	<td>${t.inTimeStr }</td>
+		        	<td>${t.outTimeStr }</td>
+		        	<td>${t.storeEnv }</td>
+		        	<td>${t.storeType }</td>
+		        	<td><a href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${t.inTimeStr }&end=${t.outTimeStr }&refId=${t.storeId }">${t.storeName }</a></td>
 		        	<td>
 						<c:if test="${t.inoutType == 0}">
 							正常
@@ -60,7 +60,59 @@
 						</c:if>
 					</td>
         		</tr>
+        	</c:forEach>
+        	
+        	<c:forEach var="r" items="${refList}">
+        		<tr>
+		        	<td>${goodsName }</td>
+		        	<td>${r.inTimeStr }</td>
+		        	<td>${r.outTimeStr }</td>
+		        	<td>${r.storeEnv }</td>
+		        	<td>${r.storeType }</td>
+		        	<td><a  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${r.inTimeStr }&end=${r.outTimeStr }&refId=${r.storeId }">${r.storeName }</a></td>
+		        	<td>
+						<c:if test="${subOrder.inoutType == 0}">
+							正常
+						</c:if>
+						<c:if test="${subOrder.inoutType == 1}">
+							退货
+						</c:if>
+						<c:if test="${subOrder.inoutType == 2}">
+							换货换入
+						</c:if>
+						<c:if test="${subOrder.inoutType == 3}">
+							换货换出
+						</c:if>
+					</td>
+        		</tr>
         	</c:forEach>     
+        	
+        	
+        	<c:forEach var="c" items="${carList}">
+        		<tr>
+		        	<td>${goodsName }</td>
+		        	<td>${c.inTimeStr }</td>
+		        	<td>${c.outTimeStr }</td>
+		        	<td>${c.storeEnv }</td>
+		        	<td>${c.storeType }</td>
+		        	<td><a  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
+		        	<td>
+						<c:if test="${subOrder.inoutType == 0}">
+							正常
+						</c:if>
+						<c:if test="${subOrder.inoutType == 1}">
+							退货
+						</c:if>
+						<c:if test="${subOrder.inoutType == 2}">
+							换货换入
+						</c:if>
+						<c:if test="${subOrder.inoutType == 3}">
+							换货换出
+						</c:if>
+					</td>
+        		</tr>
+        	</c:forEach>     
+        	
         </table>
 </div>
 <div class="split"></div>

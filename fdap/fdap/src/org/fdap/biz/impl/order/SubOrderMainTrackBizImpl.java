@@ -213,5 +213,9 @@ public class SubOrderMainTrackBizImpl implements SubOrderMainTrackBiz {
 		}
 		return true;
 	}
+	@Override
+	public PbmSubOrderMainTrack get(Long subOrderMid) {
+		return this.subOrderMainDao.get(subOrderMid);
+	}
 
 }

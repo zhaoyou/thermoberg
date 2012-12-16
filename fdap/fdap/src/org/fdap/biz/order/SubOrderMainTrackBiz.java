@@ -9,4 +9,6 @@ public interface SubOrderMainTrackBiz {
 	
 	List<PbmMedicineSummary>	getInfo(Long orderId, String goodsName, String goodTypeName,
 			String prodArea, String logno);
+	
+	PbmSubOrderMainTrack get(Long subOrderMid);
 }
