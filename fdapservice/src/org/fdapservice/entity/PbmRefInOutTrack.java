@@ -26,16 +26,13 @@ public class PbmRefInOutTrack {
 	private String storeName;
 	private Long storeId;
 	
+	private Integer totalNum;
+	
+	
+	
 	
 	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public String getInTimeStr() {
-		return sf.format(this.getInTime());
-	}
-	
-	public String getOutTimeStr() {
-		return sf.format(this.getOutTime());
-	}
 	
 	public String getStoreEnv() {
 		return storeEnv;
@@ -152,5 +149,11 @@ public class PbmRefInOutTrack {
 
 	public void setStoreId(Long storeId) {
 		this.storeId = storeId;
+	}
+	public Integer getTotalNum() {
+		return totalNum;
+	}
+	public void setTotalNum(Integer totalNum) {
+		this.totalNum = totalNum;
 	}	
 }

@@ -26,7 +26,7 @@ public class OrderTrackOperateDao {
 	
 	String refInOUtStrackSql = "insert into pbmRefInOutTrack (kdid, orderid, " +
 			"pid,inTime, outTime,demandTime,inpdaid,outpdaid,erprefid,erpposid," +
-			"subOrderMid,inoutStatus,isdelete,oid) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			"subOrderMid,inoutStatus,isdelete,oid, totalNum) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	String erpRefInoutSql = "insert into pbmErpRefInOutTrack (kdid, kid, orderid, inTime," +
 			"outtime,goodfullid,totalnum,erprefid,erpposid,ispacketrec,inouttype,suborderMid," +
@@ -108,6 +108,7 @@ public class OrderTrackOperateDao {
 				st.setShort(12, ref.getInOutStatus());
 				st.setShort(13, ref.getIsDelete());
 				st.setLong(14, ref.getOid());
+				st.setInt(15, ref.getTotalNum());
 				st.executeUpdate();
 			}
 			
@@ -197,6 +198,7 @@ public class OrderTrackOperateDao {
 			
 			conn.commit();
 		} catch (Exception e) {
+		   e.printStackTrace();
 		   System.out.println("上传PbmOrder 失败!" + e.getMessage());
 		   try {
 			   conn.rollback();

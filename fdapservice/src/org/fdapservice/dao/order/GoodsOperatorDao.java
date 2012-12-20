@@ -15,8 +15,8 @@ public class GoodsOperatorDao {
 	
 	SimpleDateFormat sb = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	String basicSql = " insert into pbmGoodsBasicInfo (goodid, goodsname goodstype, goodsunit, isdelete, oid) " +
-			" values(?, ?, ?, ?, ?, ?)";
+	String basicSql = " insert into pbmGoodsBasicInfo (goodid, goodsname, goodstype, goodsunit, isdelete, oid, typename,prodarea,storageenv) " +
+			" values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	String fullSql = " insert into pbmGoodsFullInfo (goodfullid, goodid, invalidate, lotno, isdelete, oid) " +
 			" values(?, ?, ?, ?, ?, ?)";
@@ -37,6 +37,9 @@ public class GoodsOperatorDao {
 				st.setString(4, basic.getGoodsUnit());
 				st.setShort(5, basic.getIsDelete());
 				st.setLong(6, basic.getOid());
+				st.setString(7, basic.getTypeName());
+				st.setString(8, basic.getProdarea());
+				st.setString(9, basic.getStorageEnv());
 				st.executeUpdate();
 			}
 			conn.commit();

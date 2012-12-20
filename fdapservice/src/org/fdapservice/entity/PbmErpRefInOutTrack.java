@@ -35,14 +35,7 @@ public class PbmErpRefInOutTrack {
 	
 	private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
-	public String getInTimeStr() {
-		return sf.format(this.getInTime());
-	}
-	
-	public String getOutTimeStr() {
-		return sf.format(this.getOutTime());
-	}
-	
+
 	public String getStoreEnv() {
 		return storeEnv;
 	}
