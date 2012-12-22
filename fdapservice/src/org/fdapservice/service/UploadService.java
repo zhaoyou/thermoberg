@@ -6,9 +6,15 @@ import org.fdapservice.entity.CarHisData;
 import org.fdapservice.entity.CarRealData;
 import org.fdapservice.entity.CarStartup;
 import org.fdapservice.entity.HisCarData;
+import org.fdapservice.entity.HisRetailData;
+import org.fdapservice.entity.HisRetailStartup;
 import org.fdapservice.entity.HisStartup;
 import org.fdapservice.entity.RefHisData;
 import org.fdapservice.entity.RefRealData;
+import org.fdapservice.entity.RetailHisData;
+import org.fdapservice.entity.RetailRealData;
+import org.fdapservice.entity.RetailStartup;
+
 
 /**
  * 上传数据接口
@@ -64,8 +70,32 @@ public interface UploadService {
 	 */
 	public Integer uploadCarHisData(String code,List<CarHisData> carHislist);
 	
+	/**
+	 * 上传小批零实时数据
+	 * @param code				企业授权码
+	 * @param list				小批零实时数据集合
+	 * @return					上传的操作状态 0 成功 1 失败 2 服务器发生错误
+	 */
+	public Integer uploadRetailRealData(String code,List<RetailRealData> retailrealList);
 	
-	/**下面是几个get接口**/
+	/**
+	 * 上传小批零启停记录
+	 * @param code				企业授权码
+	 * @param list				小批零启停记录集合
+	 * @return					上传的操作状态 0 成功 1 失败 2 服务器发生错误
+	 */
+	public Integer uploadRetailStartup(String code,List<RetailStartup> retailstartuplist);
+	
+	/**
+	 * 上传小批零历史数据
+	 * @param code				企业授权码
+	 * @param list				小批零历史数据信息集合
+	 * @return					上传的操作状态 0 成功 1 失败 2 服务器发生错误
+	 */
+	public Integer uploadRetailHisData(String code,List<RetailHisData> retailHislist);
+	
+	
+	/**下面是几个get接口**---------------------------------------------------------/
 	
 	
 	/**
@@ -78,7 +108,7 @@ public interface UploadService {
 	
 	
 	/**
-	 * 根据企业授权码获取该企业下所有的仓库实时数据
+	 * 根据企业授权码获取该企业下所有的仓库历史数据
 	 * @param code			企业授权码
 	 * @param startTime		开始时间
 	 * @param endTime		结束时间
@@ -116,6 +146,33 @@ public interface UploadService {
 	 */
 	public List<HisCarData> getCarHis(String code,Long startupid);
 	
+	/**
+	 * 根据企业授权码获取该企业下所有小批零的实时数据
+	 * @param code			企业授权码
+	 * @return
+	 */
+	public List<RetailRealData> getRetailReal(String code);
+	
+	
+	/**
+	 * 根据时间与小批零冷库ID，获取对应小批零历史启停记录
+	 * @param code			企业授权码
+	 * @param startTime		开始时间
+	 * @param endTime		结束时间
+	 * @param refId			冷库标识ID
+	 * @return
+	 */
+	public List<HisRetailStartup> getRetailStartUp(String code,String startTime,String endTime,Long refId);
+	
+	
+	
+	/**
+	 * 通过车载历史启停记录标识ID获取车载历史数据
+	 * @param code				企业授权码
+	 * @param startupid			车载历史启停记录标识ID
+	 * @return
+	 */
+	public List<HisRetailData> getRetailHis(String code,Long startupid);
 	
 	
 	/**
