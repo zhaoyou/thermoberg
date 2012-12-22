@@ -63,5 +63,10 @@ public class StartUpBizImpl implements StartUpBiz {
 			String startTime, String endTime) {
 		return startupdao.getBoxStartupCounts(tableName, refid, startTime, endTime);
 	}
+	@Override
+	public FdapStartUp getByTime(String table, Long refid, String startTime,
+			String endTime) {
+		return startupdao.queryByTime(table, refid, startTime, endTime);
+	}
 	
 }

@@ -95,7 +95,7 @@
 		        	<td>${c.outTimeStr }</td>
 		        	<td>${c.storeEnv }</td>
 		        	<td>${c.storeType }</td>
-		        	<td><a target="_blank" href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
+		        	<td><a target="_blank" href="order.do?ope=doCarhisbyStartup&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
 		        	<td>
 						<c:if test="${subOrder.inoutType == 0}">
 							正常

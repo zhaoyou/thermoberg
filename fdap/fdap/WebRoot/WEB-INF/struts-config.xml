@@ -72,6 +72,7 @@
   			<forward name="order" path="/ordertrack.jsp"></forward>
   			<forward name="ordertbcc" path="/ordertracktbcc.jsp"></forward>
   			<forward name="ordertbccref" path="/ordertracktbcc_ref.jsp"></forward>
+  			<forward name="ordertbcccar" path="/ordertracktbcc_car.jsp"></forward>
   		</action>
   		
   		 <action path="/resource" parameter="ope" type="org.springframework.web.struts.DelegatingActionProxy">  

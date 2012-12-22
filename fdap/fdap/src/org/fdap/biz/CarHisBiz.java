@@ -42,6 +42,10 @@ public interface CarHisBiz {
 	 */
 	public abstract List<FdapCarHisData> getCarHisbyStartup(String tableName,Integer parentId,Integer startRow,Integer pagesize);
 	
+	
+	public abstract List<FdapCarHisData> getCarHisbyStartup(String tableName,Integer parentId,Integer startRow,Integer pagesize, String startTime, String endTime);
+	
+	
 	/**
 	 * 根据启停记录的Id，获取所有车载历史数据的总条数
 	 * @param tableName         车载历史数据表名
@@ -49,6 +53,8 @@ public interface CarHisBiz {
 	 * @return
 	 */
 	public abstract Integer getCarHisCount(String tableName,Integer parentId);
+	
+	public abstract Integer getCarHisCount(String tableName, Integer parentId, String startTime, String endTime);
 	
 	/**
 	 * 根据企业Id，获取该企业下所有车载冷库列表

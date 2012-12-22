@@ -88,7 +88,7 @@
 		    	<li class="disabled"><a href="#">首页</a></li>
 		    </c:if>
 		    <c:if test="${refpage!=1&&refpage!=null }">
-		    	<li ><a href="javascript: query('${refpage  }');">首页</a></li>
+		    	<li ><a href="javascript: query('1');">首页</a></li>
 		    </c:if>
 		    <c:if test="${refpage==1||refpage==null }">
 		    	<li class="disabled"><a href="#">上一页</a></li>

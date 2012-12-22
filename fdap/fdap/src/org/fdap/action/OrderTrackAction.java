@@ -12,15 +12,19 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.fdap.biz.CarHisBiz;
 import org.fdap.biz.OrgBiz;
 import org.fdap.biz.RefConfigBiz;
 import org.fdap.biz.RefHisBiz;
+import org.fdap.biz.StartUpBiz;
 import org.fdap.biz.order.PbmErpRefInOutBiz;
 import org.fdap.biz.order.PbmGoodsBaseInfoBiz;
 import org.fdap.biz.order.PbmMiReceiverBiz;
 import org.fdap.biz.order.PbmOrderTrackBiz;
 import org.fdap.biz.order.SubOrderMainTrackBiz;
 import org.fdap.biz.order.TrackRefBiz;
+import org.fdap.entity.FdapCarHisData;
+import org.fdap.entity.FdapStartUp;
 import org.fdap.entity.Fdapaiinfo;
 import org.fdap.entity.Fdaporg;
 import org.fdap.entity.Fdapproject;
@@ -53,8 +57,20 @@ public class OrderTrackAction extends BaseAction {
 	private OrgBiz orgbiz;
 	private RefConfigBiz refConfigBiz;
 	
+	private StartUpBiz startUpBiz;
+	
+	private CarHisBiz carhisbiz;
 	
 	
+	
+	public void setStartUpBiz(StartUpBiz startUpBiz) {
+		this.startUpBiz = startUpBiz;
+	}
+
+	public void setCarhisbiz(CarHisBiz carhisbiz) {
+		this.carhisbiz = carhisbiz;
+	}
+
 	public void setRefConfigBiz(RefConfigBiz refConfigBiz) {
 		this.refConfigBiz = refConfigBiz;
 	}
@@ -437,6 +453,122 @@ public class OrderTrackAction extends BaseAction {
 		
 		return mapping.findForward("ordertbccref");
 	}
+	
+	
+	
+	// =============================== to tbcc car.
+	
+	
+	public ActionForward doCarhisbyStartup(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+				
+		//车载冷库refId
+		String carrefId=request.getParameter("refId");
+		String oid = request.getParameter("oid");
+		String startTime = request.getParameter("start");
+		String endTime = request.getParameter("end");
+		
+		String startUpTableName = "Fdapstartup_"+ oid;
+		String tableName="fdapcarhisdata_"+oid;
+		
+		
+		FdapStartUp startup = startUpBiz.getByTime(startUpTableName,
+				Long.parseLong(carrefId), startTime, endTime);
+		//启停记录sid
+		int sid = -1;
+		if (startup != null) {
+			sid= startup.getStartUpId().intValue();
+		}
+		
+		System.out.println("sid: " + sid);
+				
+		//企业Id
+		
+		//总页数和当前页
+		Integer pageCount=1,page=1;
+		//该启停记录下车载历史数据的条数
+		Integer counts=carhisbiz.getCarHisCount(tableName, sid, startTime, endTime);
+		if(counts!=null&&counts>=1){
+			pageCount=counts/PAGESIZE+(counts%PAGESIZE==0?0:1);
+		}
+		else{
+			logger.warn("获取总页数失败");
+		}
+		
+				
+		//根据启停Id查询车载历史数据，从第0条开始查，查PAGESIZE条
+		List<FdapCarHisData> list=carhisbiz.getCarHisbyStartup(tableName, sid,0,PAGESIZE, startTime, endTime);
+				
+//		System.out.println("carrefId "+carrefId);
+		//根据车载冷库Id查询冷库信息，获取车载名称
+		Fdapref carref=carhisbiz.getCarRefById(carrefId);
+		if(carref!=null)
+			request.setAttribute("carname", carref.getName());
+		else{
+			logger.warn("获取车载冷库信息失败");
+		}
+		
+		request.setAttribute("pagesize", PAGESIZE);
+		
+		request.setAttribute("page",page );
+		request.setAttribute("carpagecount", pageCount);
+		request.setAttribute("hiscarList",list);
+		request.setAttribute("sid", sid);
+		return mapping.findForward("ordertbcccar");
+		
+		
+	}
+	
+	/**
+	 * 根据启停记录查询移动车载的历史数据(分页调用)
+	 * @param mapping
+	 * @param form
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	public ActionForward doCarHisPage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		Integer sid=Integer.parseInt(request.getParameter("sid"));
+		
+		String oid=request.getParameter("oid");
+		
+		String startTime = request.getParameter("start");
+		String endTime = request.getParameter("end");
+		//车载名称
+		String carrefname=request.getParameter("carrefname");
+		String tableName="fdapcarhisdata_"+oid;
+		
+		if(sid==null||oid==null||oid==""||sid<=0){
+			logger.warn("启停记录ID以及企业ID没获取到");
+		}
+		
+		//获取当前页和总页数
+		Integer page=Integer.parseInt(request.getParameter("page"));
+		Integer pageCount=Integer.parseInt(request.getParameter("carpagecount"));
+		
+		
+		
+		Integer startRow=(page-1)*PAGESIZE;
+		//根据启停Id查询车载历史数据，从第 startRow 条开始查，查 PAGESIZE 条
+		List<FdapCarHisData> list=carhisbiz.getCarHisbyStartup(tableName, sid,startRow,PAGESIZE);
+				
+		request.setAttribute("carname", carrefname);
+		request.setAttribute("pagesize", PAGESIZE);
+		
+		request.setAttribute("page",page );
+		request.setAttribute("carpagecount", pageCount);
+			
+		request.setAttribute("hiscarList",list);
+		request.setAttribute("sid", sid);
+		return mapping.findForward("ordertbcccar");
+		
+	}
+	
 	
 	
 }

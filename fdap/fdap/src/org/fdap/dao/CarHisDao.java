@@ -4,6 +4,7 @@ import java.util.List;
 
 //import org.fdap.entity.CarHisView;
 import org.fdap.entity.FdapCarHisData;
+import org.fdap.entity.FdapStartUp;
 
 /**
  * 车载历史数据访问接口
@@ -30,6 +31,9 @@ public interface CarHisDao {
 	 */
 	public abstract List<FdapCarHisData> queryCarHisbyStartupPage(String tableName,Integer parentId,Integer startRow,Integer pagesize);
 	
+	public abstract List<FdapCarHisData> queryCarHisbyStartupPage(String tableName,Integer parentId,Integer startRow,Integer pagesize,
+			String startTime, String endTime);
+
 	/**
 	 * 根据启停记录的Id，获取所有车载历史数据的总条数
 	 * @param tableName         车载历史数据表名
@@ -37,4 +41,7 @@ public interface CarHisDao {
 	 * @return
 	 */
 	public abstract Integer queryCarHisCount(String tableName,Integer parentId);
+	
+	public abstract Integer queryCarHisCount(String tableName,Integer parentId, String startTime, String endTime);
+
 }

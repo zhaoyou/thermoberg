@@ -441,6 +441,8 @@
 		<property name="refHisBiz" ref="refhisBiz"></property>
 		<property name="orgbiz" ref="orgBiz"></property>
 		<property name="refConfigBiz" ref="refConfigBiz"></property>
+		<property name="startUpBiz" ref="startupBiz"></property>
+		<property name="carhisbiz" ref="carhisBiz"></property>
 	</bean>
 	
 	

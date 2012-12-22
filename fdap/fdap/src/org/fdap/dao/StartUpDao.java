@@ -58,4 +58,6 @@ public interface StartUpDao {
 	 * @return
 	 */
 	public abstract FdapBoxStartUp queryBoxStartUpBySid(String tableName,long sid);
+	
+	public abstract FdapStartUp queryByTime(String tableName, Long refid, String startTime, String endTime);
 }

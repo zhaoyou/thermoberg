@@ -74,4 +74,6 @@ public interface StartUpBiz {
 	 * @return
 	 */
 	public abstract FdapBoxStartUp getBoxStartUpByOidAndSid(String oid,long sid);
+	
+	public abstract FdapStartUp getByTime(String String, Long refid, String startTime, String endTime);
 }

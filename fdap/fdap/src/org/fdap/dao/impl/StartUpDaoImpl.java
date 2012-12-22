@@ -126,5 +126,21 @@ public class StartUpDaoImpl extends HibernateDaoSupport implements StartUpDao {
 			return query.addEntity("ss", FdapBoxStartUp.class).uniqueResult();
 		}});
 	}
+
+	@Override
+	public FdapStartUp queryByTime(final String tableName, final Long refid, final String startTime,
+			final String endTime) {
+		return (FdapStartUp)this.getHibernateTemplate().execute(new HibernateCallback(){public Object doInHibernate(Session session)
+		throws HibernateException, SQLException {
+			String sql = "select s.startUpId as {ss.startUpId},s.refId as {ss.refId},s.startTime as {ss.startTime}," +
+					"s.endTime as {ss.endTime},s.Carrier as {ss.carrier},s.IntervalValue as {ss.intervalValue}" +
+					" from " +tableName+" s where s.refid=? and s.starttime <= ? and s.endtime >= ?" ;
+			SQLQuery query = session.createSQLQuery(sql) ;	
+			query.setLong(0, refid);
+			query.setString(1, startTime);
+			query.setString(2, startTime);
+			return query.addEntity("ss", FdapStartUp.class).uniqueResult();
+		}});
+	}
 	
 }

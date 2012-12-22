@@ -98,5 +98,18 @@ public class CarHisBizImpl implements CarHisBiz {
 		
 		return carhisList;
 	}
+
+	@Override
+	public Integer getCarHisCount(String tableName, Integer parentId,
+			String startTime, String endTime) {
+		return carhisdao.queryCarHisCount(tableName, parentId);
+	}
+
+	@Override
+	public List<FdapCarHisData> getCarHisbyStartup(String tableName,
+			Integer parentId, Integer startRow, Integer pagesize,
+			String startTime, String endTime) {
+		return carhisdao.queryCarHisbyStartupPage(tableName, parentId, startRow, pagesize);
+	}
 	
 }
