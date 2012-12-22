@@ -51,8 +51,9 @@
     			</td>
     			<td>
     				<select id="receiver" name="receiver">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="r" items="${receiverList}">
-	    					<option value="${r.rid }"> ${r.shortName }</option>
+	    					<option value="${r.rid }" ${param.receiver == r.rid ? "selected" : "" }> ${r.shortName }</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -61,8 +62,9 @@
     			</td>
     			<td>
     				<select id="prodArea" name="prodArea">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="a" items="${areaList}">
-	    					<option value="${a }"> ${a}</option>
+	    					<option value="${a }" ${param.prodArea == a ? "selected" : "" }> ${a}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -78,8 +80,9 @@
     			</td>
     			<td>
     				<select id="goodsName" name="goodsName">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="good" items="${goodslist}">
-	    					<option value="${good.goodId }"> ${good.goodsName}</option>
+	    					<option value="${good.goodsName }" ${param.goodsName == good.goodsName ? "selected" : ""  }> ${good.goodsName}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
@@ -88,12 +91,13 @@
     			</td>
     			<td>
     				<select id="goodsType" name="goodsType">
+    					<option value="-1">全部</option>
 	    				<c:forEach var="g" items="${goodTypeList}">
-	    					<option value="${g }"> ${g}</option>
+	    					<option value="${g }" ${param.goodsType == g ? "selected" : "" }> ${g}</option>
 	    				</c:forEach> 
 	    			</select>
     			</td>
-    			<td>
+    			<td>	
     			</td>
     			<td>
     				<input type="button" class="btn btn-primary" value="查 询"/>
@@ -119,7 +123,7 @@
     					<ul class="nav nav-list">
     					<li class="nav-header">${orderView.receiver }</li>
 	    					<c:forEach var="view" items="${orderView.list}">
-	    						 <li><a href="#">${ view.orderNo}</a></li>
+	    						 <li><a href="javascript:ordertrack.getOrderDetail('${view.oid }')">${ view.orderNo}</a></li>
 	    					</c:forEach>
     					</ul>
     				</c:forEach>
@@ -142,177 +146,97 @@
 	        	<td>订单状态</td>
         	</tr>
         	<tbody>
-	        	<tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
+        		<c:forEach var="d" items="${detailList}">
+        			<tr >
+		        	<td> <a target="_blank" href="order.do?ope=toOrdertbcc&oid=${param.oid }&orderId=${d.msomt.orderId }&kid=${d.kid }&subOrderMid=${d.msomt.subOrderMid }&goodsName=${d.megfi.baseInfo.goodsName}&orderName=${d.msomt.subOrderName }">${d.msomt.subOrderName }</a></td>
+		        	<td>${d.megfi.baseInfo.goodsName }</td>
+		        	<td>${d.totalNum }</td>
+		        	<td>${d.wholePacketNum }</td>
+		        	<td>${d.wholePacketUnitNum }</td>
+		        	<td>${d.loosePacketNum }</td>
+		        	<td>${d.loosePacketTotalNum }</td>
+		        	<td>
+		        	  <c:if test="${d.msomt.inoutType == 0}">
+		        	  	正常发货
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.inoutType == 1}">
+		        	  	退货
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.inoutType == 2}">
+		        	  	换货换入
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.inoutType == 3}">
+		        	  	换货换出
+		        	  </c:if>     	
+		        	</td>
+		        	<td>
+		        	  <c:if test="${d.msomt.orderStatus == 1}">
+		        	  	尚未包装
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 2}">
+		        	  	正在包装
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 3}">
+		        	  	包装完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 4}">
+		        	  	尚未装车
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 5}">
+		        	  	正在装车
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 6}">
+		        	  	装车完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus ==7}">
+		        	  	正在卸车
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 8}">
+		        	  	卸车完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 9}">
+		        	  	尚未入库
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 10}">
+		        	  	正在入库
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 11}">
+		        	  	入库完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 12}">
+		        	  	正在出库
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 13}">
+		        	  	出库完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 14}">
+		        	  	尚未装箱
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 15}">
+		        	  	正在装箱
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 16}">
+		        	  	装箱完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 17}">
+		        	  	正在拆箱
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 18}">
+		        	  	拆箱完毕
+		        	  </c:if>
+		        	  <c:if test="${d.msomt.orderStatus == 19}">
+		        	  	运单完成
+		        	  </c:if>
+		        	</td>
 		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
-		         <tr >
-		        	<td> <a href="javascript:window.location.href='order.do?ope=toOrdertbcc&oid=${param.oid }'">狂犬育苗#22</a></td>
-		        	<td>只订单1</td>
-		        	<td>西四命2323</td>
-		        	<td>220</td>
-		        	<td>10</td>
-		        	<td>20</td>
-		        	<td>200</td>
-		        	<td>正常发货</td>
-		        	<td>已发货</td>
-		         </tr>
+        		</c:forEach>	
         	</tbody>
         </table>
     	  </div>
   	  </div>
     </div>
 </form>
+<div class="split"></div>
 <%@include file="layout/footer.html" %>
 </body>
 </html>

@@ -6,23 +6,16 @@
 -->
  
 <hibernate-mapping>
-    <class name="org.fdap.entity.order.PbmErpRefInOutTrack" table="pbmErpRefInOutTrack" >
-        <id name="kid" type="java.lang.Long">
-            <column name="kid" />
+    <class name="org.fdap.entity.order.PbmMiBarCodeDetailTrack" table="pbmBarcodeDetailTrack" >
+        <id name="bcdId" type="java.lang.Long">
+            <column name="bcdId" />
             <generator class="identity"/>
         </id>  
-        <property name="kdId" type="java.lang.Long" />
+        <property name="bcId" type="java.lang.Long" />
         <property name="orderId" type="java.lang.Long" />
-        <property name="inTime" type="java.util.Date" />
-        <property name="outTime" type="java.util.Date" />
-        <property name="goodFullId" type="java.lang.Long" />
+        <property name="goodsFullId" type="java.lang.Long" />
         <property name="totalNum" type="java.lang.Integer" />
-        <property name="erpRefId" type="java.lang.Long" />
-        <property name="erpPosId" type="java.lang.Long" />
-        <property name="isPacketRec" type="java.lang.Short" />
-        <property name="inoutType" type="java.lang.Short" />
-        <property name="subOrderMid" type="java.lang.Long" />
-        <property name="inoutStatus" type="java.lang.Short" />
+        <property name="kid" type="java.lang.Long" />
         <property name="isDelete" type="java.lang.Short" />
         <property name="oid" type="java.lang.Long" />
     </class>

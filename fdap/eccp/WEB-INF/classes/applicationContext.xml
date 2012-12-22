@@ -37,6 +37,10 @@
            	<aop:pointcut id="bizPoint" expression="execution( * org.fdap.biz.*.* (..))"/>
            	<aop:advisor advice-ref="transAdvice" pointcut-ref="bizPoint"/>
            </aop:config>
+           
+     <!-- util -->
+	
+	<bean id="gson" class="org.fdap.util.GsonUtil"></bean>
 	
 	<!-- 定义数据访问层类 -->
 	<bean id="userDao" class="org.fdap.dao.impl.UserDaoImpl">
@@ -172,6 +176,22 @@
 	</bean>
 	
 	<bean id="barCodeDetailDao" class="org.fdap.dao.impl.order.BarCodeTrackDetailDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="goodFullDao" class="org.fdap.dao.impl.order.PbmGoodsFullInfoDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="subOrderMailDetailDao" class="org.fdap.dao.impl.order.SubOrdermainDetailDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="erpRefInOutDao" class="org.fdap.dao.impl.order.PbmErpRefInOutDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="trackRefDao" class="org.fdap.dao.impl.order.TrackRefDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 
@@ -318,12 +338,22 @@
 		<property name="goodsBaseInfoDao" ref="goodsDao"></property>
 	</bean>
 	
+	<bean id="fullgoodsBiz" class="org.fdap.biz.impl.order.PbmGoodsFullInfoBizImpl">
+		<property name="baseDao" ref="goodsDao"></property>
+		<property name="fullDao" ref="goodFullDao"></property>
+	</bean>
+	
 	<bean id="orderTrackBiz" class="org.fdap.biz.impl.order.PbmOrderTrackBizImpl">
 		<property name="orderTrackDao" ref="orderTrack"></property>
 	</bean>
 	
 	<bean id="OrderSubBiz" class="org.fdap.biz.impl.order.SubOrderMainTrackBizImpl">
 		<property name="subOrderMainDao" ref="orderSubDao"></property>
+		<property name="barCodeTrackDao" ref="barCodeDao"></property>
+		<property name="barCodeTrackDetailDao" ref="barCodeDetailDao"></property>
+		<property name="fullInfoBiz" ref="fullgoodsBiz"></property>
+		<property name="subOrderMailDetailDao" ref="subOrderMailDetailDao"></property>
+		<property name="out" ref="gson"></property>
 	</bean>
 	
 	<bean id="barCodeBiz" class="org.fdap.biz.impl.order.BarCodeTrackBizImpl">
@@ -332,6 +362,14 @@
 	
 	<bean id="barCodeDetailBiz" class="org.fdap.biz.impl.order.BarCodeTrackDetailBizImpl">
 		<property name="detailDao" ref="barCodeDetailDao"></property>
+	</bean>
+	
+	<bean id="erpRefInOutBiz" class="org.fdap.biz.impl.order.PbmErpRefInOutBizImpl">
+		<property name="pbmErpRefInOutDao" ref="erpRefInOutDao"></property>
+	</bean>
+	
+	<bean id="trackRefBiz" class="org.fdap.biz.impl.order.TrackRefBizImpl">
+		<property name="trackRefDao" ref="trackRefDao"></property>
 	</bean>
 	
 	
@@ -396,6 +434,15 @@
 		<property name="goodsBiz" ref="goodsBiz"></property>
 		<property name="orgBiz" ref="orgBiz"></property>
 		<property name="orderTrackBiz" ref="orderTrackBiz"></property>
+		<property name="subOrderMainTrackBiz" ref="OrderSubBiz"></property>
+		<property name="erpRefInOutBiz" ref="erpRefInOutBiz"></property>
+		<property name="out" ref="gson"></property>
+		<property name="trackRefBiz" ref="trackRefBiz"></property>
+		<property name="refHisBiz" ref="refhisBiz"></property>
+		<property name="orgbiz" ref="orgBiz"></property>
+		<property name="refConfigBiz" ref="refConfigBiz"></property>
+		<property name="startUpBiz" ref="startupBiz"></property>
+		<property name="carhisbiz" ref="carhisBiz"></property>
 	</bean>
 	
 	

@@ -12,8 +12,8 @@
 <%@ include file="layout/header.html" %>
 <ul class="breadcrumb">
   <li><a href="#">首页</a> <span class="divider">/</span></li>
-  <li><a href="#">订单100200</a><span class="divider">/</span></li>
-  <li>A公司药品订单信息查询</li>
+  <li><a href="#">${orderName }</a><span class="divider">/</span></li>
+  <li>${goodsName } 药品信息追踪</li>
 </ul>
 <form action="org.do" name="myform" id="myform" method="post">
 <input type="hidden" name="ope"  id="ope"  value="toHigherOrg"/>
@@ -22,197 +22,100 @@
 <input type="hidden" name="orgName_statistics" id="orgName_statistics" value="${orgName }" />
 </form>
 <div>
-        <table class="table table-striped">
+        <table class="table table-striped" style="text-align: center;">
         	<tr id="r_table_tr">
 	        	<td>品名</td>
-	        	<td>条形编码</td>
 	        	<td>入时</td>
 	        	<td>出时</td>
 	        	<td>存储环境</td>
 	        	<td>存储类型</td>
 	        	<td>存储载体</td>
 	        	<td>退换货</td>
+	        	<%-- 
 	        	<td>报警状态</td>
 	        	<td>平均温度</td>
 	        	<td>平均湿度</td>
+	        	--%>
         	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#23</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#23</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#24</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#25</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#26</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#27</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#28</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#29</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	   
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#32</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	       
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#33</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	
-        	</tr>
-        	<tr>
-	        	<td>狂犬育苗#22</td>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>2012-07-18 18:10:00</td>
-	        	<td>2-8</td>
-	        	<td><a href="javascript:window.location.href='order.do?ope=toOrdertbccRef&oid=${param.oid }'">冷藏间</a></td>
-	        	<td>正常</td>
-	        	<td>7.9</td>
-	        	<td>3.6</td>
-	        	<td>5.7</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	
-        	</tr>
+        	<c:forEach var="t" items="${tracklist}">
+        		<tr>
+		        	<td>${goodsName }</td>
+		        	<td>${t.inTimeStr }</td>
+		        	<td>${t.outTimeStr }</td>
+		        	<td>${t.storeEnv }</td>
+		        	<td>${t.storeType }</td>
+		        	<td><a target="_blank" href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${t.inTimeStr }&end=${t.outTimeStr }&refId=${t.storeId }">${t.storeName }</a></td>
+		        	<td>
+						<c:if test="${t.inoutType == 0}">
+							正常
+						</c:if>
+						<c:if test="${t.inoutType == 1}">
+							退货
+						</c:if>
+						<c:if test="${t.inoutType == 2}">
+							换货换入
+						</c:if>
+						<c:if test="${t.inoutType == 3}">
+							换货换出
+						</c:if>
+					</td>
+        		</tr>
+        	</c:forEach>
+        	
+        	<c:forEach var="r" items="${refList}">
+        		<tr>
+		        	<td>${goodsName }</td>
+		        	<td>${r.inTimeStr }</td>
+		        	<td>${r.outTimeStr }</td>
+		        	<td>${r.storeEnv }</td>
+		        	<td>${r.storeType }</td>
+		        	<td><a target="_blank"  href="order.do?ope=toOrdertbccRef&oid=${param.oid }&start=${r.inTimeStr }&end=${r.outTimeStr }&refId=${r.storeId }">${r.storeName }</a></td>
+		        	<td>
+						<c:if test="${subOrder.inoutType == 0}">
+							正常
+						</c:if>
+						<c:if test="${subOrder.inoutType == 1}">
+							退货
+						</c:if>
+						<c:if test="${subOrder.inoutType == 2}">
+							换货换入
+						</c:if>
+						<c:if test="${subOrder.inoutType == 3}">
+							换货换出
+						</c:if>
+					</td>
+        		</tr>
+        	</c:forEach>     
+        	
+        	
+        	<c:forEach var="c" items="${carList}">
+        		<tr>
+		        	<td>${goodsName }</td>
+		        	<td>${c.inTimeStr }</td>
+		        	<td>${c.outTimeStr }</td>
+		        	<td>${c.storeEnv }</td>
+		        	<td>${c.storeType }</td>
+		        	<td><a target="_blank" href="order.do?ope=doCarhisbyStartup&oid=${param.oid }&start=${c.inTimeStr }&end=${c.outTimeStr }&refId=${c.storeId }">${c.storeName }</a></td>
+		        	<td>
+						<c:if test="${subOrder.inoutType == 0}">
+							正常
+						</c:if>
+						<c:if test="${subOrder.inoutType == 1}">
+							退货
+						</c:if>
+						<c:if test="${subOrder.inoutType == 2}">
+							换货换入
+						</c:if>
+						<c:if test="${subOrder.inoutType == 3}">
+							换货换出
+						</c:if>
+					</td>
+        		</tr>
+        	</c:forEach>     
         	
         </table>
 </div>
+<div class="split"></div>
 <%@include file="layout/footer.html" %>
 </body>
 </html>

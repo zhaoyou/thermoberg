@@ -7,29 +7,45 @@
 <title>订单药品轨迹信息</title>
 <link href="css/order/ordertrack_ref.less" rel="stylesheet" type="text/less"/>
 <%@ include file="layout/asset.html" %>
+<script type="text/javascript">
+	function query(count) {
+		var oid = document.getElementById('oid').value;
+		var refId = document.getElementById('checkedrefId').value;
+		var start = document.getElementById('checkedrefstartTime').value;
+		var end = document.getElementById('checkedrefendTime').value;
+		var page = document.getElementById('refpage').value;
+		var allPage = document.getElementById('refpagecount').value;
+		window.location.href='order.do?ope=doOrdertbccRef&oid=' + oid + '&checkedrefId=' +
+		 refId + '&checkedrefstartTime=' + start + '&checkedrefendTime=' + end + '&refpage=' +
+		 count + '&refpagecount=' + allPage ;
+	}
+</script>
 </head>
 <body>
 <%@ include file="layout/header.html" %>
 <ul class="breadcrumb">
   <li><a href="#">首页</a> <span class="divider">/</span></li>
-  <li><a href="#">订单 100200</a><span class="divider">/</span></li>
-  <li><a href="#">药品 西四命</a><span class="divider">/</span></li>
-  <li>F1C1 冷库</li>
+  <li><a href="#">${orgname }</a><span class="divider">/</span></li>
+  <li>${ref.name } 冷链环境追踪</li>
 </ul>
 <form action="org.do" name="myform" id="myform" method="post">
-<input type="hidden" name="ope"  id="ope"  value="toHigherOrg"/>
-<input  type="hidden" name="oid"  id="oid" value="${oid }"/>
-<input type="hidden" name="ids" id="ids" value="${ids }"/>
-<input type="hidden" name="orgName_statistics" id="orgName_statistics" value="${orgName }" />
+	<input type="hidden" name="oid"	id="oid" value="${param.oid }"/>
+    	
+    <input type="hidden" name="checkedrefId" id="checkedrefId" value="${checkedrefId }"/>
+    <input type="hidden" name="checkedrefstartTime" id="checkedrefstartTime" value="${checkedrefstartTime }"/>
+    <input type="hidden" name="checkedrefendTime" id="checkedrefendTime" value="${checkedrefendTime }"/>
+    	
+    <input type="hidden" id="refpage" name="refpage" value="${refpage }"/>
+    <input type="hidden" id="refpagecount" name="refpagecount" value="${refpagecount }"/>
 </form>
 <div class="query_div">
 	<table>
 		<tr>
 			<td>开始时间</td>
-			<td><input class="input-time" type="text" placeholder="2012-11-11 12:12:12"></td>
+			<td><input class="input-time" type="text" disabled="disabled" value="${checkedrefstartTime }"></td>
 			<td>结束时间</td>
-			<td><input class="input-time" type="text" placeholder="2012-11-12 11:11:11"></td>
-			<td><input type="button" value="返回" class="btn"/></td>  
+			<td><input class="input-time" type="text" disabled="disabled" value="${checkedrefendTime}"></td>
+			<td>&nbsp;</td>  
 		</tr>
 	</table>
 </div>
@@ -37,253 +53,61 @@
         <table id="r_table" class="table table-striped">
         	<tr id="r_table_tr">
 	        	<td>时间</td>
-	        	<td>T51</td>
-	        	<td>T52</td>
-	        	<td>T53</td>
-	        	<td>RH51</td>
-	        	<td>最大温度</td>
-	        	<td>最小温度</td>
-	        	<td>平均温度</td>
-	        	<td>最大湿度</td>
-	        	<td>最小湿度</td>
-	        	<td>平均湿度</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 12:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 13:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 14:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 15:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 16:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 17:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 18:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 19:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 20:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 21:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
-        	</tr>
-        	<tr>
-	        	<td>2012-07-11 22:00:00</td>
-	        	<td>12.21</td>
-	        	<td>10.91</td>
-	        	<td>12.22</td>
-	        	<td>84%</td>
-	        	<td>13.99</td>
-	        	<td>8.99</td>
-	        	<td>9.12</td>
-	        	<td>75%</td>
-	        	<td>60%</td>
-	        	<td>66%</td>
+	        	 <c:forEach var="aiinfo" items="${refAiList}">
+	        	 	<td>${aiinfo.name }</td>
+	        	 </c:forEach>
+	        	<td>报警状态</td>
         	</tr>
         	
+        	<c:forEach var="hisref" items="${refhisList}" varStatus="irow">	
+					<tr ${irow.count%2==0?"bgcolor='#f1f4f8'":"" }>
+						<td align="center"  nowrap="nowrap">
+						 	${hisref[fn:length(refAiList)]}
+						</td>
+						<c:forEach begin="1" end="${fn:length(refAiList) }" var="rrow">
+						<td align="center" nowrap="nowrap">	
+								${hisref[rrow-1]==-300?"--":hisref[rrow-1] }
+						</td>
+						</c:forEach>
+						 <td align="center"  nowrap="nowrap">
+						 	<c:if test="${hisref[fn:length(refAiList)+1]==0 }">
+						 		<img src="images/index/29.gif" title='表示处于报警状态' width="16" height="10"/>
+						 	</c:if>
+						 	<c:if test="${hisref[fn:length(refAiList)+1]==1 }">
+						 		<img src="images/index/28.gif" title='表示处于正常状态' width="16" height="10"/>
+						 	</c:if>
+						 </td>
+					</tr>
+					</c:forEach> 	
         </table>
     </div>
     
     <div class="pagination pagination-large">
 		  <ul>
-		    <li class="disabled"><a href="#">Prev</a></li>
-		    <li class="active"><a href="#">1</a></li>
-		    <li ><a href="#">2</a></li>
-		    <li ><a href="#">3</a></li>
-		    <li ><a href="#">4</a></li>
-		    <li ><a href="#">5</a></li>
-		    <li ><a href="#">6</a></li>
-		    <li ><a href="#">7</a></li>
-		    <li ><a href="#">Next</a></li>  
+		  	<c:if test="${refpage==1||refpage==null }">
+		    	<li class="disabled"><a href="#">首页</a></li>
+		    </c:if>
+		    <c:if test="${refpage!=1&&refpage!=null }">
+		    	<li ><a href="javascript: query('1');">首页</a></li>
+		    </c:if>
+		    <c:if test="${refpage==1||refpage==null }">
+		    	<li class="disabled"><a href="#">上一页</a></li>
+		    </c:if>
+		    <c:if test="${refpage!=1&&refpage!=null }">
+		    	<li ><a href="javascript: query('${refpage - 1 }');">上一页</a></li>
+		    </c:if>
+		    <c:if test="${refpage==refpagecount }">
+		    	<li class="disabled"><a href="#">下一页</a></li>
+		    </c:if>
+		    <c:if test="${refpage!=refpagecount }">
+		    	<li ><a href="javascript:query('${refpage + 1 }');">下一页</a></li>
+		    </c:if>
+		    <c:if test="${refpage==refpagecount }">
+		    	<li class="disabled" ><a href="#">末页</a></li>
+		    </c:if>
+		    <c:if test="${refpage!=refpagecount }">
+		    	<li ><a href="javascript:query('${ refpagecount}');">末页</a></li>
+		    </c:if>
 		  </ul>
 </div>
 

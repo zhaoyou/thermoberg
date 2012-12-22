@@ -14,6 +14,7 @@
   
         <property name="subOrderMid" type="java.lang.Long" />
         <property name="bcdId" type="java.lang.Long" />
+        <property name="orderId" type="java.lang.Long"></property>
         <property name="totalNum" type="java.lang.Integer" />
         <property name="isDelete" type="java.lang.Short" />
         <property name="oid" type="java.lang.Long" />
