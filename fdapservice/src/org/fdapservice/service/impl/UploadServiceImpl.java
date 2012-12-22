@@ -5,6 +5,40 @@ import java.util.List;
 import org.fdapservice.biz.*;
 import org.fdapservice.biz.impl.*;
 import org.fdapservice.entity.*;
+
+import org.fdapservice.biz.CarHisDataBiz;
+import org.fdapservice.biz.CarRealDataBiz;
+import org.fdapservice.biz.CarStartupBiz;
+import org.fdapservice.biz.RefHisDataBiz;
+import org.fdapservice.biz.RefRealDataBiz;
+import org.fdapservice.biz.impl.CarHisDataBizImpl;
+import org.fdapservice.biz.impl.CarRealDataBizImpl;
+import org.fdapservice.biz.impl.CarStartupBizImpl;
+import org.fdapservice.biz.impl.OrderTrackBizImpl;
+import org.fdapservice.biz.impl.RefHisDataBizImpl;
+import org.fdapservice.biz.impl.RefRealDataBizImpl;
+import org.fdapservice.entity.CarHisData;
+import org.fdapservice.entity.CarRealData;
+import org.fdapservice.entity.CarStartup;
+import org.fdapservice.entity.HisCarData;
+import org.fdapservice.entity.HisStartup;
+import org.fdapservice.entity.PbmCallResult;
+import org.fdapservice.entity.PbmCarInOutTrack;
+import org.fdapservice.entity.PbmErpRefInOutTrack;
+import org.fdapservice.entity.PbmMiBarCodeDetailTrack;
+import org.fdapservice.entity.PbmMiBarCodeTrack;
+import org.fdapservice.entity.PbmMiCar;
+import org.fdapservice.entity.PbmMiGoodsBaseInfo;
+import org.fdapservice.entity.PbmMiGoodsFullInfo;
+import org.fdapservice.entity.PbmMiOrderTrack;
+import org.fdapservice.entity.PbmMiReceiver;
+import org.fdapservice.entity.PbmMiRef;
+import org.fdapservice.entity.PbmRefInOutTrack;
+import org.fdapservice.entity.PbmSubOrderDetailTrack;
+import org.fdapservice.entity.PbmSubOrderMainTrack;
+import org.fdapservice.entity.RefHisData;
+import org.fdapservice.entity.RefRealData;
+import org.fdapservice.entity.Test;
 import org.fdapservice.service.UploadService;
 import org.fdapservice.util.DateUtil;
 
@@ -27,7 +61,13 @@ public class UploadServiceImpl implements UploadService {
 	
 	public RetailStartupBiz retailStartupBiz = new RetailStartupBizImpl();
 	
+
 	public RetailHisDataBiz retailhisdatabiz = new RetailHisDataBizImpl();
+
+	
+	public OrderTrackBizImpl orderTrackBiz = new OrderTrackBizImpl();
+	
+
 	@Override
 	/**
 	 * 上传冷库实时数据
@@ -184,6 +224,43 @@ public class UploadServiceImpl implements UploadService {
 		} catch (Exception e) {
 			System.out.println("查询冷库实时数据失败");
 		}
+	}
+
+	@Override
+	public PbmCallResult uploadBasicGoods(List<PbmMiGoodsBaseInfo> basicList) {
+		return orderTrackBiz.uploadBasicGoods(basicList);
+	}
+
+	@Override
+	public PbmCallResult uploadFullGoods(List<PbmMiGoodsFullInfo> fullList) {
+		return orderTrackBiz.uploadFullGoods(fullList);
+	}
+
+	@Override
+	public PbmCallResult uploadMiCar(List<PbmMiCar> carList) {
+		return orderTrackBiz.uploadMiCar(carList);
+	}
+
+	@Override
+	public PbmCallResult uploadMiRef(List<PbmMiRef> refList) {
+		return orderTrackBiz.uploadMiRef(refList);
+	}
+
+	@Override
+	public PbmCallResult uploadOrder(PbmMiOrderTrack order,
+			List<PbmCarInOutTrack> carList, List<PbmRefInOutTrack> refList,
+			List<PbmErpRefInOutTrack> erpLIst,
+			List<PbmMiBarCodeTrack> barcodeList,
+			List<PbmMiBarCodeDetailTrack> barcodeDetailList,
+			List<PbmSubOrderMainTrack> subOrderList,
+			List<PbmSubOrderDetailTrack> subOrderDetailList) {
+		return orderTrackBiz.uploadOrder(order, carList, refList, erpLIst, barcodeList,
+				barcodeDetailList, subOrderList, subOrderDetailList);
+	}
+
+	@Override
+	public PbmCallResult uploadReceiver(List<PbmMiReceiver> receiverList) {
+		return orderTrackBiz.uploadReceiver(receiverList);
 	}
 
 }

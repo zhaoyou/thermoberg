@@ -28,6 +28,7 @@ public class ConnectionFactory {
 				ds.setMinPoolSize(Integer.parseInt(pro.getProperty("minPoolSize"))) ;
 				ds.setMaxPoolSize(Integer.parseInt(pro.getProperty("maxPoolSize"))) ;
 				ds.setInitialPoolSize(Integer.parseInt(pro.getProperty("initialPoolSize"))) ;
+				System.out.println(pro);
 		} catch (Exception e) {
 			System.out.println("初始化连接池失败: "+e.getMessage());
 		}
