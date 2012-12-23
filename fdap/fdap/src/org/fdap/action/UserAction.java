@@ -77,9 +77,19 @@ public class UserAction extends BaseAction {
 		String checkCode = request.getParameter("checkCode");
 		
 		//验证参数
-		if(clientName==null || clientName.equals("")|| userName==null || userName.equals("")|| password==null || password.equals("")){
+		if(clientName==null || clientName.equals("")|| userName==null || userName.equals("")||
+				password==null || password.equals("") || checkCode == null && checkCode.equals("")){
 			logger.warn("登录参数非法!") ;
-			return new ActionForward("index.jsp?msg=badRequest", true); 
+			request.setAttribute("msg", "传递了非法参数");
+			return mapping.findForward("index");
+			//return new ActionForward("index.jsp?msg=badRequest", true); 
+		}
+		
+		// code
+		if (!checkCode.equals(request.getSession().getAttribute("rand"))) {
+			logger.warn("验证码错误!");
+			request.setAttribute("msg", "验证码错误！");
+			return mapping.findForward("index");
 		}
 		
 		Fdapuser user  = null;
@@ -100,7 +110,9 @@ public class UserAction extends BaseAction {
 			if(user==null){
 				System.out.println("user is null");
 				logger.warn("用户登录失败!") ;
-				return new ActionForward("index.jsp?msg=fail" , true);
+				request.setAttribute("msg", "用户登录失败!");
+				return mapping.findForward("index");
+				//return new ActionForward("index.jsp?msg=fail" , true);
 			}
 		}
 		
