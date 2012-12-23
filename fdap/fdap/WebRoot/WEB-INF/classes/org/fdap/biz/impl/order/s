@@ -1,0 +1,275 @@
+       /// <summary>
+        /// 刷新当前订单详细信息
+        /// </summary>
+        /// <param name="miordertrack">订单对象</param>
+        private void refreshOrder(MiOrderTrack miordertrack)
+        {
+            string Mifilter = String.Empty;
+            Hashtable ht = new Hashtable();
+            MiMedicineSummary mms;
+            ErpGoodsFullInfo megfi;
+            dgv.Rows.Clear();
+
+            //清除所有暂存的包装信息数据
+            msots.Clear();               //清除子订单主记录列表
+            msodts.Clear();              //清楚子订单详细记录列表
+            barcodeTracks.Clear();       //清除条码跟踪表信息列表
+            barcodeDetailTracks.Clear(); //清除条码详细跟踪表信息列表
+
+            try
+            {
+
+                    //获取子订单主记录列表信息
+                Mifilter = "OrderId=" + miordertrack.OrderId + " and IsDelete=0 order by SubOrderMId,InOutType asc";
+                    MiSubOrderMainTrack[] msotsarrays = MiTrackBL.Instance.MiQuerySubOrderMainTrackByFilter(Mifilter);
+                    foreach (MiSubOrderMainTrack msotsarray in msotsarrays)
+                    {
+                        msots.Add(msotsarray);   
+                    }
+
+                    //获取子订单详细记录列表信息
+                    Mifilter = "OrderId=" + miordertrack.OrderId + " and IsDelete=0 ";
+                    MiSubOrderDetailTrack[] msodtsarrays = MiTrackBL.Instance.MiQuerySubOrderDetailTrackByFilter(Mifilter);
+                    foreach (MiSubOrderDetailTrack msodtsarray in msodtsarrays)
+                    {
+                        msodts.Add(msodtsarray);
+                    }
+
+                    //获取条码主跟踪信息数组
+                    Mifilter = "OrderId=" + miordertrack.OrderId + " and IsDelete=0 ";
+                    MiBarcodeTrack[] mbts = MiTrackBL.Instance.MiQueryBarcodeTrack(Mifilter);
+                    Mifilter = String.Empty;
+                    foreach (MiBarcodeTrack mbt in mbts)
+                    {
+                        barcodeTracks.Add(mbt);   //条码跟踪信息列表
+
+                        //if (String.IsNullOrEmpty(Mifilter) == true)
+                        //    Mifilter = "BcId=" + mbt.BcId;
+                        //else
+                        //    Mifilter += " or BcId=" + mbt.BcId;
+                    }
+
+                    //获取条码详细跟踪信息数组
+                    Mifilter = "OrderId=" + miordertrack.OrderId + " and IsDelete=0 ";
+                    if (String.IsNullOrEmpty(Mifilter) == false)  //存在条码详细信息
+                    {
+                        MiBarcodeDetailTrack[] mbdts = MiTrackBL.Instance.MiQueryBarcodeDetailTrack(Mifilter);
+                        foreach (MiBarcodeDetailTrack mbdt in mbdts)
+                        {
+                            barcodeDetailTracks.Add(mbdt);
+                        }
+                    }
+
+                //============================
+                //DataGridView加载数据
+                    foreach (MiSubOrderMainTrack msomt in msots)  //每一个子订单主记录
+                   {
+                     ht.Clear();
+
+                     if ((msomt.InOutType == INOUTTYPE.NORMAL) && (msomt.InWholeOrder == 1))  //是正常完整订单
+                    {
+
+                         //遍历所有条码主跟踪记录
+                         foreach (MiBarcodeTrack mbt in barcodeTracks)
+                        {
+                            if (mbt.BarcodeType!=BARCODETYPE.NORMALPACKET) //不是第一次打包正常条码
+                                continue;
+
+                            //条码详细记录信息
+                            foreach (MiBarcodeDetailTrack mbdt in barcodeDetailTracks)
+                            {
+                                if (mbdt.BcId != mbt.BcId)  //不属于当前条码
+                                    continue;
+
+                                megfi = MiTrackBL.Instance.MiQueryFullGoodsInfoByFullId(mbdt.GoodFullId); //获取完整药品信息
+
+                                if (IsProductValid(megfi) == false) //药品基本信息过滤
+                                {
+                                    if (mbt.PacketType == PACKETTYPE.WHOLEPACKET)  //整件
+                                        break;     //查找下一条码
+                                    else  //散件
+                                        continue;  //继续查找当前条码的其他详细信息
+                                }
+
+                                if (ht.ContainsKey(mbdt.Kid) == false) //尚未统计过该药品
+                                {
+                                    mms = new MiMedicineSummary();
+                                }
+                                else
+                                {
+                                    mms = (MiMedicineSummary)ht[mbdt.Kid];
+                                }
+
+                                if (mbt.PacketType == PACKETTYPE.WHOLEPACKET)  //整件
+                                {
+                                        mms.WholePacketNum+=mbt.PacketNum;       //根据该条码对应的整件数量增加整件数
+                                        mms.WholePacketUnitNum = mbdt.TotalNum;  //整件药品单位数量
+                                }
+                                else  //散件
+                                {
+                                    mms.LoosePacketNum++;                       //散件件数增加(同一条码编号中的相同Kid对应的药品在每一箱散件中只存在一条条码详细编码信息，因此散件件数只能增加1次)      
+                                    mms.LoosePacketTotalNum += mbdt.TotalNum;   //增加散件药品总数量
+                                }
+
+                                mms.TotalNum = mms.WholePacketNum * mms.WholePacketUnitNum + mms.LoosePacketTotalNum; //计算总药品数
+                                mms.Kid = mbdt.Kid;
+                                mms.msomt = msomt;
+                                mms.egfi = megfi;               //药品记录赋值
+
+                                if (ht.ContainsKey(mbdt.Kid) == false) //hash表中没有改Kid对应的药品统计信息
+                                {
+                                    ht.Add(mbdt.Kid, mms);
+                                }
+
+                                if (mbt.PacketType == PACKETTYPE.WHOLEPACKET)  //整件
+                                    break;     //查找下一条码
+                                else  //散件
+                                    continue;  //继续查找当前散件条码的其他详细信息
+
+                            }
+                        }
+                    
+                    }
+                    else  //是退货、换入、换出订单
+                    {
+                        //所有子订单详细记录信息
+                       foreach (MiSubOrderDetailTrack msodt in msodts)
+                       {
+                           if (msodt.SubOrderMId != msomt.SubOrderMId) //不是子订单主记录对应的子订单详细记录
+                               continue;
+
+                         //条码详细记录信息
+                         foreach (MiBarcodeDetailTrack mbdt in barcodeDetailTracks)
+                        {
+
+                            if (msodt.BcdId != mbdt.BcdId) //不是子订单详细记录对应的详细条码信息
+                                continue;
+
+                            megfi = MiTrackBL.Instance.MiQueryFullGoodsInfoByFullId(mbdt.GoodFullId); //获取完整药品信息
+
+                            if (IsProductValid(megfi) == false) //药品基本信息过滤
+                                break;
+
+                              //遍历所有条码主跟踪记录
+                                foreach (MiBarcodeTrack mbt in barcodeTracks)
+                                {
+                                    if (mbdt.BcId != mbt.BcId)  //不属于当前条码
+                                        continue;
+
+                                    if (ht.ContainsKey(mbdt.Kid) == false) //尚未统计过该药品
+                                    {
+                                        mms = new MiMedicineSummary();
+                                    }
+                                    else
+                                    {
+                                        mms = (MiMedicineSummary)ht[mbdt.Kid];
+                                    }
+
+                                     if (mbt.PacketType == PACKETTYPE.WHOLEPACKET)  //整件
+                                    {
+                                         if (msodt.TotalNum / mbdt.TotalNum > 0)  //存在整件
+                                         {
+                                            mms.WholePacketNum += msodt.TotalNum / mbdt.TotalNum;  //整件件数增加(考虑一个条码包括多箱药品的情况，msodt.TotalNum可能是包括多箱药品的药品数)
+                                            mms.WholePacketUnitNum = mbdt.TotalNum;                //整件药品单位数量
+                                          }
+
+                                          if (msodt.TotalNum % mbdt.TotalNum > 0)  //存在散件
+                                          {
+                                             mms.LoosePacketNum++;                                       //散件件数增加      
+                                             mms.LoosePacketTotalNum += msodt.TotalNum % mbdt.TotalNum;  //增加散件药品总数量                                            
+                                          }
+                                     }
+                                     else  //散件
+                                     {
+                                         mms.LoosePacketNum++;          //散件件数增加      
+                                         mms.LoosePacketTotalNum += msodt.TotalNum;  //增加散件药品总数量
+                                     }
+                                        
+                                     mms.TotalNum = mms.WholePacketNum * mms.WholePacketUnitNum + mms.LoosePacketTotalNum; //计算总药品数
+                                     mms.Kid = mbdt.Kid;
+                                     mms.msomt = msomt;
+                                     mms.egfi = megfi;               //药品记录赋值
+
+                                     if (ht.ContainsKey(mbdt.Kid) == false) //hash表中没有改Kid对应的药品统计信息
+                                     {                                  
+                                         ht.Add(mbdt.Kid, mms);
+                                     }
+
+                                     break;
+                                }
+                                break;
+                        }
+                      }
+                    }
+
+                    foreach(Int64 Kid in ht.Keys) //对于当前子订单主记录的每一个药品信息，需要刷新到datagrid中
+                    {
+                      mms=(MiMedicineSummary)ht[Kid];
+                      DataGridViewRow row = this.dgv.Rows[this.dgv.Rows.Add()];
+                      row.Cells["SubOrderName"].Value = mms.msomt.SubOrderMName;  //子订单名称
+                      row.Cells["InOutType"].Value = mms.msomt.InOutType;  //退换货状态
+                      row.Cells["OrderStatus"].Value = CommonDefine.Instance.GetOrderStatusNameById(mms.msomt.OrderStatus);//订单状态 
+                      row.Cells["TotalNum"].Value =mms.TotalNum ;                       //药品总数量                        
+                      row.Cells["WholePacketNum"].Value = mms.WholePacketNum;           //整件件数
+                      row.Cells["WholePacketUnitNum"].Value = mms.WholePacketUnitNum;   //整件单位数
+                      row.Cells["LoosePacketNum"].Value = mms.LoosePacketNum;           //散件件数
+                      row.Cells["LoosePacketTotalNum"].Value = mms.LoosePacketTotalNum;   //散件药品总数                      
+                      row.Cells["GoodName"].Value = mms.egfi.GoodBasicInfo.Goodsname;
+                      row.Cells["prodarea"].Value = mms.egfi.GoodBasicInfo.prodarea;
+                      row.Cells["goodstype"].Value = mms.egfi.GoodBasicInfo.goodstype;
+                      row.Cells["Goodsunit"].Value = mms.egfi.GoodBasicInfo.Goodsunit;
+                      row.Cells["typename"].Value = mms.egfi.GoodBasicInfo.typename;
+                      row.Cells["lotno"].Value = mms.egfi.lotno;
+                      row.Cells["invaliddate"].Value = mms.egfi.invaliddate;
+
+                      row.Tag = mms;  //药品统计信息对象赋值到gridview该行的tag
+                    }
+                }
+
+                return;
+
+            }
+            catch (Exception)
+            {
+                Msg.ShowError("无法获取订单详细数据");
+            }
+            
+            
+            /// <summary>
+        /// 判断是否产品品名、规格、产地等信息是否过滤
+        /// </summary>
+        /// <param name="megfi">药品完整信息对象</param>
+        /// <returns>true:没有过滤；false:已经过滤</returns>
+        private Boolean IsProductValid(ErpGoodsFullInfo megfi)
+        {
+            //品名过滤
+            if (cmbMedicineName.SelectedIndex > 0)  //选择了一个品名的药品（不是没有选择或选择全部）
+            {
+                if (megfi.GoodBasicInfo.Goodsname.Equals(((ErpGoodsBasicInfo)cmbMedicineName.SelectedItem).Goodsname) == false)
+                    return false;
+            }
+
+            //规格过滤
+            if (cmbType.SelectedIndex > 0)  //选择了一个规格的药品（不是没有选择或选择全部）
+            {
+                if (megfi.GoodBasicInfo.goodstype.Equals(((ErpGoodsBasicInfo)cmbType.SelectedItem).goodstype) == false)
+                    return false;
+            }
+
+            //产地过滤
+            if (cmbProducer.SelectedIndex > 0)  //选择了一个产地的药品（不是没有选择或选择全部）
+            {
+                if (megfi.GoodBasicInfo.prodarea.Equals(((ErpGoodsBasicInfo)cmbProducer.SelectedItem).prodarea) == false)
+                    return false;
+            }
+
+            //批号过滤
+            if (String.IsNullOrEmpty(tblotto.Text) == false)  //输入了一个批号的全部或部分
+            {
+                if (megfi.lotno.Contains(tblotto.Text) == false)
+                    return false;
+            }
+
+            return true;
+        }
+    }
