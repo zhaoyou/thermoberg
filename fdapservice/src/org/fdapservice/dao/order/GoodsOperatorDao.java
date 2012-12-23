@@ -44,6 +44,7 @@ public class GoodsOperatorDao {
 			}
 			conn.commit();
 		} catch (Exception e) {
+		   e.printStackTrace();
 		   System.out.println("上传PbmMIBasicGoods 失败!" + e.getMessage());
 		   try {
 			   conn.rollback();
@@ -80,6 +81,7 @@ public class GoodsOperatorDao {
 			}
 			conn.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		   System.out.println("上传PbmMiGoodsFullInfo 失败!" + e.getMessage());
 		   try {
 			   conn.rollback();

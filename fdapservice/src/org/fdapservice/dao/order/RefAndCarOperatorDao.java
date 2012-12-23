@@ -27,7 +27,6 @@ public class RefAndCarOperatorDao {
 		PreparedStatement  st = null ;
 		try {
 			conn = DBUtil.getCon();
-			System.out.println("ss" + conn.hashCode());
 			conn.setAutoCommit(false);
 			for (PbmMiCar car: carList) {
 				st = conn.prepareStatement(carSql);
@@ -74,6 +73,7 @@ public class RefAndCarOperatorDao {
 			}
 			conn.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 		   System.out.println("上传PbmMIRef 失败!" + e.getMessage());
 		   try {
 			   conn.rollback();
