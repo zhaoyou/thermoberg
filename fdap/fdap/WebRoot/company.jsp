@@ -160,7 +160,7 @@
 			              <td width="65" align="center" style="border:none; text-align:center;"><a href="javascript:goData('realAlarm.do','toRealAlarm',${org.oid });"><img src="images/index/show_b.gif" width="75" height="21" /></a></td>
 			               <td width="65" align="center" style="border:none; text-align:center;"><a href="javascript:goData('refHis.do','toRefHis',${org.oid });"><img src="images/index/show_cc.gif" width="75" height="21" /></a></td>
 			              <td width="65" style="border:none; text-align:center;"><a href="javascript:goData('hisAlarm.do','toAlarmHis',${org.oid });"><img src="images/index/show_g.gif" width="75" height="21" border="0" /></a></td>
-			              <td><a href="order.do?ope=toOrder&oid=${org.oid }">订单信息</a></td>
+			              <td style="background-color: #d4e7f5"><a style="text-decoration: none;color:#333;" href="order.do?ope=toOrder&oid=${org.oid }"><img style="vertical-align: middle;" src="images/index/chart-up.png" border="0" />订单追溯</a></td>
 			            </tr>
 			          </table></td>
 		        </tr>
