@@ -21,7 +21,7 @@
     	var isSetUp = true ;
     	function setPath(path){
     		var p = document.getElementById("project").value ; 
-    		var pathPrefix = "img/project/"+p+"/" ;
+    		var pathPrefix = "../img/project/"+p+"/" ;
 				if(isSetUp){   
     				document.getElementById('img').src=pathPrefix+path; 
     				isSetUp = false ;
