@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    zhaoyou
+-->
+ 
+<hibernate-mapping>
+    <class name="org.fdap.entity.order.PbmCarInOutTrack" table="PbmCarInOutTrack" >
+        <id name="cdId" type="java.lang.Long">
+            <column name="cdId" />
+            <generator class="identity"/>
+        </id>  
+        <property name="pid" type="java.lang.Long" />
+        <property name="orderId" type="java.lang.Long" />
+        <property name="inTime" type="java.util.Date"></property>
+        <property name="outTime" type="java.util.Date"></property>
+        <property name="demandTime" type="java.util.Date"></property>
+        <property name="inPdaId" type="java.lang.Long" />
+        <property name="outPdaId" type="java.lang.Long" />
+        <property name="miCarId" type="java.lang.Long" />
+        <property name="subOrderMid" type="java.lang.Long" />
+        <property name="inOutStatus" type="java.lang.Short"></property>
+        <property name="isDelete" type="java.lang.Short"></property>
+        <property name="uploadStatus"  type="java.lang.Short"></property>
+        <property name="oid" type="java.lang.Long" />
+    </class>
+</hibernate-mapping>
