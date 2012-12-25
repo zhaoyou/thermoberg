@@ -132,9 +132,11 @@
           <td height="28" colspan="7" bgcolor="#dff4fc"><table width="100%" style="height:32px; border-bottom-width: 1px;border-bottom-style: solid;border-bottom-color: #b6d6e6; background-color:#FFF;">
             <tr>
               <td width="110" height="24" style="border:none;"><a href="javascript:gosumb('refHis.do','toRefHis');"><img src="images/index/alarm_e.gif" width="100" height="24" /></a></td>
-              <td width="100" style="border:none;"><a href="#"><img src="images/index/alarm_d.gif" width="100" height="24" /></a></td>
+              <td width="100" style="border:none;"><a href="javascript:gosumb('carHis.do', 'toHisStartUp');"><img src="images/index/alarm_d.gif" width="100" height="24" /></a></td>
               <td width="110" style="border:none;">
-				<a href="#">小批零起停记录</a>
+				<a href="#">
+					 <img src="images/index/xiaopiling.gif" width="100" height="24" />
+				</a>
 			  </td>
               <td width="608" style="border:none;">&nbsp;</td>
             </tr>
@@ -196,7 +198,7 @@
 					<td>
 						<%-- <img  src="images/u80.gif"  title="车载历史数据" style="cursor:pointer" onclick="javascript:godetail('carHis.do','doCarhisbyStartup','${startup.startUpId}','${startup.startTime }','${startup.endTime }');"/>--%> 
 						<a href="javascript:godetail('boxHis.do','doBoxhisbyStartup','${startup.startUpId}','${startup.startTime }','${startup.endTime }','${startup.carrier }');" style="text-decoration: none;">
-							<img src="images/index/show_w.gif" title="小批零历史数据" style="cursor:pointer" width="98" height="21" />
+							<img src="images/index/lishishuju.gif" title="小批零历史数据" style="cursor:pointer" width="80" height="21" />
 						</a>
 						<%-- 
 						<a href="javascript:godetail('carHis.do','toHisCarcurve','${startup.startUpId}','${startup.startTime }','${startup.endTime }','${startup.carrier }');" style="text-decoration: none;">
