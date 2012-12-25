@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<flexProperties flexServerType="2" serverContextRoot="/fdap" serverRoot="E:/zhaoyou/ccdcc-ds/192.168.1.116软件测试工具/apache-tomcat-6.0.18/webapps/fdap" serverRootURL="http://localhost:8888/fdap" toolCompile="true" useServerFlexSDK="false" version="1"/>
+<flexProperties flexServerType="2" serverContextRoot="/fdap" serverRoot="C:/code/apache-tomcat-6.0.36/webapps/fdap" serverRootURL="http://localhost:8080/fdap" toolCompile="true" useServerFlexSDK="false" version="1"/>

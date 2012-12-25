@@ -19,7 +19,7 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>E:/zhaoyou/ccdcc-ds/192.168.1.116软件测试工具/apache-tomcat-6.0.18/webapps/fdap/fdap</location>
+			<location>C:/code/apache-tomcat-6.0.36/webapps/fdap/fdap</location>
 		</link>
 	</linkedResources>
 </projectDescription>
