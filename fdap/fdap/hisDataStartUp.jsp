@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>查看${orgname }的小批零启停记录</title>
+<title>查看${orgname }的车载启停记录</title>
 <link rel="Shortcut Icon" href="images/logo.ico" />
 <link href="css/index/hiscar_startup.css" rel="stylesheet" type="text/css" />
 <script src="DatePicker/WdatePicker.js"></script>
@@ -63,7 +63,7 @@
 			var carrefId=document.getElementById("carrefId").value;
 			if(carrefId==""){
 				document.getElementById("msg").innerHTML="";
-				window.alert('该企业下没有小批零，请确认无误后查询');
+				window.alert('该企业下没有车载，请确认无误后查询');
 				return;
 			}
 			var startTime=document.getElementById("startTime").value;
@@ -100,7 +100,7 @@
     <div class="top">
       <table width="985" border="0" cellpadding="0" cellspacing="0" id="tb" >
         <tr id="tb1" >
-          <td width="983" colspan="7"><span style="text-align:left; float:left;padding-left:4px; margin-left:4px; color:#141414;"><img src=images/index/icon.gif width="9" height="10" /> 当前位置： 查看${orgname }的小批零启停记录</span>
+          <td width="983" colspan="7"><span style="text-align:left; float:left;padding-left:4px; margin-left:4px; color:#141414;"><img src=images/index/icon.gif width="9" height="10" /> 当前位置： 查看${orgname }的车载启停记录</span>
           <a href="javascript:gosumb('org.do','toHigherOrg');"><img src="images/index/back.gif" width="58" height="21" 
         class="pho"/></a></td>
         </tr>
@@ -114,7 +114,7 @@
    <%--  <input type="hidden" id="projectId" name="projectId" value="${projectId }"/> --%>
     <input type="hidden" name="time1" id="time1" value=""/>
     <input type="hidden" name="time2" id="time2" value=""/>
-    <input type="hidden" name="ope" id="ope" value="doBoxStartUpByRefAndtime"/>
+    <input type="hidden" name="ope" id="ope" value="doStartUpByRefAndtime"/>
 
 	<input type="hidden" name="carrier" id="carrier" value="${carrier }" />
 	
@@ -131,11 +131,19 @@
         <tr bgcolor="#CCCCCC">
           <td height="28" colspan="7" bgcolor="#dff4fc"><table width="100%" style="height:32px; border-bottom-width: 1px;border-bottom-style: solid;border-bottom-color: #b6d6e6; background-color:#FFF;">
             <tr>
-              <td width="110" height="24" style="border:none;"><a href="javascript:gosumb('refHis.do','toRefHis');"><img src="images/index/alarm_e.gif" width="100" height="24" /></a></td>
-              <td width="100" style="border:none;"><a href="#"><img src="images/index/alarm_d.gif" width="100" height="24" /></a></td>
+              <td width="110" height="24" style="border:none;">
+              	<a href="javascript:gosumb('refHis.do','toRefHis');">
+              	<img src="images/index/alarm_e.gif" width="100" height="24" /></a>
+              </td>
+              <td width="100" style="border:none;">
+	              <a href="#">
+	              <img src="images/index/alarm_d.gif" width="100" height="24" /></a>
+              </td>
               <td width="110" style="border:none;">
-				<a href="#">小批零起停记录</a>
-			  </td>
+                 <a href="javascript:gosumb('boxHis.do', 'toHisStartUp');">
+ 					<img src="images/index/xiaopiling.gif" width="100" height="24" />
+				 </a>
+              </td>
               <td width="608" style="border:none;">&nbsp;</td>
             </tr>
           </table>
@@ -146,7 +154,7 @@
                     <%--<input name="textfield" type="text" value="A企业" size="15" /> --%>
                     <input name="orgname" id="orgname" type="text" value="${orgname }" size="15" readonly="readonly" style="text-align: center;background-color: #f1f4f8;" />
                   </label></td>
-                <td width="66" style="border:none;"><label>选择小批零: </label></td>
+                <td width="66" style="border:none;"><label>选择车载: </label></td>
                 <td width="150"  style="border:none;">
                 <select name="carrefId" id="carrefId">
     			<c:forEach var="carref" items="${carreflist}">
@@ -169,7 +177,7 @@
                 <%-- <input name="endTime" id="endTime" type="text" value="${endTime }" size="21" /> --%>
                 </td>
                 <td width="81" style="border:none;">
-                <img src="images/index/search.gif" width="45" height="20" style="border:none;cursor:pointer;" onclick="javascript:dosearch('startUp.do','doBoxStartUpByRefAndtime');"/>
+                <img src="images/index/search.gif" width="45" height="20" style="border:none;cursor:pointer;" onclick="javascript:dosearch('startUp.do','doStartUpByRefAndtime');"/>
                 <%-- <input type="submit" name="Submit" value="" style=" border:none;width:45px; height:20px;cursor:pointer; background-image:url(images/index/search.gif)"/>--%>
                 </td>
               </tr>
@@ -195,17 +203,16 @@
 					<td>${startup.carrier }</td>
 					<td>
 						<%-- <img  src="images/u80.gif"  title="车载历史数据" style="cursor:pointer" onclick="javascript:godetail('carHis.do','doCarhisbyStartup','${startup.startUpId}','${startup.startTime }','${startup.endTime }');"/>--%> 
-						<a href="javascript:godetail('boxHis.do','doBoxhisbyStartup','${startup.startUpId}','${startup.startTime }','${startup.endTime }','${startup.carrier }');" style="text-decoration: none;">
-							<img src="images/index/show_w.gif" title="小批零历史数据" style="cursor:pointer" width="98" height="21" />
+						<a href="javascript:godetail('carHis.do','doCarhisbyStartup','${startup.startUpId}','${startup.startTime }','${startup.endTime }','${startup.carrier }');" style="text-decoration: none;">
+							<img src="images/index/lishishuju.gif" title="车载历史数据" style="cursor:pointer" width="80" height="21" />
 						</a>
-						<%-- 
 						<a href="javascript:godetail('carHis.do','toHisCarcurve','${startup.startUpId}','${startup.startTime }','${startup.endTime }','${startup.carrier }');" style="text-decoration: none;">
 							<img src="images/index/show_d.gif" title="车载历史曲线" style="cursor:pointer" width="78" height="21" />
 						</a>
 						<a href="javascript:goMap('carHis.do','toHisMap','${startup.startTime }');" style="text-decoration: none;">
 							<img  src="images/index/show_gjhf.jpg" title="车载行驶历史轨迹回放"/> 
 						</a>
-						--%>
+						
 					</td>
 				</tr>
 		</c:forEach>
