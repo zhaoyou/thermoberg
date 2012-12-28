@@ -133,7 +133,11 @@
               <%-- <a href="hisDataStartUp.jsp"><img src="images/index/alarm_d.gif" width="100" height="24" /></a>--%>
               <a href="javascript:goData('carHis.do','toHisStartUp');"><img src="images/index/alarm_d.gif" width="100" height="24" /></a>
               </td>
-              <td width="110" style="border:none;">&nbsp;</td>
+              <td width="110" style="border:none;">
+				 <a href="javascript:goData('boxHis.do', 'toHisStartUp');">
+ 					<img src="images/index/xiaopiling.gif" width="100" height="24" />
+				 </a>
+			  </td>
               <td width="608" style="border:none;">&nbsp;</td>
             </tr>
           </table>
