@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- 
+    zhaoyou
+-->
+ 
+<hibernate-mapping>
+    <class name="org.fdap.entity.order.PbmMiGoodsFullInfo" table="pbmGoodsFullInfo" >
+        <id name="goodFullId" type="java.lang.Long">
+            <column name="goodFullId" />
+            <generator class="identity"/>
+        </id>  
+  
+        <property name="lotno" type="java.lang.String" />
+        <property name="goodId" type="java.lang.Long" />
+        <property name="invaliDate" type="java.util.Date" />
+        <property name="oid" type="java.lang.Long" />
+    </class>
+</hibernate-mapping>
