@@ -334,7 +334,7 @@
 		 	
 	 	]]>
 	 </mx:Script>
-	 <mx:RemoteObject id="Remotehiscar" destination="hiscar" endpoint="http://{hostname}/fdap/messagebroker/amf">
+	 <mx:RemoteObject id="Remotehiscar" destination="hiscar" endpoint="http://{hostname}/eccp/messagebroker/amf">
 	 	<mx:method name="getRefById" fault="errorHandler(event)" result="getRefById(event)"/>
 	 	<mx:method name="getStartUp" fault="errorHandler_startup(event)" result="getStartup(event)"/>
 	 	<mx:method name="getHisCar" fault="errorHandler_data(event)" result="getData(event)"/>

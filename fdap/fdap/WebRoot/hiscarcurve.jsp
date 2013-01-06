@@ -39,7 +39,7 @@
   <img src="images/index/back.gif" width="58" height="21" style="cursor:pointer" class="tb3" onclick="golist('startUp.do','doStartUpPage');"/></div>
   <div id="bottom">
   	<div>
-  		<iframe scrolling="no" src="fdap/hiscar3.html?oid=${param.oid }&sid=${param.sid }&refId=${param.checkedrefId }" width=100% height="630"  frameborder=0></iframe >
+  		<iframe scrolling="no" src="eccp/hiscar3.html?oid=${param.oid }&sid=${param.sid }&refId=${param.checkedrefId }" width=100% height="630"  frameborder=0></iframe >
 	</div>
   </div>
 </div>

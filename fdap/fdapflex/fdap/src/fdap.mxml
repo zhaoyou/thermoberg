@@ -153,7 +153,7 @@
 	<mx:SeriesSlide id="slideIn" duration="1000" direction="down"/>
    	<mx:SeriesSlide id="slideOut" duration="1000" direction="up"/>
 	
-	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/fdap/messagebroker/amf">
+	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/eccp/messagebroker/amf">
 		<mx:method name="getAlarmCounts" result="getCounts(event)" fault="errorHandler(event)" />
 	</mx:RemoteObject>
 	<mx:ToggleButtonBar dataProvider="{viewstack}" direction="horizontal" />

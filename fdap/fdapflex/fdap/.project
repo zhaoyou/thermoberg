@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>fdap</name>
+	<name>eccp</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -19,7 +19,7 @@
 		<link>
 			<name>bin-debug</name>
 			<type>2</type>
-			<location>C:/code/apache-tomcat-6.0.36/webapps/fdap/fdap</location>
+			<location>C:/code/apache-tomcat-6.0.36/webapps/eccp/eccp</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -384,7 +384,7 @@
 	 		 
 		]]>
 	</mx:Script>
-	<mx:RemoteObject id="remoteRef" destination="hisref" endpoint="http://{hostname}/fdap/messagebroker/amf">
+	<mx:RemoteObject id="remoteRef" destination="hisref" endpoint="http://{hostname}/eccp/messagebroker/amf">
 		<mx:method name="getAiList"  		fault="errorHandler_ai(event)" 			result="resultHandler_getAI(event)"/>
 		<mx:method name="getRefHisData" 	fault="errorHanlder_data(event)" 		result="resultHandler_getRefData(event)"/>
 		

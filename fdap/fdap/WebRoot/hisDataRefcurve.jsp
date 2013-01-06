@@ -196,7 +196,7 @@
       
     </div>
     <div>
-  		<iframe scrolling="no" src="fdap/hisref.html?oid=${param.oid }&refId=${checkedrefId }&startTime=${checkedrefstartTime}&endTime=${checkedrefendTime }" width=100% height="630"  frameborder=0></iframe >
+  		<iframe scrolling="no" src="eccp/hisref.html?oid=${param.oid }&refId=${checkedrefId }&startTime=${checkedrefstartTime}&endTime=${checkedrefendTime }" width=100% height="630"  frameborder=0></iframe >
 	</div>
   </div>
 </div>

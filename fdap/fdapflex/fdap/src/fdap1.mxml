@@ -200,7 +200,7 @@
     </mx:Array>
    	
    
-	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/fdap/messagebroker/amf">
+	<mx:RemoteObject destination="hisalarm" id="hisalarm" endpoint="http://{hostname}/eccp/messagebroker/amf">
 		<mx:method name="getAlarmCounts" result="getCounts(event)" fault="errorHandler(event)" />
 	</mx:RemoteObject>
 	<mx:ToggleButtonBar dataProvider="{viewstack}" direction="horizontal" />
