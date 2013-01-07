@@ -197,7 +197,7 @@ public class BoxHisAction extends BaseAction {
 		else{
 			logger.warn("该企业下没有车载工程");
 			//没有获取到企业信息
-			request.setAttribute("msg", "<font color='blue'>该企业下没有车载工程</font>");
+			request.setAttribute("msg", "<font color='blue'>该企业下没有小批零</font>");
 			return mapping.findForward("boxStartUp");
 		}
 	}

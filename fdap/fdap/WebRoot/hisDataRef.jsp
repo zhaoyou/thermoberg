@@ -170,7 +170,7 @@
               </td>
               <td width="110" style="border:none;">
 				 <a href="javascript:goData('boxHis.do', 'toHisStartUp');">
-				    <img src="images/index/xiaopiling.gif" width="100" height="24" />
+				    <img src="images/index/box_startup_query.gif" width="114" height="24" />
 				 </a>
 			  </td>
               <td width="608" style="border:none;">&nbsp;</td>
