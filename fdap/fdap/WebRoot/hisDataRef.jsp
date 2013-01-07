@@ -181,11 +181,11 @@
               <tr>
                 <td width="88" height="23" style="border:none;">企业名称：</td>
                 <td width="152"  style="border:none; text-align:left;"><label>
-                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="21" disabled="disabled" style="text-align: center;background-color: #f1f4f8;"/>
+                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="21" disabled="disabled" style="text-align: center;background-color: #f1f4f8;height: 20px;"/>
                   </label></td>
                 <td width="83" style="border:none;"><label>选择仓库： </label></td>
                 <td width="149"  style="border:none; text-align:left;">
-                	<select name="projectid" id="projectid" onchange="changed(this)">
+                	<select name="projectid" id="projectid" onchange="changed(this)" style="height: 20px;">
                     <%--<option value="0">全部仓库</option> --%>
                     <c:forEach var="project" items="${prolist}">
     					<option value="${project.projectid }" ${checkedprojectid==project.projectid?"selected=selected":"" }>${project.name }</option>

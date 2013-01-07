@@ -152,11 +152,11 @@
                 <td width="82" height="23" style="border:none;">企业名称：</td>
                 <td width="107"  style="border:none;"><label>
                     <%--<input name="textfield" type="text" value="A企业" size="15" /> --%>
-                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="15" readonly="readonly" style="text-align: center;background-color: #f1f4f8;" />
+                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="15" readonly="readonly" style="text-align: center;background-color: #f1f4f8;height: 20px;" />
                   </label></td>
                 <td width="66" style="border:none;"><label>选择车载: </label></td>
                 <td width="150"  style="border:none;">
-                <select name="carrefId" id="carrefId">
+                <select name="carrefId" id="carrefId" style="height: 20px;">
     			<c:forEach var="carref" items="${carreflist}">
     				<option value="${carref.refId }" ${checkedrefId==carref.refId?"selected=selected":"" }>${carref.name }</option>
     			</c:forEach>
