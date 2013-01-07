@@ -135,7 +135,7 @@
               <td width="100" style="border:none;"><a href="javascript:gosumb('carHis.do', 'toHisStartUp');"><img src="images/index/alarm_d.gif" width="100" height="24" /></a></td>
               <td width="110" style="border:none;">
 				<a href="#">
-					 <img src="images/index/xiaopiling.gif" width="100" height="24" />
+					 <img src="images/index/box_startup_query.gif" width="114" height="24" />
 				</a>
 			  </td>
               <td width="608" style="border:none;">&nbsp;</td>
@@ -146,11 +146,11 @@
                 <td width="82" height="23" style="border:none;">企业名称：</td>
                 <td width="107"  style="border:none;"><label>
                     <%--<input name="textfield" type="text" value="A企业" size="15" /> --%>
-                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="15" readonly="readonly" style="text-align: center;background-color: #f1f4f8;" />
+                    <input name="orgname" id="orgname" type="text" value="${orgname }" size="15" readonly="readonly" style="text-align: center;background-color: #f1f4f8;height: 20px;" />
                   </label></td>
                 <td width="66" style="border:none;"><label>选择小批零: </label></td>
                 <td width="150"  style="border:none;">
-                <select name="carrefId" id="carrefId">
+                <select name="carrefId" id="carrefId"  style="height: 20px;">
     			<c:forEach var="carref" items="${carreflist}">
     				<option value="${carref.refId }" ${checkedrefId==carref.refId?"selected=selected":"" }>${carref.name }</option>
     			</c:forEach>
