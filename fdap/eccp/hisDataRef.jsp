@@ -220,8 +220,8 @@
                 <%--<input name="refendTime" id="refendTime" type="text" value="${refendTime }" size="21" />--%>
                 </td>
                 <td  style="border:none;" colspan="2">&nbsp;</td>
-                <td style="border:none;" colspan="2"><img src="images/index/search.gif" width="45" height="20" style="cursor:pointer;" onclick="javascript:dosearch('refHis.do','doRefHisData');"/>
-                &nbsp;&nbsp;<img src="images/index/hiscurve.gif" width="55" height="20" style="cursor:pointer;" onclick="javascript:dosearch('refHis.do','doRefHisCurve');"/></td>
+                <td style="border:none;" colspan="2"><img src="images/index/list_query.gif" width="55" height="20" style="cursor:pointer;" onclick="javascript:dosearch('refHis.do','doRefHisData');"/>
+                &nbsp;&nbsp;<img src="images/index/line_query.gif" width="55" height="20" style="cursor:pointer;" onclick="javascript:dosearch('refHis.do','doRefHisCurve');"/></td>
                
                </tr>
             </table></td>
