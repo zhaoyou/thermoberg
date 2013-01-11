@@ -30,6 +30,11 @@
     			
     	}
     	
+    	function ifShow(name) {
+    		var regx = /±¨¾¯|min|max/gi;
+    		return regx.test(name);
+    	}
+    	
     	function mysplit(str){
     		
     		var wid = screen.width;
@@ -61,6 +66,10 @@
     			var cName = controlData[4];
     			var cUnit = controlData[5];
     			var cData= controlData[6];
+    			
+    			if (ifShow(cName)) {
+    				continue;
+    			}
     			
     			var showData = cName+cData+cUnit; 
     		
