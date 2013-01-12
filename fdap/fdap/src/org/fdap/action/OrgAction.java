@@ -54,6 +54,7 @@ public class OrgAction extends BaseAction {
 		Fdaporg org = this.getOrgBiz().getByOid(new Long(oid));
 		request.setAttribute("oid", oid);
 		if(org.getNodetype()==2){
+			System.out.println("entry org list");
 			request.setAttribute("org", org);
 			return mapping.findForward("orglistQ");
 		}else{
@@ -64,16 +65,26 @@ public class OrgAction extends BaseAction {
 			if(oids==null || oids.size()==0){
 				return mapping.findForward("leaf");
 			}else{
+				
 				List<Fdaporg> orglist = this.getOrgBiz().getByParentId(new Long(oid));
 				request.setAttribute("orgList", orglist);
 				//下级如果是企业，则跳到企业管理页面。
+				// 原来的实现是， 下级是企业的话，直接跳转到企业的列表。如果下级是机构的话，
+				// 根据机构的显示标识，跳转到机构列表和机构的地图页面。
+				// TODO (zhaoyou)
+				// 如果本身机构显示地图， 就直接显示企业地图，如果是列表，就直接显示企业列表。
+				
 				if(orglist.get(0).getNodetype()==2){
-					
-					return mapping.findForward("leaf");
+					if (org.getIsshowmap() == 2) {
+						return new ActionForward("/map_org_"+oid+".jsp?oid="+oid);
+					} else {
+						return mapping.findForward("leaf");
+					}
 				}else{
 					request.setAttribute("isshowmap", org.getIsshowmap());
 					//获取该机构的下级机构的标识和名称
 					request.setAttribute("ids", buildOrg(oids));
+					System.out.println("****showMap: " + org.getIsshowmap());
 					if(org.getIsshowmap()==2){
 						//进入机构地图页面
 						return new ActionForward("/map_"+oid+".jsp?oid="+oid);
