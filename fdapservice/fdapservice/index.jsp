@@ -108,8 +108,10 @@ function getPostData()
   </head>
   
   <body>
+  <!-- 
     <input type="text" id="txtName" /><br/>
 	<button id="btnTest">BtnTest</button>
 	<div id="result"></div>
+	 -->
   </body>
 </html>
