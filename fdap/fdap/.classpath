@@ -89,7 +89,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-toplink.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-web.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-webmvc.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sqljdbc.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/struts.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/swarmcache-1.0rc2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/tbcclog.jar"/>
@@ -98,5 +97,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xalan.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xerces-2.6.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sqljdbc4.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>
